@@ -6,5 +6,6 @@
 | Vishal Deb Sahoo | sahoovi1 | 1006730450 | vishal.sahoo@mail.utoronto.ca | 6474253948 |theBigResult#7289 |
 | Carlos Fei Huang | huan1942 | 1006274274 | carlosfei.huang@mail.utoronto.ca | discord | thermalice#3770 |
 |Amy Yao | yaoamy | 1006941286 | amy.yao@mail.utoronto.ca | discord | Qumack#1875 |
+| Noor Nasri | nasrinoo | 100710403646 | noor.nasri@mail.utoronto.ca | discord | iamnoamesa#7528 |
 
 **Discord Chat/Server Invite :** https://discord.gg/95ssta9q9G
