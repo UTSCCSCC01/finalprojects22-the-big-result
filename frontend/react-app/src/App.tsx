@@ -5,6 +5,7 @@ import './App.css';
 
 function App() {
   const [currentTime, setCurrentTime] = useState(5);
+  const [currQuery, setCurrQuery] = useState(5);
 
   useEffect(() => {
     fetch('http://localhost:5000/time').then(res => {
@@ -15,15 +16,20 @@ function App() {
     }).then(data => {
       setCurrentTime(data.time);
     });
+    fetch("http://localhost:5000/db").then(res => {
+      console.log(res);
+      return res.json();
+    }).then(data => {
+      setCurrQuery(data.myquery)
+    });
   }, []);
 
   return (
     <div className="App">
       <header className="App-header">
 
-        ... no changes in this part ...
-
         <p>The current time is {currentTime}.</p>
+        <p>The query from the database is {currQuery}</p>
       </header>
     </div>
   );
