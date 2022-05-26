@@ -2,9 +2,9 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import time
 
-from backend.dbConnection import sampleQuery
+from dbConnection import sampleQuery
 
-from backend.sampleFeature.mySampleFeature import sampleBlueprint
+from sampleFeature.mySampleFeature import sampleBlueprint
 
 
 from flask_sqlalchemy import SQLAlchemy
