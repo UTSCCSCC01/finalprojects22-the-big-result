@@ -46,8 +46,9 @@ We are using ODBC SQL driver 17 for connecting to the remote database via our py
 #### Do you use git flow? 
 Yes.
 #### What do you name your branches?
-- Based on git flow standards, the main branch will contain the official releases at the end of each sprint. The develop branch will be used to work on and integrate features.
-- To contribute a new feature, create a feature branch from the develop branch following the convention: feature/descriptive-name-of-feature
+Based on git flow standards, the main branch will contain the official releases at the end of each sprint. The develop branch will be used to work on and integrate features.
+
+To contribute a new feature, create a feature branch from the develop branch following the convention: feature/descriptive-name-of-feature
 
 #### Do you use github issues or another ticketing website?
 Jira will be primarily used as a ticketing website. Github Issues can be used as a secondary tool.
