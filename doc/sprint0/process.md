@@ -2,16 +2,16 @@
 Team roles and tasks were assigned in the first meeting at the beginning of the sprint, as well as the team contract. This was done based on interest and skills, keeping in mind similar workloads.
 
 For sprint 0, the responsibilities were distributed as follows:
-Team contract - All
-Summary - Ava, Amy
-Competition - Vishal
-Personas - Fariha, Ananya
-Product Backlog - Together
-Setup - Carlos
-Documentation README - Carlos
-User Experience/ UI - Vishal, Amy
-Done - Ananya
-Process - Noor, Ava
+- Team contract - Together
+- Summary - Ava, Amy
+- Competition - Vishal
+- Personas - Fariha, Ananya
+- Product Backlog - Together
+- Setup - Carlos
+- Documentation README - Carlos
+- User Experience/ UI - Vishal, Amy
+- Done - Ananya
+- Process - Noor, Ava
 
 These roles assign responsibility, but are not restrictive. Team members are expected to look over the project, and are pulled into the parts that need more work if they are done. 
 
