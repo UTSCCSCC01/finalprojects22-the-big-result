@@ -27,7 +27,8 @@ import os
 # db = SQLAlchemy(app)
 
 def sampleQuery():
-    load_dotenv("./config/.env")
+
+    load_dotenv(f".{os.sep}config{os.sep}.env")
     DB_password = os.environ.get("DATABASE_PASSWORD")
     engine = create_engine(f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server")
 
