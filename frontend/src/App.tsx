@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
-import GetTime from "./learning/GetTime";
 import './App.css';
 
 function App() {
