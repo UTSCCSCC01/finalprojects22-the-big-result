@@ -1,18 +1,20 @@
 import { useState } from "react";
 import axios from "axios";
 import "./Login.css";
-// import {setToken} from '../useToken';
 
 function Login(props) {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
-  const [type, setType] = useState("");
+  const [type, setType] = useState("customer");
+  const [failedLogin, setFailedLogin] = useState(false);
 
+
+  // idea add /token/${type} but also end of /profile
   const handleSubmit = (e) => {
     e.preventDefault();
     axios({
       method: "POST",
       //TODO: Create 2 different endpoints for the login in the backend
-      url: `http://localhost:5000/token`,
+      url: `http://localhost:5000/token/${type}`,
       data: {
         email: loginForm.email,
         password: loginForm.password,
@@ -20,16 +22,20 @@ function Login(props) {
     })
       //TODO: Integrate with backend
       .then((res) => {
-        // console.log(res.data.access_token)
         localStorage.setItem('token', res.data.access_token);
+        // only go to profile tab when login is successful
         window.location = "/profile"
-        
+
+        setFailedLogin(false)
       })
       .catch((err) => {
-        console.log(err);
+        // diaplay "incorrect login" message
+        setFailedLogin(true)
+        console.log(err.response.status)
       });
     //reset form after submission
     setLoginForm({ email: "", password: "" });
+    // setFailedLogin(false)
   };
 
   const handleChange = (e) => {
@@ -80,6 +86,7 @@ function Login(props) {
           Already have an account? <a>Sign Up</a>
         </small>
       </div>
+      {failedLogin && <div>Username or password is incorrect.</div>}
     </div>
   );
 }

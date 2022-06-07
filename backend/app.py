@@ -1,7 +1,6 @@
-import json
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token, unset_jwt_cookies, jwt_required, JWTManager
+from flask_jwt_extended import JWTManager
 import time
 from dotenv import load_dotenv
 import os
@@ -9,10 +8,14 @@ import os
 from dbConnection import sampleQuery
 
 from sampleFeature.mySampleFeature import sampleBlueprint
+from login import login_blueprint
+
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.register_blueprint(sampleBlueprint, url_prefix='/example')
+app.register_blueprint(login_blueprint)
+
 CORS(app)
 
 app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
@@ -50,43 +53,6 @@ def getSampleQuery():
 @app.route("/stuff", methods=['GET'])
 def databaseTestingStuff():
     return str(db.engine.execute("SELECT * from Persons").fetchall())
-
-
-
-# user submits login request, the email/pass and compared with the hardcoded email/pass
-@app.route('/token', methods=["POST"])
-def create_token():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
-
-    print(email, password)
-    if email != "test@utoronto.ca" or password != "1234":
-        err_response = {"msg": "Wrong email or password", "status": 401 }
-        return err_response
-
-    # acess token is returned to user if details are correct
-    access_token = create_access_token(identity = email) # use email or username as id?
-    response = { "access_token" : access_token }
-    print(response)
-    return response
-  
-
-
-@app.route("/logout", methods=["POST"])
-def logout():
-    response = jsonify({"msg": "logout successful"})
-    unset_jwt_cookies(response)
-    return response
-
-
-# prevent un-authenticated users from making reqs to endpoints - 
-@app.route('/profile', methods=["GET"])
-@jwt_required() 
-def my_profile():
-    # no need to jsonify this, a dict is turned to JSON in flask
-    response_body = { "name": "ANGELA WATSON", "about": "stuff about angela" }
-    return response_body
-
 
 
 if __name__ == "__main__":
