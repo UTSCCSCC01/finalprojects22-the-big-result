@@ -1,0 +1,16 @@
+.service-card { 
+    margin: 16px;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px #ccc;
+    border-color: black;
+    border-width: 5px; 
+    background-color: lavenderblush;
+    /* flex: 1; */
+    /* width: 40%; */
+    font-size: 24px;
+    text-align: center;
+  }
+
+/* ! Make it more similar to Login card */
