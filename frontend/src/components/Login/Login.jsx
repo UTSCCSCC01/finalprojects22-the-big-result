@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "./Login.css";
+// import {setToken} from '../useToken';
 
 function Login(props) {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
@@ -17,7 +18,10 @@ function Login(props) {
     })
       //TODO: Integrate with backend
       .then((res) => {
-        props.setToken(res.data.token);
+        // console.log(res.data.access_token)
+        localStorage.setItem('token', res.data.access_token);
+        window.location = "/profile"
+        
       })
       .catch((err) => {
         console.log(err);

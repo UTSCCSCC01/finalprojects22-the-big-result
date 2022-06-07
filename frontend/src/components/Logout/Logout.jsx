@@ -3,8 +3,10 @@ import axios from "axios";
 function Logout(props) {
   const logout = () => {
     axios({ method: "POST", url: "http://localhost:5000/logout" })
-      //TODO: Integrate with backend
-      .then(() => props.token())
+      .then((res) => {
+        localStorage.removeItem("token");
+        window.location = "/login"
+      })
       .catch((err) => {
         console.log(err);
       });

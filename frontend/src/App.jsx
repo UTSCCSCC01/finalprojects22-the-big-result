@@ -1,15 +1,18 @@
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./components/Login/Login";
+import Profile from './components/Profile/Profile'
 
 function App() {
+
   return (
-    // BrowserRouter: keep your UI in sync with the URL
     <BrowserRouter>
-      <div className="App">
-        <Login />
-      </div>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        {/* when going to this endpoint serve me this component */}
+        <Route path="/profile" element={<Profile />} /> 
+        {/* TODO: when wrong email/pass combination entered still goes to profile page */}
+      </Routes>
     </BrowserRouter>
   );
 }
