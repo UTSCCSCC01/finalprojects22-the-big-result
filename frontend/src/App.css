@@ -1,12 +1,7 @@
-.App {
+#root {
   text-align: center;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
 }

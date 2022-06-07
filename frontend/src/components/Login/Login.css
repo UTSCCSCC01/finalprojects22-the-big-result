@@ -30,6 +30,11 @@
   border: 1px solid grey;
 }
 
+#login-form label {
+  padding: 0;
+  text-align: left;
+}
+
 #login-form button {
   background-color: black;
   color: white;

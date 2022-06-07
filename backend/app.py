@@ -11,16 +11,19 @@ from dbConnection import sampleQuery
 from sampleFeature.mySampleFeature import sampleBlueprint
 from flask_sqlalchemy import SQLAlchemy
 
+app = Flask(__name__)
+app.register_blueprint(sampleBlueprint, url_prefix='/example')
+CORS(app)
+
+app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
+jwt = JWTManager(app)
+
 
 def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
     DB_password = os.environ.get("DATABASE_PASSWORD")
     return f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server"
 
-
-app = Flask(__name__)
-app.register_blueprint(sampleBlueprint, url_prefix='/example')
-CORS(app)
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
@@ -50,9 +53,6 @@ def databaseTestingStuff():
 
 
 
-app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
-jwt = JWTManager(app)
-
 # user submits login request, the email/pass and compared with the hardcoded email/pass
 @app.route('/token', methods=["POST"])
 def create_token():
@@ -69,6 +69,7 @@ def create_token():
     response = { "access_token" : access_token }
     print(response)
     return response
+  
 
 
 @app.route("/logout", methods=["POST"])

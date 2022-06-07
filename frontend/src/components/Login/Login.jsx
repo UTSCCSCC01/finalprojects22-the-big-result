@@ -5,12 +5,14 @@ import "./Login.css";
 
 function Login(props) {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [type, setType] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://localhost:5000/token",
+      //TODO: Create 2 different endpoints for the login in the backend
+      url: `http://localhost:5000/token`,
       data: {
         email: loginForm.email,
         password: loginForm.password,
@@ -44,6 +46,17 @@ function Login(props) {
       <div className="container">
         <h1>Login</h1>
         <form id="login-form" onSubmit={handleSubmit}>
+          <label for="type">Log in is a</label>
+          <select
+            name="type"
+            required
+            onChange={(e) => setType(e.target.value)}
+          >
+            <option selected="selected" value="customer">
+              Customer
+            </option>
+            <option value="provider">Service Provider</option>
+          </select>
           <input
             onChange={handleChange}
             placeholder="Your email..."
