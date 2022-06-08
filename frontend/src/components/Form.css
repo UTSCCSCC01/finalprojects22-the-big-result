@@ -1,0 +1,39 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  text-align: centers;
+}
+
+.form > * {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 0 auto 15px auto;
+  width: 50%;
+}
+
+input,
+select {
+  box-sizing: border-box;
+}
+
+.form input {
+  border: 1px solid grey;
+}
+
+.form label {
+  padding: 0;
+  text-align: left;
+}
+
+button {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+
+button:hover {
+  background-color: purple;
+}
