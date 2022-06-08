@@ -14,8 +14,7 @@ function SignUpCustomer() {
     e.preventDefault();
     axios({
       method: "POST",
-      //TODO: Integrate with backend
-      url: `http://localhost:5000/signupCustomer`,
+      url: `http://localhost:5000/signup/customer`,
       data: {
         firstName: signupForm.firstName,
         lastName: signupForm.lastName,
@@ -24,7 +23,7 @@ function SignUpCustomer() {
       },
     })
       .then((res) => {
-        window.location = "/profile";
+        if (res.status === "200") window.location = "/profile";
       })
       .catch((err) => {
         console.log(err);
@@ -54,7 +53,7 @@ function SignUpCustomer() {
         placeholder="First name"
         type="text"
         name="firstName"
-        value={signupForm.email}
+        value={signupForm.firstName}
         required
       />
       <input
@@ -62,7 +61,7 @@ function SignUpCustomer() {
         placeholder="Last name"
         type="text"
         name="lastName"
-        value={signupForm.email}
+        value={signupForm.lastName}
         required
       />
       <input

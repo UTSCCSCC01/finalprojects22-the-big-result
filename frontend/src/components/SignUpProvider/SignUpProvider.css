@@ -1,6 +1,10 @@
 /* styling the react-select component */
-.hello.css-b62m3t-container {
+#signup-provider .css-b62m3t-container {
   box-sizing: inherit;
   text-align: left;
   font-size: 14px;
+}
+
+.css-b62m3t-container .css-1s2u09g-control {
+  border-color: grey;
 }

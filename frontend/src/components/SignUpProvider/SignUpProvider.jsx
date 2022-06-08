@@ -34,7 +34,7 @@ function SignUpProvider() {
     lastName: "",
     email: "",
     password: "",
-    servicesProvided: "",
+    servicesProvided: [],
     location: "",
   });
 
@@ -43,7 +43,7 @@ function SignUpProvider() {
     axios({
       method: "POST",
       //TODO: Integrate with backend
-      url: `http://localhost:5000/signupProvider`,
+      url: `http://localhost:5000/signup/provider`,
       data: {
         firstName: signupForm.firstName,
         lastName: signupForm.lastName,
@@ -54,7 +54,7 @@ function SignUpProvider() {
       },
     })
       .then((res) => {
-        window.location = "/profile";
+        if (res.status === "200") window.location = "/profile";
       })
       .catch((err) => {
         console.log(err);
@@ -65,7 +65,7 @@ function SignUpProvider() {
       lastName: "",
       email: "",
       password: "",
-      servicesProvided: "",
+      servicesProvided: [],
       location: "",
     });
   };
@@ -78,6 +78,13 @@ function SignUpProvider() {
     }));
   };
 
+  const handleSelect = (e) => {
+    setSignupForm((prevSignup) => ({
+      ...prevSignup,
+      servicesProvided: Array.isArray(e) ? e.map((option) => option.value) : [],
+    }));
+  };
+
   return (
     <form id="signup-provider" className="form" onSubmit={handleSubmit}>
       <input
@@ -85,7 +92,7 @@ function SignUpProvider() {
         placeholder="First name"
         type="text"
         name="firstName"
-        value={signupForm.email}
+        value={signupForm.firstName}
         required
       />
       <input
@@ -93,7 +100,7 @@ function SignUpProvider() {
         placeholder="Last name"
         type="text"
         name="lastName"
-        value={signupForm.email}
+        value={signupForm.lastName}
         required
       />
       <input
@@ -116,14 +123,18 @@ function SignUpProvider() {
         onChange={handleChange}
         placeholder="Location"
         type="text"
-        name="text"
+        name="location"
         value={signupForm.location}
         required
       />
       <Select
         placeholder="Services Offered"
-        className="hello"
+        value={services.filter((option) =>
+          signupForm.servicesProvided.includes(option.value)
+        )}
+        onChange={handleSelect}
         isMulti
+        isClearable
         options={services}
       />
       <button type="submit">Sign Up!</button>
