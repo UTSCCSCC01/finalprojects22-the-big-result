@@ -24,10 +24,10 @@ def signup(type):
             return "Unable to Add Customer", 500
     else:
         provider = {"email": email, "password": password, "first_name": firstName, "last_name": lastName, 
-        "location":location, "services_provided": servicesProvided}
+        "location": location, "services_provided": servicesProvided}
         provider_data.append(provider)
         if provider in provider_data: 
             return {"type": type, "firstName": firstName, "lastName": lastName, "email": email, 
-            "location": location, "services": servicesProvided}
+            "location": location, "servicesProvided": servicesProvided}
         else:
             return "Unable to Add Provider", 500

@@ -8,20 +8,11 @@ from dotenv import load_dotenv
 import os
 
 from dbConnection import sampleQuery
+from models import runDBQueries
+from models import db
 
 from sampleFeature.mySampleFeature import sampleBlueprint
 from signup import signup_blueprint
-
-app = Flask(__name__)
-bcrypt = Bcrypt(app)
-app.register_blueprint(sampleBlueprint, url_prefix='/example')
-app.register_blueprint(signup_blueprint)
-
-CORS(app)
-
-app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
-jwt = JWTManager(app)
-
 
 def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
@@ -29,10 +20,27 @@ def getDBURL() -> str:
     return f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server"
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+def createApp():
+    app = Flask(__name__)
+    app.register_blueprint(sampleBlueprint, url_prefix='/example')
+    app.register_blueprint(signup_blueprint)
 
-db = SQLAlchemy(app)
+    CORS(app)
+
+    Bcrypt(app)
+    app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
+    JWTManager(app)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.init_app(app)
+    app.app_context().push()
+
+    return app
+
+
+app = createApp()
 
 
 @app.route("/")
@@ -56,5 +64,5 @@ def databaseTestingStuff():
 
 
 if __name__ == "__main__":
-    # print(getDBURL())
+    # runDBQueries()
     app.run(debug=True)
