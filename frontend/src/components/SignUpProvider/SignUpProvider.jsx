@@ -42,7 +42,6 @@ function SignUpProvider() {
     e.preventDefault();
     axios({
       method: "POST",
-      //TODO: Integrate with backend
       url: `http://localhost:5000/signup/provider`,
       data: {
         firstName: signupForm.firstName,
@@ -113,9 +112,10 @@ function SignUpProvider() {
       />
       <input
         onChange={handleChange}
-        placeholder="Password"
+        placeholder="Password (6 characters minimum)"
         type="password"
         name="password"
+        minLength={6}
         value={signupForm.password}
         required
       />

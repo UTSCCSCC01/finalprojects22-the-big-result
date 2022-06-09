@@ -74,9 +74,10 @@ function SignUpCustomer() {
       />
       <input
         onChange={handleChange}
-        placeholder="Password"
+        placeholder="Password (6 characters minimum)"
         type="password"
         name="password"
+        minLength={6}
         value={signupForm.password}
         required
       />
