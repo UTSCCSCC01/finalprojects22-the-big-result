@@ -10,7 +10,7 @@ import os
 from dbConnection import sampleQuery
 
 from sampleFeature.mySampleFeature import sampleBlueprint
-from login import login_blueprint
+from login import login_blueprint, loginWithEmailPassword
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)

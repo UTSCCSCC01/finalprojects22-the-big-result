@@ -6,6 +6,7 @@ customer_data = [
     "last_name": "one",
     "email": "custone@utoronto.ca",
     "password": "1234",
+    "username":"custoneuser"
   },
   {
     "id": 1,
@@ -13,6 +14,7 @@ customer_data = [
     "last_name": "two",
     "email": "custtwo@utoronto.ca",
     "password": "5678",
+    "username": "custtwouser"
   }
 ]
 provider_data = [
@@ -23,7 +25,8 @@ provider_data = [
     "email": "provone@utoronto.ca",
     "password": "1234",
     "location": "Toronto, ON",
-    "services_provided": ["hairstyle", "landscaping"]
+    "services_provided": ["hairstyle", "landscaping"],
+    "username": "provoneuser"
   },
   {
     "id": 1,
@@ -32,6 +35,7 @@ provider_data = [
     "email": "provtwo@utoronto.ca",
     "password": "5678",
     "location": "Toronto, ON",
-    "services_provided": ["makeup", "landscaping"]
+    "services_provided": ["makeup", "landscaping"],
+    "username": "provtwouser"
   }
 ]
