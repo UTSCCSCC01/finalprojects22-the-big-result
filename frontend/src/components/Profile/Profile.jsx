@@ -2,12 +2,9 @@ import { useEffect, useState } from 'react'
 import axios from "axios";
 import "./Profile.css";
 import Review from "../Review/Review";
-//import { profile } from 'console';
-//import { setPriority } from 'os';
 
 function Profile(props) {
   const [profileData, setProfileData] = useState([]);
-  let reviewList = [];
   
   useEffect(() => {
     // axios({
@@ -31,29 +28,18 @@ function Profile(props) {
       .then(res => res.json())
       .then(data => {
         setProfileData(data);
-
         
-
-        //console.log(data);
+        //console.log(profileData);
+        console.log(data);
     });
 
     
 
-  })
-
-  // //if (profileData.length > 0) {
-  //   reviewList = profileData.reviews.map(item => {
-  //     return(
-  //       <Review imageLink={item.imageLink} rating={item.rating} reviewDescription={item.reviewDescription} reviewedBy={item.reviewedBy} service={item.service}/>
-  //     )
-  //   })
-  // //}
-
+  }, [])
 
   return(
     <div id="profile">
       <h1>Profile</h1>
-
       <div className="img-container">
         <img src={profileData.profilePictureLink} alt=""></img>
         <div className="name-review-container">
@@ -68,8 +54,11 @@ function Profile(props) {
 
       <div className="reviews-container">
         <h1>Reviews</h1>
-        <Review />
-        {reviewList}
+        {Object.keys(profileData).length > 0 && profileData.reviews.length > 0 && (
+          <Review imageLink={profileData.reviews[0].imageLink} 
+          rating={profileData.reviews[0].rating} reviewDescription={profileData.reviews[0].reviewDescription} 
+          reviewedBy={profileData.reviews[0].reviewedBy} service={profileData.reviews[0].service}/>
+        )}
 
         {/* <div className="review">
           <img src="https://picsum.photos/100"></img>
