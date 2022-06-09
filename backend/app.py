@@ -5,10 +5,11 @@ from dotenv import load_dotenv
 import os
 
 from dbConnection import sampleQuery
+from models import runDBQueries
+from models import db
 
 from sampleFeature.mySampleFeature import sampleBlueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
-from flask_sqlalchemy import SQLAlchemy
 
 
 def getDBURL() -> str:
@@ -17,15 +18,23 @@ def getDBURL() -> str:
     return f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server"
 
 
-app = Flask(__name__)
-app.register_blueprint(sampleBlueprint, url_prefix='/example')
-app.register_blueprint(serviceProviderBlueprint,url_prefix="/serviceProvider")
-CORS(app)
+def createApp():
+    app = Flask(__name__)
+    app.register_blueprint(sampleBlueprint, url_prefix='/example')
+    app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    CORS(app)
 
-db = SQLAlchemy(app)
+    app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.init_app(app)
+    app.app_context().push()
+
+    return app
+
+
+app = createApp()
 
 
 @app.route("/")
@@ -49,5 +58,5 @@ def databaseTestingStuff():
 
 
 if __name__ == "__main__":
-    # print(getDBURL())
+    # runDBQueries()
     app.run(debug=True)
