@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
 import time
 from dotenv import load_dotenv
 import os
@@ -10,9 +12,8 @@ from dbConnection import sampleQuery
 from sampleFeature.mySampleFeature import sampleBlueprint
 from login import login_blueprint
 
-from flask_sqlalchemy import SQLAlchemy
-
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.register_blueprint(sampleBlueprint, url_prefix='/example')
 app.register_blueprint(login_blueprint)
 
@@ -26,7 +27,6 @@ def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
     DB_password = os.environ.get("DATABASE_PASSWORD")
     return f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server"
-
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()

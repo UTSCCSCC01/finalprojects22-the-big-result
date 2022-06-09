@@ -6,36 +6,6 @@
   justify-content: center;
 }
 
-.container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding: 50px;
-  border: 1px solid black;
-  border-radius: 5px;
-}
-
-#login-form {
-  display: flex;
-  flex-direction: column;
-}
-
-#login-form > * {
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-#login-form input {
-  border: 1px solid grey;
-}
-
-#login-form label {
-  padding: 0;
-  text-align: left;
-}
-
-#login-form button {
-  background-color: black;
-  color: white;
+.error {
+  color: red;
 }
