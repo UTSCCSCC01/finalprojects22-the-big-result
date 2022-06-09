@@ -1,0 +1,30 @@
+.provider-card {
+    box-shadow: 0 4px 8px 0 gray;
+    margin-left: 250px;
+    margin-right: 250px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 10px;
+}
+
+.photo-holder {
+    float: left;
+    padding: 10px;
+}
+
+.text-holder {
+    padding: 10px;
+}
+
+.review-holder {
+    border-style: solid;
+    padding: 10px;
+}
+
+.img {
+    display: block;
+}
+
+#name {
+    font-weight: bold;
+}
