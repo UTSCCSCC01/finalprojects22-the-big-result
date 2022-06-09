@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 
 list_providers_blueprint = Blueprint('list_providers_blueprint', __name__)
 
-@list_providers_blueprint.route("/listserviceproviders")
+@list_providers_blueprint.route("/listServiceProviders")
 def get_service_provider_list():
     return { "providers": [
         {

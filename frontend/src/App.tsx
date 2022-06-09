@@ -7,7 +7,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/listProviders" element={<ProviderPage/>}/>
+        <Route path="/listServiceProviders" element={<ProviderPage/>}/>
       </Routes>
     </BrowserRouter>
   );
