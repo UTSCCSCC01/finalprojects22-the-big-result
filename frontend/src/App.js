@@ -1,44 +1,11 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import ServiceCard from './components/Services/ServiceCard.js';
+import ServiceList from './views/ServicesList'; 
 
 function App() {
 
-  // ! TODO Instead of hardcoding here, fetch from backend. 
-  // ! TODO After button is clicked, lead to service providers stuff
-
-  const serviceArr = [ // an array of objects
-    {
-      id: 1, 
-      service: 'Hairstyle'
-    },
-    {
-      id: 2, 
-      service: 'Makeup'
-    },
-    {
-      id: 3, 
-      service: 'Nail Care'
-    },
-    {
-      id: 4, 
-      service: 'Landscaping'
-    }
-  ]
-
-  
-  //! (F) TODO Based on which one is clicked, go to a spcific list of service providers
-  const onClick = (props) => alert("hi, now goes to providers of: " + props);
-
-  //! (F) TODO or maybe do for loop?
-    const serviceCards = serviceArr.map((item) => {
-    return (
-      <div onClick={() => onClick(item.service)}>
-        <ServiceCard service={item.service} key={item.id} id={item.id}/>
-      </div>
-    )
-  })
+  // ! TODO convert back to typescript?
 
   return (
     // BrowserRouter: keep your UI in sync with the URL
@@ -47,7 +14,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       {/* <div className="App"> */}
-        <Route path="/services" element={serviceCards} />      
+        <Route path="/services" element={<ServiceList />} />      
       {/* </div> */}
       </Routes>
     </BrowserRouter>
