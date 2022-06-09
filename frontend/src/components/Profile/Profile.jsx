@@ -19,8 +19,9 @@ function Profile(props) {
         about_me: res.last_name}))
     }).catch((error) => {
       console.log(error.response.status)
-      // TODO: do somthing in frontend if user info doesn't exist
-      // maybe user disabled their account
+      // token expired: profile cannot be accessed so reroute to login page
+      window.location = "/login"
+      // TODO: also take into account case that user doesn't exist
     })
   })
 

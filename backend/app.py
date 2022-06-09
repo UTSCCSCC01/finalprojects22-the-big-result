@@ -18,7 +18,12 @@ app.register_blueprint(login_blueprint)
 
 CORS(app)
 
+# for refreshing token
+from datetime import timedelta
+
 app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=5)
+
 jwt = JWTManager(app)
 
 

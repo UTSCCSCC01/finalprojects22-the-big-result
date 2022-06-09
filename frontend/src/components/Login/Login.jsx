@@ -33,7 +33,7 @@ function Login(props) {
         setFailedLogin(true)
         console.log(err.response.status)
       });
-    //reset form after submission
+    // reset form after submission
     setLoginForm({ email: "", password: "" });
     // setFailedLogin(false)
   };
