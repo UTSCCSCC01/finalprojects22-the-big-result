@@ -8,7 +8,8 @@ from flask_jwt_extended import create_access_token, unset_jwt_cookies, \
 # from flask_bcrypt import check_password_hash
 from sqlalchemy import create_engine
 
-from mockData import customer_data, provider_data
+# from mockData import customer_data, provider_data
+from datetime import datetime, timedelta, timezone # for refreshing token
 
 invalidLogin = 'invalid_login'
 
@@ -33,9 +34,6 @@ def getUserInfoOnID(id):
 
 login_blueprint = Blueprint('login_blueprint', __name__)
 global access_token 
-
-# for refreshing token
-from datetime import datetime, timedelta, timezone
 
 
 # user submits login request, the email/pass and compared with the hardcoded email/pass
@@ -89,7 +87,7 @@ def refresh_expiring_jwts(res):
         verify_jwt_in_request(optional=True)
         expiration_time = get_jwt()["exp"] # expirary time 
         now = datetime.now(timezone.utc)
-        target_time = datetime.timestamp(now + timedelta(seconds=5))
+        target_time = datetime.timestamp(now + timedelta(seconds=120))
         # create new token, and send that as response if expired
         if target_time > expiration_time:
             access_token = create_access_token(identity=get_jwt_identity())
