@@ -18,9 +18,12 @@ DB_password = os.environ.get("DATABASE_PASSWORD")
 localEngine = create_engine(
     f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server")
 
-def loginWithEmailPassword(email, password):
+singleQuote = "'"
+
+def loginWithEmailPassword(email, password, userType):
     try:
-        return localEngine.execute("SELECT * from [User] where email = '"+ email + "' AND password = " + password ).fetchone()
+        userTypeStr = 'Customer' if userType == 'c' else "Professional"
+        return localEngine.execute("SELECT * from [User] where email = "+ singleQuote+ email + singleQuote +" AND password =  "+singleQuote + password + singleQuote+ " AND userType = " +singleQuote+  userTypeStr + singleQuote).fetchone()
     except Exception as e:
         return invalidLogin
 
@@ -66,7 +69,7 @@ def create_token(type):
     # query db based on type and check if email/pass match
     user_type = 'c' if type == 'customer' else 'p'
 
-    loginInfo = loginWithEmailPassword(email,password)
+    loginInfo = loginWithEmailPassword(email,password, user_type)
 
     if loginInfo == invalidLogin:
         err_res = {"msg": "Wrong email or password"}, 401
