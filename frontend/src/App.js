@@ -5,11 +5,8 @@ import ServiceList from './views/ServicesList';
 
 function App() {
 
-  // ! TODO convert back to typescript?
-
   return (
     // BrowserRouter: keep your UI in sync with the URL
-    //! TODO No <div className="App">?
 
     <BrowserRouter>
     <Routes>

@@ -7,6 +7,7 @@ import os
 from dbConnection import sampleQuery
 
 from sampleFeature.mySampleFeature import sampleBlueprint
+from servicelist import services_blueprint
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -18,6 +19,7 @@ def getDBURL() -> str:
 
 app = Flask(__name__)
 app.register_blueprint(sampleBlueprint, url_prefix='/example')
+app.register_blueprint(services_blueprint)
 CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()

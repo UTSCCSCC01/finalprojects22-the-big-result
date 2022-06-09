@@ -1,37 +1,28 @@
 import ServiceCard from '../components/Services/ServiceCard.js';
+import { useState, useEffect } from 'react';
+import axios from "axios";
 
 function ServiceList () {
 
-    // ! TODO After button is clicked, lead to service providers stuff
-    // ! TODO Instead of hardcoding here, fetch from backend. 
-    const serviceArr = [ // an array of objects
-    {
-      id: 1, 
-      service: 'Hairstyle'
-    },
-    {
-      id: 2, 
-      service: 'Makeup'
-    },
-    {
-      id: 3, 
-      service: 'Nail Care'
-    },
-    {
-      id: 4, 
-      service: 'Landscaping'
-    }
-  ]
+  const [arrServices, setArrServices] = useState([]);
 
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/services-list`
+    })
+    .then((res) => {
+      setArrServices(res.data.services);
+    })
+  }, []
   
-  //! (F) TODO Based on which one is clicked, go to a spcific list of service providers
-  const serviceClick = (props) => alert("hi, now goes to providers of: " + props);
-
+  );
+  
   //! (F) TODO or maybe do for loop?
-    const serviceCards = serviceArr.map((item) => {
+    const serviceCards = arrServices.map((item) => {
     return (
-      <div onClick={() => serviceClick(item.service)}>
-        <ServiceCard service={item.service} key={item.id} id={item.id}/>
+      <div onClick={() => window.location = `/services/${item}`} > 
+        <ServiceCard service={item}/>
       </div>
     )
   })
