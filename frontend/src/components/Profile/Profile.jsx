@@ -39,17 +39,21 @@ function Profile(props) {
 
   return(
     <div id="profile">
+      <div className="profile-container">
       <h1>Profile</h1>
-      <div className="img-container">
-        <img src={profileData.profilePictureLink} alt=""></img>
-        <div className="name-review-container">
-          <h2>{profileData.name}</h2>
-          <h3>Rating: {profileData.rating}</h3>
-        </div>
-      </div>
+        <div className="profile-inner-container">
+          <div className="img-container">
+            <img src={profileData.profilePictureLink} alt=""></img>
+            <div className="name-review-container">
+              <h2>{profileData.name}</h2>
+              <h3>Rating: {profileData.rating}</h3>
+            </div>
+          </div>
 
-      <div className="description-container">
-        <p>{profileData.description}</p>
+          <div className="description-container">
+            <p>{profileData.description}</p>
+          </div>
+        </div>
       </div>
 
       <div className="reviews-container">
