@@ -8,6 +8,10 @@ from flask_jwt_extended import create_access_token, unset_jwt_cookies, \
 from flask_bcrypt import check_password_hash
 from sqlalchemy import create_engine
 
+# new dao
+from DAOs import CustomersDAO, ProfessionalsDAO
+# new dao
+
 # from mockData import customer_data, provider_data
 from datetime import datetime, timedelta, timezone # for refreshing token
 
@@ -19,6 +23,11 @@ localEngine = create_engine(
     f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server")
 
 singleQuote = "'"
+
+# new dao
+custDAO = CustomersDAO()
+profDAO = ProfessionalsDAO()
+# new dao
 
 # def loginWithEmailPassword(email, password, userType):
 #     try:
@@ -67,25 +76,32 @@ global access_token
 
 @login_blueprint.route('/token/<type>', methods=["POST"])
 def create_token(type):
-    print('IN LOGIN', verify_jwt_in_request(optional=True))
-
     global access_token
     email = request.json.get("email", None)
-    password = check_password_hash(request.json.get("password", None))
-
-    # query db based on type and check if email/pass match
+    err_res = {"msg": "Wrong email or password"}, 401
+    
+    # customer
     user_type = 'c' if type == 'customer' else 'p'
-
-    loginInfo = loginWithEmailPassword(email,password, user_type)
-
-    if loginInfo == invalidLogin:
-        err_res = {"msg": "Wrong email or password"}, 401
+    
+    if user_type == 'c':
+      customer = custDAO.getCustomerOnUsername(email)
+      if not customer: 
         return err_res
+      check_pass = check_password_hash(customer.password, request.json.get("password", None))
+      if check_pass:
+        access_token = create_access_token(identity=str(customer.id) + user_type) # use email or username as id?
+        return { "access_token" : access_token }
+      return err_res
 
-    access_token = create_access_token(identity=str(loginInfo['id']) + user_type) # use email or username as id?
-    res = { "access_token" : access_token }
-    return res
-
+    # provider user_type == 'p'
+    provider = profDAO.getProfessionalOnUsername(email)
+    if not provider: 
+      return err_res
+    check_pass = check_password_hash(provider.password, request.json.get("password", None))
+    if check_pass:
+      access_token = create_access_token(identity=str(provider.id) + user_type) # use email or username as id?
+      return { "access_token" : access_token }
+    return err_res
 
 
 
@@ -118,23 +134,32 @@ def logout():
 def verify_loggedin():
     if verify_jwt_in_request(optional=True):
       return {"success": "yes"}
-    return {"success": "no"}
+    return {"success": "no"}, 500
 
 # prevent un-authenticated users from making reqs to endpoints - 
-@login_blueprint.route('/profile', methods=["GET"])
+@login_blueprint.route('/successlogin', methods=["GET"]) # NEW: changed endpoint
 @jwt_required()
-def my_profile():
+def get_user_info_on_success_login():
     global access_token
+
+    err_res = {"first_name": "no match...", "last_name": "no match..."}, 404
 
     user_type = decode_token(access_token)["sub"][-1]
     user_id = decode_token(access_token)["sub"][:-1] # dont include user_type char
+    print(user_type, user_id)
 
-    userInfo = getUserInfoOnID(user_id)
+    type = 'Customer' if user_type=='c' else 'Provider'
 
-    if userInfo == invalidLogin:
-        res_body = {"first_name": "no match...", "last_name": "no match..."}
-        return res_body
-
-    return { "first_name": userInfo['firstName'], "last_name": userInfo['lastName'] }
-        
+    # customer get info
+    if user_type == 'c':
+      cust_info = custDAO.getCustomerOnID(user_id)
+      if cust_info == None:
+        return err_res
+      return { "first_name": cust_info.firstName, "last_name": cust_info.lastName, "user_type": type}
+    
+    # provider get info
+    prov_info = profDAO.getProfessionalOnId(user_id)
+    if prov_info == None:
+      return err_res
+    return { "first_name": prov_info.firstName, "last_name": prov_info.lastName, "user_type": type}
 

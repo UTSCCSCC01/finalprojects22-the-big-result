@@ -1,0 +1,40 @@
+.review {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: 2rem;
+
+  border: 1px solid grey;
+  border-radius: 5px;
+  
+  padding: 10px 50px;
+}
+
+.review-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+
+}
+
+.review-subhead {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#rating {
+    margin-left: auto;
+}

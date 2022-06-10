@@ -8,14 +8,13 @@ function Login() {
   const [type, setType] = useState("customer");
   const [failedLogin, setFailedLogin] = useState(false);
 
-  //redirect to profile if already logged in
   useEffect(() => {
     axios({
       method: "GET",
       url: `http://localhost:5000/verify-loggedin`,
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     })
-      .then(() => (window.location = "/profile"))
+      .then(() => (window.location = "/successlogin"))
       .catch((err) => console.log(err));
   }, []);
 
@@ -32,7 +31,7 @@ function Login() {
       .then((res) => {
         localStorage.setItem("token", res.data.access_token);
         // only go to profile tab when login is successful
-        window.location = "/profile";
+        window.location = "/successlogin";
         setFailedLogin(false);
       })
       .catch((err) => {
@@ -42,7 +41,6 @@ function Login() {
       });
     // reset form after submission
     setLoginForm({ email: "", password: "" });
-    // setFailedLogin(false)
   };
 
   const handleChange = (e) => {

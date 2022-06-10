@@ -7,13 +7,15 @@ import time
 from dotenv import load_dotenv
 import os
 
+from DAOs import runQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
 
 from sampleFeature.mySampleFeature import sampleBlueprint
+from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
 
-from login import login_blueprint, loginWithEmailPassword
+from login import login_blueprint
 from datetime import timedelta
 from listServiceProviders import list_providers_blueprint
 
@@ -24,29 +26,30 @@ def getDBURL() -> str:
     return f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server"
 
 
-def createApp():
-    app = Flask(__name__)
-    bcrypt = Bcrypt(app)
-    app.register_blueprint(sampleBlueprint, url_prefix='/example')
-    app.register_blueprint(login_blueprint)
-    app.register_blueprint(list_providers_blueprint)
+# def createApp():
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
+app.register_blueprint(sampleBlueprint, url_prefix='/example')
+app.register_blueprint(login_blueprint)
+app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
+app.register_blueprint(list_providers_blueprint)
 
-    JWTManager(app)
+JWTManager(app)
 
-    CORS(app)
+CORS(app)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=60)
+app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=60)
 
-    db.init_app(app)
-    app.app_context().push()
+db.init_app(app)
+app.app_context().push()
 
-    return app
+# return app
 
 
-app = createApp()
+# app = createApp()
 
 
 @app.route("/")
@@ -71,4 +74,5 @@ def databaseTestingStuff():
 
 if __name__ == "__main__":
     # runDBQueries()
+    # runQueries()
     app.run(debug=True)

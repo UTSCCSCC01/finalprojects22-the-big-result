@@ -19,7 +19,7 @@ function ProviderPage(props) {
             console.log("ERR")
             console.log(err.response)
         })
-    })
+    }, [])
 
     return (
     <div>
