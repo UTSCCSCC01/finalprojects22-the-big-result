@@ -1,4 +1,4 @@
-import ServiceCard from '../components/Services/ServiceCard.js';
+import ServiceCard from '../components/Services/ServiceCard.jsx';
 import './ServicesList.css'
 import { useState, useEffect } from 'react';
 import axios from "axios";
