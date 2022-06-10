@@ -1,9 +1,7 @@
 from flask import Blueprint, redirect, request, jsonify
 from flask_bcrypt import generate_password_hash
+from DAOs import CustomersDAO, ProfessionalsDAO
 signup_blueprint = Blueprint('signup_blueprint', __name__)
-
-customer_data = []
-provider_data = []
 
 @signup_blueprint.route('/signup/<type>', methods=["POST"])
 def signup(type):
@@ -15,19 +13,25 @@ def signup(type):
     lastName = request.json.get("lastName", None)
     location = request.json.get("location", None)
     servicesProvided = request.json.get("servicesProvided", None)
-    if(type == "customer"):
-        customer = {"email": email, "password": password, "first_name": firstName, "last_name": lastName}
-        customer_data.append(customer)
-        if customer in customer_data: 
-            return {"type": type, "firstName": firstName, "lastName": lastName, "email": email}
-        else:
+    if(type == "customer"):        
+        custDao = CustomersDAO()
+        # Check if email exists
+        if(custDao.emailExists(email)):
+            return "Email already exists", 409
+        try:
+            custDao.addCustomer(firstName, lastName, email, email, password)
+            return {"type": type, "firstName": firstName, "lastName": lastName, "email": email, 
+            "username": email}
+        except:
             return "Unable to Add Customer", 500
     else:
-        provider = {"email": email, "password": password, "first_name": firstName, "last_name": lastName, 
-        "location": location, "services_provided": servicesProvided}
-        provider_data.append(provider)
-        if provider in provider_data: 
+        providerDao = ProfessionalsDAO()
+        
+        if(providerDao.emailExists(email)):
+            return "Email already exists", 409
+        try:
+            providerDao.addProfessional(firstName, lastName, email, email, password, servicesProvided)
             return {"type": type, "firstName": firstName, "lastName": lastName, "email": email, 
-            "location": location, "servicesProvided": servicesProvided}
-        else:
+            "username": email, "servicesProvided": servicesProvided}
+        except:
             return "Unable to Add Provider", 500

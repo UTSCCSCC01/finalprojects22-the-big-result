@@ -3,6 +3,7 @@ import enum
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime,date
 from sqlalchemy import  Enum
+from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
 

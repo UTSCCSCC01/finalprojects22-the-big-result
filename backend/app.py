@@ -7,12 +7,14 @@ import time
 from dotenv import load_dotenv
 import os
 
+from DAOs import runQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
 
 from sampleFeature.mySampleFeature import sampleBlueprint
 from signup import signup_blueprint
+from listServiceProviders import list_providers_blueprint
 
 def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
@@ -24,6 +26,7 @@ def createApp():
     app = Flask(__name__)
     app.register_blueprint(sampleBlueprint, url_prefix='/example')
     app.register_blueprint(signup_blueprint)
+    app.register_blueprint(list_providers_blueprint)
 
     CORS(app)
 
@@ -65,4 +68,5 @@ def databaseTestingStuff():
 
 if __name__ == "__main__":
     # runDBQueries()
+    # runQueries()
     app.run(debug=True)
