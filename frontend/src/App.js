@@ -7,7 +7,6 @@ function App() {
 
   return (
     // BrowserRouter: keep your UI in sync with the URL
-
     <BrowserRouter>
     <Routes>
       {/* <div className="App"> */}

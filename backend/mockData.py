@@ -1,3 +1,3 @@
 list_of_services = {
-    "services": ["Makeup", "Cleaning", "Hairstyle", "Landscaping", "Nail Care"]
+    "services": ["Makeup", "Hairstyle", "Landscaping", "Nail Care"]
 }
