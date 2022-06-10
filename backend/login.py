@@ -43,7 +43,12 @@ global access_token
 # @login_blueprint.route('/token/<type>', methods=["POST"])
 # def create_token(type):
 #     global access_token
-#     email = request.json.get("email", None)
+#     email = request.json.get("em
+# user submits login request, the email/pass and compared with the hardcoded email/pass
+# @login_blueprint.route('/token/<type>', methods=["POST"])
+# def create_token(type):
+#     global access_token
+#     email = request.json.get("ail", None)
 #     password = request.json.get("password", None)
 #
 #     # query db based on type and check if email/pass match
@@ -101,7 +106,6 @@ def refresh_expiring_jwts(res):
     # case where there is not a valid jwt return original respone
     except (RuntimeError, KeyError) as ex:
         return res
-
 
 
 @login_blueprint.route("/logout", methods=["POST"])
