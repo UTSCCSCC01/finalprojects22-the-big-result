@@ -8,13 +8,16 @@ function Login() {
   const [type, setType] = useState("customer");
   const [failedLogin, setFailedLogin] = useState(false);
 
+  //redirect to profile if already logged in
   useEffect(() => {
     axios({
       method: "GET",
       url: `http://localhost:5000/verify-loggedin`,
-      headers: { Authorization: 'Bearer ' + localStorage.getItem("token") }
-    }).then(() => window.location = "/profile").catch(err => console.log(err))
-  }, [])
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    })
+      .then(() => (window.location = "/profile"))
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,17 +54,29 @@ function Login() {
     }));
   };
 
+  const handleTabs = (e) => {
+    setType(e.target.id);
+    e.target.classList.add("active");
+    //remove active class from unclicked element
+    if (e.target.id === "customer") {
+      document.querySelector("#provider").classList.remove("active");
+    } else {
+      document.querySelector("#customer").classList.remove("active");
+    }
+  };
+
   return (
     <div id="login">
-      <h1>Login</h1>
+      <h1>Login as a</h1>
+      <div className="tabs">
+        <button className="tab active" id="customer" onClick={handleTabs}>
+          Customer
+        </button>
+        <button className="tab" id="provider" onClick={handleTabs}>
+          Service Provider
+        </button>
+      </div>
       <form id="login-form" className="form" onSubmit={handleSubmit}>
-        <label for="type">Log in is a</label>
-        <select name="type" required onChange={(e) => setType(e.target.value)}>
-          <option selected="selected" value="customer">
-            Customer
-          </option>
-          <option value="provider">Service Provider</option>
-        </select>
         <input
           onChange={handleChange}
           placeholder="Your email..."
