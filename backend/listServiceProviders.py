@@ -14,14 +14,14 @@ def get_service_provider_list():
         },
         {
             "name": "Steven Adams",
-            "service": "Haircutting",
+            "service": "Hairstyle",
             "description": "Over 5+ years of serving satisfied customers",
             "price": 60,
             "profilePicURL": "https://picsum.photos/101"
         },
         {
             "name": "Alice Schulz",
-            "service": "Haircutting",
+            "service": "Hairstyle",
             "description": "Best in the business for all your haircutting needs",
             "price": 70,
             "profilePicURL": "https://picsum.photos/102"
