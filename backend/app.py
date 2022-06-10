@@ -1,5 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
 import time
 from dotenv import load_dotenv
 import os
@@ -13,7 +16,10 @@ from sampleFeature.mySampleFeature import sampleBlueprint
 from servicelist import services_blueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
 
+from login import login_blueprint
+from datetime import timedelta
 from listServiceProviders import list_providers_blueprint
+
 
 def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
@@ -27,11 +33,15 @@ def createApp():
     app.register_blueprint(services_blueprint)
     app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
     app.register_blueprint(list_providers_blueprint)
+    app.register_blueprint(login_blueprint)
 
     CORS(app)
+    JWTManager(app)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=60)
 
     db.init_app(app)
     app.app_context().push()
