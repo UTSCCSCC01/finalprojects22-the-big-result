@@ -1,33 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 import "../Form.css";
 import "./SignUpProvider.css";
 
 function SignUpProvider() {
-  //TODO: Retrieve from backend
-  const services = [
-    {
-      id: 1,
-      label: "Hairstyle",
-      value: "hairstyle",
-    },
-    {
-      id: 2,
-      label: "Makeup",
-      value: "makeup",
-    },
-    {
-      id: 3,
-      label: "Nails",
-      value: "nails",
-    },
-    {
-      id: 4,
-      label: "Landscaping",
-      value: "landscaping",
-    },
-  ];
+  const [servicesList, setServicesList] = useState([]);
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/services-list`,
+    }).then((res) => {
+      let services = [];
+      res.data.services.forEach((element) =>
+        services.push({ label: element, value: element.toLowerCase() })
+      );
+      setServicesList(services);
+    });
+  }, []);
 
   const [signupForm, setSignupForm] = useState({
     firstName: "",
@@ -127,17 +117,22 @@ function SignUpProvider() {
         value={signupForm.location}
         required
       />
-      <Select
-        placeholder="Services Offered"
-        value={services.filter((option) =>
-          signupForm.servicesProvided.includes(option.value)
-        )}
-        onChange={handleSelect}
-        isMulti
-        isClearable
-        options={services}
-      />
+      {servicesList && (
+        <Select
+          placeholder="Services Offered"
+          value={servicesList.filter((option) =>
+            signupForm.servicesProvided.includes(option.value)
+          )}
+          onChange={handleSelect}
+          isMulti
+          isClearable
+          options={servicesList}
+        />
+      )}
       <button type="submit">Sign Up!</button>
+      <small>
+        Already have an account? <a href="/login">Log In</a>
+      </small>
     </form>
   );
 }

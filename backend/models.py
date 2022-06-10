@@ -170,3 +170,4 @@ def runDBQueries():
 
 def createTables():
     db.create_all()
+
