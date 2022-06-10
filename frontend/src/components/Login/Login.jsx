@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Login.css";
 import "../Form.css";
@@ -7,6 +7,14 @@ function Login() {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [type, setType] = useState("customer");
   const [failedLogin, setFailedLogin] = useState(false);
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/verify-loggedin`,
+      headers: { Authorization: 'Bearer ' + localStorage.getItem("token") }
+    }).then(() => window.location = "/profile").catch(err => console.log(err))
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();

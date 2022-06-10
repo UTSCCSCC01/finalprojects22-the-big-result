@@ -23,10 +23,9 @@ function Profile(props) {
       window.location = "/login"
       // TODO: also take into account case that user doesn't exist
     })
-  })
+  }, [])
 
   return (
-
     <div>      
       {localStorage.getItem("token") && profileData &&
         <div>

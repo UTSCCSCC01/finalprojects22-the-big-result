@@ -62,6 +62,8 @@ global access_token
 
 @login_blueprint.route('/token/<type>', methods=["POST"])
 def create_token(type):
+    print('IN LOGIN', verify_jwt_in_request(optional=True))
+
     global access_token
     email = request.json.get("email", None)
     password = request.json.get("password", None)
@@ -90,7 +92,7 @@ def refresh_expiring_jwts(res):
         verify_jwt_in_request(optional=True)
         expiration_time = get_jwt()["exp"] # expirary time 
         now = datetime.now(timezone.utc)
-        target_time = datetime.timestamp(now + timedelta(seconds=120))
+        target_time = datetime.timestamp(now + timedelta(seconds=60))
         # create new token, and send that as response if expired
         if target_time > expiration_time:
             access_token = create_access_token(identity=get_jwt_identity())
@@ -108,6 +110,11 @@ def logout():
     unset_jwt_cookies(res)
     return res
 
+@login_blueprint.route("/verify-loggedin", methods=["GET"])
+def verify_loggedin():
+    if verify_jwt_in_request(optional=True):
+      return {"success": "yes"}
+    return {"success": "no"}
 
 # prevent un-authenticated users from making reqs to endpoints - 
 @login_blueprint.route('/profile', methods=["GET"])
