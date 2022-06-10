@@ -4,14 +4,6 @@ import "./Review.css";
 function Review(props) {
   return(
     <div className="review">
-      {/* <img src="https://picsum.photos/100"></img>
-      <div className="review-text">
-        <h2>ex service</h2>
-        <h2>Rating: 1.2</h2>
-        <h4>Review by: a person</h4>
-        <p>Description of the review.</p>
-      </div> */}
-
       <div className="review-img-container">
         <img src={props.imageLink}></img>
         <h4>Review by: {props.reviewedBy}</h4>
