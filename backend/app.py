@@ -4,6 +4,7 @@ import time
 from dotenv import load_dotenv
 import os
 
+from DAOs import runQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
@@ -59,4 +60,5 @@ def databaseTestingStuff():
 
 if __name__ == "__main__":
     # runDBQueries()
+    # runQueries()
     app.run(debug=True)
