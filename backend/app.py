@@ -11,6 +11,7 @@ from models import db
 from sampleFeature.mySampleFeature import sampleBlueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
 
+from listServiceProviders import list_providers_blueprint
 
 def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
@@ -22,6 +23,7 @@ def createApp():
     app = Flask(__name__)
     app.register_blueprint(sampleBlueprint, url_prefix='/example')
     app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
+    app.register_blueprint(list_providers_blueprint)
 
     CORS(app)
 

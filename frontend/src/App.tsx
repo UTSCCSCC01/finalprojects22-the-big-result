@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Profile from "./components/Profile/Profile";
+import ProviderPage from './components/Provider/ProviderPage'
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/profile" element={<Profile />} /> 
+        <Route path="/listServiceProviders" element={<ProviderPage/>}/>
       </Routes>
     </BrowserRouter>
   );
