@@ -16,7 +16,11 @@ from sampleFeature.mySampleFeature import sampleBlueprint
 from signup import signup_blueprint
 from listServices import services_blueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
+
+from login import login_blueprint
+from datetime import timedelta
 from listServiceProviders import list_providers_blueprint
+
 
 def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
@@ -31,8 +35,10 @@ def createApp():
     app.register_blueprint(services_blueprint)
     app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
     app.register_blueprint(list_providers_blueprint)
+    app.register_blueprint(login_blueprint)
 
     CORS(app)
+    JWTManager(app)
 
     Bcrypt(app)
     app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
@@ -40,6 +46,8 @@ def createApp():
 
     app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=60)
 
     db.init_app(app)
     app.app_context().push()

@@ -7,11 +7,19 @@ function Profile(props) {
   const [profileData, setProfileData] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/serviceProvider")
-      .then((res) => res.json())
-      .then((data) => {
-        setProfileData(data);
-        console.log(data);
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/serviceProvider`,
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    })
+      .then((res) => {
+        const res = response.data;
+        window.location = "/profile";
+        setProfileData(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
 

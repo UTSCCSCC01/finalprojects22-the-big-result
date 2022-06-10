@@ -22,8 +22,8 @@ function SignUpCustomer() {
         password: signupForm.password,
       },
     })
-      .then((res) => {
-        if (res.status === "200") window.location = "/profile";
+      .then(() => {
+        window.location = "/login";
       })
       .catch((err) => {
         console.log(err);
