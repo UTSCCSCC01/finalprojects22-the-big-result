@@ -15,6 +15,7 @@ from sampleFeature.mySampleFeature import sampleBlueprint
 
 from login import login_blueprint, loginWithEmailPassword
 from datetime import timedelta
+from listServiceProviders import list_providers_blueprint
 
 
 def getDBURL() -> str:
@@ -28,6 +29,7 @@ def createApp():
     bcrypt = Bcrypt(app)
     app.register_blueprint(sampleBlueprint, url_prefix='/example')
     app.register_blueprint(login_blueprint)
+    app.register_blueprint(list_providers_blueprint)
 
     JWTManager(app)
 

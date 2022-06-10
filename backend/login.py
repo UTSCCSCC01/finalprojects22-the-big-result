@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, unset_jwt_cookies, \
                                jwt_required, decode_token, \
                                get_jwt_identity, get_jwt, verify_jwt_in_request, set_access_cookies
-# from flask_bcrypt import check_password_hash
+from flask_bcrypt import check_password_hash
 from sqlalchemy import create_engine
 
 # from mockData import customer_data, provider_data
@@ -20,18 +20,18 @@ localEngine = create_engine(
 
 singleQuote = "'"
 
-def loginWithEmailPassword(email, password, userType):
-    try:
-        userTypeStr = 'Customer' if userType == 'c' else "Professional"
-        return localEngine.execute("SELECT * from [User] where email = "+ singleQuote+ email + singleQuote +" AND password =  "+singleQuote + password + singleQuote+ " AND userType = " +singleQuote+  userTypeStr + singleQuote).fetchone()
-    except Exception as e:
-        return invalidLogin
+# def loginWithEmailPassword(email, password, userType):
+#     try:
+#         userTypeStr = 'Customer' if userType == 'c' else "Professional"
+#         return localEngine.execute("SELECT * from [User] where email = "+ singleQuote+ email + singleQuote +" AND password =  "+singleQuote + password + singleQuote+ " AND userType = " +singleQuote+  userTypeStr + singleQuote).fetchone()
+#     except Exception as e:
+#         return invalidLogin
 
-def getUserInfoOnID(id):
-    try:
-        return localEngine.execute("SELECT * from [User] where id = '"+ id + "'" ).fetchone()
-    except Exception as e:
-        return invalidLogin
+# def getUserInfoOnID(id):
+#     try:
+#         return localEngine.execute("SELECT * from [User] where id = '"+ id + "'" ).fetchone()
+#     except Exception as e:
+#         return invalidLogin
 
 
 
@@ -71,7 +71,7 @@ def create_token(type):
 
     global access_token
     email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    password = check_password_hash(request.json.get("password", None))
 
     # query db based on type and check if email/pass match
     user_type = 'c' if type == 'customer' else 'p'
