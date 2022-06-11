@@ -8,6 +8,7 @@ def getServiceProviderProfile():
         "name": "Bob Ross",
         "rating": 4.5,
         "description": "High quality hairdresser available for work!",
+        "services": "Hairstyle",
         "profilePictureLink": "https://picsum.photos/200",
         "calendar": "Some calendar stuff here that we would probably need later on",
         "reviews": getReviews(3)
@@ -18,7 +19,7 @@ def getReviews(numRevs = 1)-> list:
     reviewList = []
     for i in range(numRevs):
         reviewList.append({
-            "service": "hairdressing",
+            "service": "hairstyle",
             "reviewedBy": "Bob Marley",
             "rating": 3.7,
             "imageLink":"https://picsum.photos/100",

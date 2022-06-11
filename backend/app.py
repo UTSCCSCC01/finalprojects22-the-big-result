@@ -13,7 +13,8 @@ from models import runDBQueries
 from models import db
 
 from sampleFeature.mySampleFeature import sampleBlueprint
-from servicelist import services_blueprint
+from signup import signup_blueprint
+from listServices import services_blueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
 
 from login import login_blueprint
@@ -30,12 +31,17 @@ def getDBURL() -> str:
 def createApp():
     app = Flask(__name__)
     app.register_blueprint(sampleBlueprint, url_prefix='/example')
+    app.register_blueprint(signup_blueprint)
     app.register_blueprint(services_blueprint)
     app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
     app.register_blueprint(list_providers_blueprint)
     app.register_blueprint(login_blueprint)
 
     CORS(app)
+    JWTManager(app)
+
+    Bcrypt(app)
+    app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
     JWTManager(app)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
