@@ -5,7 +5,7 @@ serviceProviderBlueprint = Blueprint("serviceProvider", __name__)
 @serviceProviderBlueprint.route("/")
 def getServiceProviderProfile():
     return jsonify({
-        "name": "Bob Ross",
+        "name": "Steven Adams",
         "rating": 4.5,
         "description": "High quality hairdresser available for work!",
         "services": "Hairstyle",
