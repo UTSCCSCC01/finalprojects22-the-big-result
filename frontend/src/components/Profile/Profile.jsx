@@ -9,12 +9,11 @@ function Profile(props) {
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://localhost:5000/serviceProvider`,
+      url: `http://localhost:5000/serviceProvider/`,
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     })
-      .then((res) => {
+      .then((response) => {
         const res = response.data;
-        window.location = "/profile";
         setProfileData(res);
         console.log(res);
       })

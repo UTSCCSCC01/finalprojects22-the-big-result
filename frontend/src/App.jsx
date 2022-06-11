@@ -5,6 +5,7 @@ import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
 import ProviderPage from "./components/Provider/ProviderPage";
 import SignUp from "./views/SignUp";
 import ServiceList from "./views/ServicesList";
+import Profile from "./components/Profile/Profile";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         <Route path="/successlogin" element={<SuccessLogin />} />
         <Route path="/services" element={<ServiceList />} />
         <Route path="/listServiceProviders" element={<ProviderPage />} />
-        <Route path="/profile" element={<ProviderPage />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
     </BrowserRouter>
