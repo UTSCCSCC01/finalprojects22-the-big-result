@@ -9,6 +9,7 @@ function SignUpCustomer() {
     email: "",
     password: "",
   });
+  const [failedSignup, setFailedSignup] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,7 +27,9 @@ function SignUpCustomer() {
         window.location = "/login";
       })
       .catch((err) => {
+        setFailedSignup(true);
         console.log(err);
+
       });
     //reset form after submission
     setSignupForm({
@@ -81,6 +84,9 @@ function SignUpCustomer() {
         value={signupForm.password}
         required
       />
+      {failedSignup && (
+        <p className="error">User already exists.</p>
+      )}
       <button type="submit">Sign Up!</button>
     </form>
   );

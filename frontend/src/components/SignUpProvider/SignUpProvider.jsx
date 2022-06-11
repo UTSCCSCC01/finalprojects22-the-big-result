@@ -6,6 +6,8 @@ import "./SignUpProvider.css";
 
 function SignUpProvider() {
   const [servicesList, setServicesList] = useState([]);
+  const [failedSignup, setFailedSignup] = useState(false);
+
   useEffect(() => {
     axios({
       method: "GET",
@@ -47,6 +49,7 @@ function SignUpProvider() {
       })
       .catch((err) => {
         console.log(err);
+        setFailedSignup(true);
       });
     //reset form after submission
     setSignupForm({
@@ -128,6 +131,9 @@ function SignUpProvider() {
           isClearable
           options={servicesList}
         />
+      )}
+      {failedSignup && (
+        <p className="error">User already exists.</p>
       )}
       <button type="submit">Sign Up!</button>
       <small>

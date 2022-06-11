@@ -4,6 +4,7 @@ import Login from "./components/Login/Login";
 import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
 import ProviderPage from "./components/Provider/ProviderPage";
 import SignUp from "./views/SignUp";
+import ServiceList from "./views/ServicesList";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/successlogin" element={<SuccessLogin />} />
+        <Route path="/services" element={<ServiceList />} />
         <Route path="/listServiceProviders" element={<ProviderPage />} />
         <Route path="/profile" element={<ProviderPage />} />
         <Route path="/signup" element={<SignUp />} />
