@@ -57,6 +57,11 @@ class Status(enum.Enum):
     RESCHEDULED = 5
 
 
+professionalServices = db.Table('ProfessionalServices',
+    db.Column('professionalID', db.Integer, db.ForeignKey('Professional.id'), primary_key=True),
+    db.Column('serviceName', db.String(200), db.ForeignKey('Services.serviceName'), primary_key=True)
+)
+
 class User(db.Model):
     __tablename__ = "User"
     id = db.Column(db.Integer, primary_key=True) #This autoincrements
@@ -73,12 +78,15 @@ class User(db.Model):
         "polymorphic_on": userType,
     }
 
+
 class Professional(User):
     __tablename__ = "Professional"
     id = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
     description = db.Column(db.Text, nullable=True)
     ratings = db.Column(db.Float,nullable=False, default=0)
     averageCost = db.Column(db.Float)
+    location = db.Column(db.String(500), nullable=True)
+    services = db.relationship('Services', secondary=professionalServices, lazy=True, backref='Professional')
 
 
     __mapper_args__ = {
@@ -137,21 +145,28 @@ class Bookings(db.Model):
     customerID = db.Column(db.Integer, db.ForeignKey("Customer.id"))
     professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"))
 
-    serviceTime = db.Column(db.Time, default=date(2001, 5, 26))
+    serviceTime = db.Column(db.DateTime, default=datetime(2001, 5, 26))
     location = db.Column(db.String(1000), nullable=True)
     status = db.Column(Enum(Status), nullable=False,default=Status.BOOKED)
     price = db.Column(db.Float,nullable=False)
-    bookingTime = db.Column(db.Time,default=datetime.utcnow)
+    bookingTime = db.Column(db.DateTime,default=datetime.utcnow)
+
+    review = db.relationship('Reviews', backref='Bookings', lazy=True, uselist=False)
 
 class Services(db.Model):
     __tablename__ = "Services"
     serviceName = db.Column(db.String(200),primary_key=True,unique=True)
     description = db.Column(db.String(500), nullable=False)
 
+    professionals = db.relationship('Professional', secondary=professionalServices, lazy=True, backref='Services')
+
 class ProfessionalServices(db.Model):
     __tablename__ = "ProfessionalServices"
+    __table_args__ = {'extend_existing': True}
     professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"),primary_key=True)
     serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"),primary_key=True)
+
+
 
 
 
@@ -161,9 +176,22 @@ def runDBQueries():
     # db.session.commit()
     # print(TestUser.query.all())
     # createTables()
-    sampleUSer = Customer(firstName="Mike", lastName="Coxlong", email="mikecox@gmail.com",username="large_cox")
-    db.session.add(sampleUSer)
-    db.session.commit()
+    # sampleUSer = Customer(firstName="Mike", lastName="Coxlong", email="mikecox@gmail.com",username="large_cox")
+    # db.session.add(sampleUSer)
+    # db.session.commit()
+    # sampleBooking = Bookings(customerID = 1, professionalID = 13, location="UTSC", price= 500)
+    # db.session.add(sampleBooking)
+    # sampleReview = Reviews(bookingID = 1, customerID =1 ,professionalID=13,serviceName= "hairstyling", description="awesome haircut by Brian!", ratings=4 )
+    # sampleReview = Reviews(bookingID = 1, customerID =1 ,professionalID=13,serviceName= "hairstyling", description="awesome haircut by Brian!", ratings=2)
+    # db.session.add(sampleReview)
+    # db.session.commit()
+
+    result = Professional.query.filter_by(id=13).first()
+    print(result.services)
+
+    #
+    # result = Bookings.query.filter_by(id=1).first()
+    # print(result.review.description)
     # print("Running database queries")
     # print(date(2019, 4, 13))
     # print(Manager.query.all())

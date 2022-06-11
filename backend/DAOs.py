@@ -1,7 +1,8 @@
-from models import db, Customer, Professional, Admin, Services, ProfessionalServices
+from models import db, Customer, Professional, Admin, Services
 
 
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import Query
 
 class CustomersDAO:
 
@@ -98,7 +99,7 @@ class ServicesDAO:
         return Services.query.all()
 
     def getServiceByName(self,servicename:str):
-        return Services.query.filter(serviceName=servicename).first()
+        return Services.query.filter_by(serviceName=servicename).first()
 
     def addService(self,servicename,description):
         newService = Services(serviceName=servicename,description=description)
@@ -118,7 +119,7 @@ def runQueries():
     serviceDao = ServicesDAO()
 
     profServDao = ProfessionalServicesDAO()
-    print(profServDao.getServiceFromUserID(6))
+    print(profDao.getProfessionalOnId(13).location)
 
     # serviceDao.addService("nails","Making your nails look really pretty!")
 
