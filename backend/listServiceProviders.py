@@ -8,7 +8,7 @@ def get_service_provider_list():
         {
             "name": "Mike Ross",
             "service": "Landscaping",
-            "description": "Hard working landscaper who will make your yard look pretty",
+            "description": "Landscaper who will make your yard look pretty",
             "price": 50,
             "profilePicURL": "https://picsum.photos/100"
         },
