@@ -5,6 +5,6 @@ services_blueprint = Blueprint('services_blueprint', __name__)
 @services_blueprint.route('/services-list', methods=["GET"])
 def services():
     list_services = {
-        "services": ["Makeup", "Hairstyle", "Landscaping", "Nail Care"]
+        "services": ["Makeup", "Hairstyling", "Landscaping", "Nails"]
     }
     return list_services

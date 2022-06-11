@@ -1,4 +1,4 @@
- #profile {
+#profile {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -8,11 +8,14 @@
 
 .profile-container {
   width: 60%;
-
 }
 
-h1 {
+#profile h1 {
   align-self: flex-start;
+}
+
+.profile-container h1 {
+  text-align: left;
 }
 
 .profile-inner-container {
