@@ -142,6 +142,7 @@ class Bookings(db.Model):
     status = db.Column(Enum(Status), nullable=False,default=Status.BOOKED)
     price = db.Column(db.Float,nullable=False)
     bookingTime = db.Column(db.Time,default=datetime.utcnow)
+    specialInstructions = db.Column(db.String(500),nullable=True)
 
 class Services(db.Model):
     __tablename__ = "Services"
