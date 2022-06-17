@@ -20,21 +20,6 @@
   }
 }
 
-.provider-card {
-  align-self: center;
-  background-color: white;
-  box-shadow: 0 2px 2px 0 #ebe9f5;
-  border: 1px solid #ebe9f5;
-  margin: 40px 10px;
-  border-radius: 5px;
-  text-align: left;
-  transition: 0.2s ease-in-out box-shadow, 1s ease-in-out transform;
-}
-
-.provider-card:hover {
-  box-shadow: 0 10px 10px 0 #b7b6b6;
-}
-
 .metadata {
   padding: 10px;
   padding-bottom: 8px;

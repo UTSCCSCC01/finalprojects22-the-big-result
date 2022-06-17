@@ -4,21 +4,3 @@
   align-items: center;
   justify-content: center;
 }
-
-.active {
-  background: black;
-}
-
-.tabs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 15px auto;
-  width: fit-content;
-  padding: 10px;
-}
-
-.tabs .tab {
-  border-radius: 0;
-  border: none;
-}

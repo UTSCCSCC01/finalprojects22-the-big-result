@@ -11,16 +11,22 @@ body {
   color: #1c2b49;
 }
 
+/*Buttons*/
 button {
   background-color: #5646ab;
   border: none;
   color: white;
   padding: 10px;
   border-radius: 5px;
+  transition: color 0.5s, background-color 0.5s;
+}
+
+button,
+input::placeholder,
+a {
   font-family: "Roboto", sans-serif;
   letter-spacing: 2px;
   font-size: 12px;
-  transition: color 0.5s, background-color 0.5s;
 }
 
 .transparent-btn {
@@ -34,10 +40,36 @@ button:hover {
   background-color: black;
 }
 
-.highlight {
-  color: #5646ab;
-}
-
 .btn-group button {
   margin-right: 10px;
+}
+
+/*Tabs*/
+
+.active {
+  background: black;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px auto;
+  width: fit-content;
+  padding: 10px;
+}
+
+.tabs .tab {
+  border-radius: 0;
+  border: none;
+}
+
+/*Special text*/
+
+.error {
+  color: red;
+}
+
+.highlight {
+  color: #5646ab;
 }

@@ -1,6 +1,6 @@
-import ServiceCard from "../components/Services/ServiceCard.jsx";
-import { useState, useEffect } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import ServiceCard from "../components/Services/ServiceCard.jsx";
 
 function ServiceList() {
   const [arrServices, setArrServices] = useState([]);
@@ -14,32 +14,25 @@ function ServiceList() {
     });
   }, []);
 
-  const half = Math.ceil(arrServices.length / 2);
-
-  const serviceCardsLeft = arrServices.slice(0, half).map((item) => {
+  const serviceCards = arrServices.map((item) => {
     return (
-      <div onClick={() => (window.location = `/services/${item}`)}>
-        <ServiceCard service={item} />
+      <div
+        className="card-container"
+        onClick={() => (window.location = `/services/${item}`)}
+      >
+        <ServiceCard
+          onClick={() => (window.location = `/services/${item}`)}
+          service={item}
+        />
       </div>
     );
   });
-  const serviceCardsRight = arrServices
-    .slice(half, arrServices.length)
-    .map((item) => {
-      return (
-        <div onClick={() => (window.location = `/services/${item}`)}>
-          <ServiceCard service={item} />
-        </div>
-      );
-    });
 
   return (
-    <div>
+    <div className="services">
       <h1>List of Services</h1>
-      <div class="row">
-        <div class="column">{serviceCardsLeft} </div>
-        <div class="column">{serviceCardsRight} </div>
-      </div>
+
+      <div class="row">{serviceCards}</div>
       <a href="/listServiceProviders">See all providers!</a>
     </div>
   );

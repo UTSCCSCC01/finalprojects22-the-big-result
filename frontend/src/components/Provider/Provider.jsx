@@ -1,10 +1,11 @@
 import "./Provider.css";
+import "../Card.css";
 
 function Provider(props) {
   return (
     <div
       onClick={() => (window.location = "/profile")}
-      className="provider-card"
+      className="provider-card card"
     >
       <div class="metadata">
         <img src={props.profilePicURL} alt={props.name} />

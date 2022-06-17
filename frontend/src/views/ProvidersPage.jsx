@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import Provider from "./Provider";
-import Header from "./Header";
+import Provider from "../components/Provider/Provider";
+import Header from "../components/Provider/Header";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);
