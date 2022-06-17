@@ -1,5 +1,4 @@
 import ServiceCard from "../components/Services/ServiceCard.jsx";
-import "./ServicesList.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -36,7 +35,7 @@ function ServiceList() {
 
   return (
     <div>
-      <h3>List of Services</h3>
+      <h1>List of Services</h1>
       <div class="row">
         <div class="column">{serviceCardsLeft} </div>
         <div class="column">{serviceCardsRight} </div>

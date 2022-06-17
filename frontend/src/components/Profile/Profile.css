@@ -10,13 +10,13 @@
   width: 60%;
 }
 
-#profile h1 {
+/* #profile h1 {
   align-self: flex-start;
 }
 
 .profile-container h1 {
   text-align: left;
-}
+} */
 
 .profile-inner-container {
   display: flex;
