@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import Provider from "../components/Provider/Provider";
-import Header from "../components/Provider/Header";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);
@@ -24,7 +23,7 @@ function ProviderPage(props) {
 
   return (
     <div className="providers-page">
-      <Header />
+      <h1>Service Providers</h1>
       <div className="providers">
         {providerList.map((provider) => (
           <Provider

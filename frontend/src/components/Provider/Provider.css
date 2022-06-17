@@ -11,27 +11,19 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-column-gap: 10px;
   }
-  .provider-card:nth-child(1) {
-    margin-right: auto;
-  }
-
-  .provider-card:nth-child(2) {
-    margin-left: auto;
-  }
 }
 
 .metadata {
   padding: 10px;
   padding-bottom: 8px;
   display: flex;
-  align-items: center;
+  column-gap: 1rem;
 }
 
 .provider-card img {
   border-radius: 5px;
   width: 100%;
-  border: 1px solid white;
-  margin-right: 10px;
+  object-fit: cover;
   flex: 0 0 30%;
 }
 .desc {
@@ -41,9 +33,6 @@
   margin: 10px;
 }
 
-.svc-tag {
-  background-color: #ebe9f5;
-  width: min-content;
-  padding: 5px;
-  border-radius: 5px;
+.metadata-text {
+  margin: auto 0;
 }

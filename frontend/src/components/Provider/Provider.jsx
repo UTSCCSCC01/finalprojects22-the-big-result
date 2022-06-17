@@ -10,7 +10,7 @@ function Provider(props) {
       <div class="metadata">
         <img src={props.profilePicURL} alt={props.name} />
         <div className="metadata-text">
-          <h3 className="highlight">{props.name}</h3>
+          <h2 className="highlight">{props.name}</h2>
           <p className="svc-tag">{props.service}</p>
           <p>
             <b>Price:</b> {props.price}

@@ -31,9 +31,8 @@ function ServiceList() {
   return (
     <div className="services">
       <h1>List of Services</h1>
-
       <div class="row">{serviceCards}</div>
-      <a href="/listServiceProviders">See all providers!</a>
+      <a href="/serviceProviders">See all providers!</a>
     </div>
   );
 }
