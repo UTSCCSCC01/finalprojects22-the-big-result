@@ -5,11 +5,8 @@
   align-items: center;
   justify-content: center;
   column-gap: 2rem;
-
-  border: 1px solid grey;
-  border-radius: 5px;
-  
-  padding: 10px 50px;
+  padding: 10px 20px;
+  margin: 10px 0;
 }
 
 .review-img-container {
@@ -19,22 +16,6 @@
   justify-content: center;
 }
 
-.review-text {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-
-}
-
-.review-subhead {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-#rating {
-    margin-left: auto;
+.review-img-container img {
+  border-radius: 5px;
 }

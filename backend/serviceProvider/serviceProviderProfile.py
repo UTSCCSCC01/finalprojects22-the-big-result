@@ -7,7 +7,8 @@ def getServiceProviderProfile():
     return jsonify({
         "name": "Steven Adams",
         "rating": 4.5,
-        "description": "High quality hairdresser available for work!",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+        "felis imperdiet proin fermentum leo. Lobortis elementum nibh tellus molestie nunc non. Nullam non nisi est sit amet facilisis magna. Odio pellentesque",
         "services": "Hairstyle",
         "profilePictureLink": "https://picsum.photos/200",
         "calendar": "Some calendar stuff here that we would probably need later on",
@@ -15,7 +16,7 @@ def getServiceProviderProfile():
     })
 
 
-def getReviews(numRevs = 1)-> list:
+def getReviews(numRevs = 3)-> list:
     reviewList = []
     for i in range(numRevs):
         reviewList.append({
