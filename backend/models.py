@@ -62,10 +62,14 @@ professionalServices = db.Table('ProfessionalServices',
 )
 
 
-# class ProfessionalServices(db.Model):
-#     __tablename__ = "ProfessionalServices"
-#     professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"),primary_key=True)
-#     serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"),primary_key=True)
+class ProfessionalServices(db.Model):
+    __tablename__ = "ProfessionalServices"
+
+    professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"),primary_key=True)
+    serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"),primary_key=True)
+    defaultPrice = db.Column(db.Float, default=0)
+
+    __table_args__ = {'extend_existing': True}
 
 
 
@@ -106,6 +110,8 @@ class Customer(User):
     __tablename__ = "Customer"
     id = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
 
+    bookings = relationship('Bookings',backref='customer',lazy=True)
+
     __mapper_args__ = {
         "polymorphic_identity": "Customer",
     }
@@ -131,10 +137,12 @@ class Reviews(db.Model):
     bookingID = db.Column(db.Integer, db.ForeignKey("Bookings.id"))
     professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"))
     customerID = db.Column(db.Integer, db.ForeignKey("Customer.id"))
-    serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
 
     description = db.Column(db.Text, nullable=False)
     ratings = db.Column(db.Integer,db.CheckConstraint("ratings >= 1 AND ratings <= 5"), nullable=False)
+
+    booking = relationship('Bookings',backref="review")
+
 
 class Pictures(db.Model):
     __tablename__ = "Pictures"
@@ -160,6 +168,8 @@ class Bookings(db.Model):
     price = db.Column(db.Float,nullable=False)
     bookingTime = db.Column(db.Time,default=datetime.utcnow)
     specialInstructions = db.Column(db.String(500),nullable=True)
+    serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
+
 
 
 class Services(db.Model):
@@ -187,11 +197,15 @@ def runDBQueries():
     # db.session.add(sampleService)
     # db.session.commit()
     # print(Services.query.all())
-    print(Professional.query.filter_by(id=36).first().reviews)
-    # print(Services.query.filter_by(serviceName="landscaping").first().professionals[0].firstName)
+    # print(Professional.query.filter_by(id=36).first().reviews)
+    print(Services.query.filter_by(serviceName="landscaping").first().professionals[0].username)
     # print("Running database queries")
     # print(date(2019, 4, 13))
     # print(Manager.query.all())
+
+    # print(Reviews.query.filter_by(id=4).first().booking.location)
+    # print(Customer.query.filter_by(id=34).first().bookings[0].specialInstructions)
+
     pass
 
 def createTables():
