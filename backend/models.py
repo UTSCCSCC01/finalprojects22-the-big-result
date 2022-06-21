@@ -56,6 +56,18 @@ class Status(enum.Enum):
     RESOLVED = 4
     RESCHEDULED = 5
 
+professionalServices = db.Table('ProfessionalServices',
+    db.Column('professionalID', db.Integer, db.ForeignKey('Professional.id'), primary_key=True),
+    db.Column('serviceName', db.String, db.ForeignKey('Services.serviceName'), primary_key=True)
+)
+
+
+# class ProfessionalServices(db.Model):
+#     __tablename__ = "ProfessionalServices"
+#     professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"),primary_key=True)
+#     serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"),primary_key=True)
+
+
 
 class User(db.Model):
     __tablename__ = "User"
@@ -79,6 +91,8 @@ class Professional(User):
     description = db.Column(db.Text, nullable=True)
     ratings = db.Column(db.Float,nullable=False, default=0)
     averageCost = db.Column(db.Float)
+
+    services = relationship("Services",secondary=professionalServices,lazy='subquery',back_populates="professionals")
 
 
     __mapper_args__ = {
@@ -144,15 +158,14 @@ class Bookings(db.Model):
     bookingTime = db.Column(db.Time,default=datetime.utcnow)
     specialInstructions = db.Column(db.String(500),nullable=True)
 
+
 class Services(db.Model):
     __tablename__ = "Services"
     serviceName = db.Column(db.String(200),primary_key=True,unique=True)
     description = db.Column(db.String(500), nullable=False)
 
-class ProfessionalServices(db.Model):
-    __tablename__ = "ProfessionalServices"
-    professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"),primary_key=True)
-    serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"),primary_key=True)
+    professionals = db.relationship("Professional",secondary=professionalServices, back_populates="services")
+
 
 
 
@@ -162,12 +175,21 @@ def runDBQueries():
     # db.session.commit()
     # print(TestUser.query.all())
     # createTables()
-    sampleUSer = Customer(firstName="Mike", lastName="Coxlong", email="mikecox@gmail.com",username="large_cox")
-    db.session.add(sampleUSer)
-    db.session.commit()
+    # sampleUSer = Customer(firstName="Mike", lastName="Coxlong", email="mikecox@gmail.com",username="large_cox")
+    # db.session.add(sampleUSer)
+    # db.session.commit()
+
+    # sampleService = Services("Personal trainer", "Makes you more fit with exercise!")
+    #
+    # db.session.add(sampleService)
+    # db.session.commit()
+    # print(Services.query.all())
+    print(Professional.query.filter_by(id=36).first().services)
+    # print(Services.query.filter_by(serviceName="landscaping").first().professionals[0].firstName)
     # print("Running database queries")
     # print(date(2019, 4, 13))
     # print(Manager.query.all())
+    pass
 
 def createTables():
     db.create_all()

@@ -1,4 +1,4 @@
-from models import db, Customer, Professional, Admin, Services, ProfessionalServices
+from models import db, Customer, Professional, Admin, Services, professionalServices
 
 
 from sqlalchemy.orm import joinedload
@@ -61,6 +61,9 @@ class ProfessionalsDAO:
         queryRes = Professional.query.filter_by(email=email).first()
         return queryRes is not None
 
+    def getAllServicesForProfessional(self, id:int):
+        return Professional.query.filter_by(id=id).first().services
+
 
 class AdminDAO:
 
@@ -110,15 +113,16 @@ class ProfessionalServicesDAO:
     def getServiceFromUserID(self, id):
         return db.engine.execute(f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
 
-def runQueries():
+def runDAOQueries():
     custDao = CustomersDAO()
 
     profDao = ProfessionalsDAO()
+    print(profDao.getAllServicesForProfessional(36))
 
     serviceDao = ServicesDAO()
 
-    profServDao = ProfessionalServicesDAO()
-    print(profServDao.getServiceFromUserID(6))
+    # profServDao = ProfessionalServicesDAO()
+    # print(profServDao.getServiceFromUserID(6))
 
     # serviceDao.addService("nails","Making your nails look really pretty!")
 
