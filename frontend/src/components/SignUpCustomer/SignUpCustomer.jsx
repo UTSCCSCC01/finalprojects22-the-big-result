@@ -29,7 +29,6 @@ function SignUpCustomer() {
       .catch((err) => {
         setFailedSignup(true);
         console.log(err);
-
       });
     //reset form after submission
     setSignupForm({
@@ -84,10 +83,11 @@ function SignUpCustomer() {
         value={signupForm.password}
         required
       />
-      {failedSignup && (
-        <p className="error">User already exists.</p>
-      )}
+      {failedSignup && <p className="error">User already exists.</p>}
       <button type="submit">Sign Up!</button>
+      <p>
+        Already have an account? <a href="/login">Log In</a>
+      </p>
     </form>
   );
 }
