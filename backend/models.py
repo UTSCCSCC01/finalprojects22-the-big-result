@@ -94,6 +94,9 @@ class Professional(User):
 
     services = relationship("Services",secondary=professionalServices,lazy='subquery',back_populates="professionals")
 
+    reviews = relationship('Reviews',backref="professional",lazy='dynamic')
+
+
 
     __mapper_args__ = {
         "polymorphic_identity": "Professional",
@@ -131,7 +134,7 @@ class Reviews(db.Model):
     serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
 
     description = db.Column(db.Text, nullable=False)
-    ratings = db.Column(db.Integer,db.CheckConstraint("ratings >= 1 AND ratings <= 5"), nullable=False,)
+    ratings = db.Column(db.Integer,db.CheckConstraint("ratings >= 1 AND ratings <= 5"), nullable=False)
 
 class Pictures(db.Model):
     __tablename__ = "Pictures"
@@ -184,7 +187,7 @@ def runDBQueries():
     # db.session.add(sampleService)
     # db.session.commit()
     # print(Services.query.all())
-    print(Professional.query.filter_by(id=36).first().services)
+    print(Professional.query.filter_by(id=36).first().reviews)
     # print(Services.query.filter_by(serviceName="landscaping").first().professionals[0].firstName)
     # print("Running database queries")
     # print(date(2019, 4, 13))

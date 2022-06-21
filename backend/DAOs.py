@@ -64,6 +64,12 @@ class ProfessionalsDAO:
     def getAllServicesForProfessional(self, id:int):
         return Professional.query.filter_by(id=id).first().services
 
+    def getAllReviewsForProfesional(self,id:int):
+        return Professional.query.filter_by(id=id).first().reviews
+
+    def getFirstNReviewsForProfesional(self,id:int, numReviews = 3):
+        return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
+
 
 class AdminDAO:
 
@@ -108,6 +114,10 @@ class ServicesDAO:
         db.session.add(newService)
         db.session.commit()
 
+    def getProfessionalsForService(self,servicename: str):
+        return Services.query.filter_by(serviceName=servicename)
+
+
 class ProfessionalServicesDAO:
 
     def getServiceFromUserID(self, id):
@@ -117,7 +127,8 @@ def runDAOQueries():
     custDao = CustomersDAO()
 
     profDao = ProfessionalsDAO()
-    print(profDao.getAllServicesForProfessional(36))
+    # print(profDao.getAllServicesForProfessional(36))
+    # print(profDao.getFirstNReviewsForProfesional(36,1))
 
     serviceDao = ServicesDAO()
 
