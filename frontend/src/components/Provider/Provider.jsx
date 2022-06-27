@@ -7,7 +7,7 @@ function Provider(props) {
       onClick={() => (window.location = "/profile")}
       className="provider-card card"
     >
-      <div class="metadata">
+      <div className="metadata">
         <img src={props.profilePicURL} alt={props.name} />
         <div className="metadata-text">
           <h2 className="highlight">{props.name}</h2>

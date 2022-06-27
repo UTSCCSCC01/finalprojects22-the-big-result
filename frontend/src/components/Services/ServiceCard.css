@@ -14,3 +14,7 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.active-svc {
+  background-color: #d9d5ea;
+}
