@@ -1,0 +1,12 @@
+.prof-calender {
+  margin: 100px 200px 100px 200px;
+}
+
+.rbc-calendar {
+  font-size: small;
+}
+
+button {
+  color: black !important;
+  background-color: white !important;
+}

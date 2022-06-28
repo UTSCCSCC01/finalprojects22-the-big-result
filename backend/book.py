@@ -17,6 +17,7 @@ def booking1():
     selected_date = {"date": date, "time": time}
     return jsonify(selected_date)
 
+# get the bookings from backend
 @book_blueprint.route('/booking', methods=["GET"])
 def booking2():
     global selected_date

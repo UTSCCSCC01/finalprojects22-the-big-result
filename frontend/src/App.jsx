@@ -1,3 +1,4 @@
+import React, { Component }  from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./components/Login/Login";
@@ -7,6 +8,8 @@ import SignUp from "./views/SignUp";
 import ServiceList from "./views/ServicesList";
 import BookingCalender from './components/Calender/BookingCalender'; // NEW
 import Book from './components/Booking/Book'; // NEW
+import ProfCalender from './components/Calender/ProfCalender' // NEW
+import CustCalender from './components/Calender/CustCalender';
 
 function App() {
   return (
@@ -22,6 +25,9 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/calender" element={<BookingCalender />} /> // new
         <Route path="/booking" element={<Book />} /> // new
+        <Route path="/p/calendar" element={<ProfCalender />} /> // new
+        {/* <Route path="/c/calendar" element={<CustCalender />} /> // new */}
+        {/* <Route path="/c/calender" element={<CustCalender />} /> // new */}
        
       </Routes>
     </BrowserRouter>
