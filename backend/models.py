@@ -1,11 +1,13 @@
 import enum
+from typing import List
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime,date
-from sqlalchemy import  Enum
+from datetime import datetime, date
+from sqlalchemy import Enum
 from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
+
 
 # All the Testing stuff here!
 # class TestUser(db.Model):
@@ -56,130 +58,138 @@ class Status(enum.Enum):
     RESOLVED = 4
     RESCHEDULED = 5
 
+
 professionalServices = db.Table('ProfessionalServices',
-    db.Column('professionalID', db.Integer, db.ForeignKey('Professional.id'), primary_key=True),
-    db.Column('serviceName', db.String, db.ForeignKey('Services.serviceName'), primary_key=True)
-)
+                                db.Column('professionalID', db.Integer, db.ForeignKey('Professional.id'),
+                                          primary_key=True),
+                                db.Column('serviceName', db.String, db.ForeignKey('Services.serviceName'),
+                                          primary_key=True)
+                                )
 
 
 class ProfessionalServices(db.Model):
     __tablename__ = "ProfessionalServices"
 
-    professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"),primary_key=True)
-    serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"),primary_key=True)
-    defaultPrice = db.Column(db.Float, default=0)
+    professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"), primary_key=True)
+    serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"), primary_key=True)
+    defaultPrice: float = db.Column(db.Float, default=0)
 
     __table_args__ = {'extend_existing': True}
 
 
-
 class User(db.Model):
     __tablename__ = "User"
-    id = db.Column(db.Integer, primary_key=True) #This autoincrements
-    firstName = db.Column(db.String(40), nullable=False)
-    lastName = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    id: int = db.Column(db.Integer, primary_key=True)  # This autoincrements
+    firstName: str = db.Column(db.String(40), nullable=False)
+    lastName: str = db.Column(db.String(100), nullable=False)
+    email: str = db.Column(db.String(120), unique=True, nullable=False)
+    username: str = db.Column(db.String(80), unique=True, nullable=False)
+    password: str = db.Column(db.String(100), nullable=False)
 
-    userType = db.Column(db.String(50))
+    userType: str = db.Column(db.String(50))
 
     __mapper_args__ = {
         "polymorphic_identity": "BaseUser",
         "polymorphic_on": userType,
     }
 
+
 class Professional(User):
     __tablename__ = "Professional"
-    id = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
-    description = db.Column(db.Text, nullable=True)
-    ratings = db.Column(db.Float,nullable=False, default=0)
-    averageCost = db.Column(db.Float)
+    id: int = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
+    description: str = db.Column(db.Text, nullable=True)
+    ratings: float = db.Column(db.Float, nullable=False, default=0)
+    averageCost: float = db.Column(db.Float)
 
-    services = relationship("Services",secondary=professionalServices,lazy='subquery',back_populates="professionals")
+    # List of services
+    services = relationship("Services", secondary=professionalServices, lazy='subquery', back_populates="professionals")
 
-    reviews = relationship('Reviews',backref="professional",lazy='dynamic')
-
-
+    # List of reviews
+    reviews = relationship('Reviews', backref="professional", lazy='dynamic')
 
     __mapper_args__ = {
         "polymorphic_identity": "Professional",
     }
 
+
 class Customer(User):
     __tablename__ = "Customer"
-    id = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
+    id: int = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
 
-    bookings = relationship('Bookings',backref='customer',lazy=True)
+    # List of bookings
+    bookings = relationship('Bookings', backref='customer', lazy=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "Customer",
     }
 
+
 class Admin(User):
     __tablename__ = "Admin"
-    id = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
+
+    id: int = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "Admin",
     }
 
+
 class Settings(db.Model):
     __tablename__ = "Settings"
-    id = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
-    billing = db.Column(db.Text, nullable=True)
-
+    id: int = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
+    billing: str = db.Column(db.Text, nullable=True)
+    profilePicLink: str = db.Column(db.String(300), nullable=True, default="https://picsum.photos/100")
 
 
 class Reviews(db.Model):
     __tablename__ = "Reviews"
-    id = db.Column(db.Integer, primary_key=True)
-    bookingID = db.Column(db.Integer, db.ForeignKey("Bookings.id"))
-    professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"))
-    customerID = db.Column(db.Integer, db.ForeignKey("Customer.id"))
+    id: int = db.Column(db.Integer, primary_key=True)
+    bookingID: int = db.Column(db.Integer, db.ForeignKey("Bookings.id"))
+    professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
+    customerID: int = db.Column(db.Integer, db.ForeignKey("Customer.id"))
 
-    description = db.Column(db.Text, nullable=False)
-    ratings = db.Column(db.Integer,db.CheckConstraint("ratings >= 1 AND ratings <= 5"), nullable=False)
+    description: str = db.Column(db.Text, nullable=False)
+    ratings: int = db.Column(db.Integer, db.CheckConstraint("ratings >= 1 AND ratings <= 5"), nullable=False)
 
-    booking = relationship('Bookings',backref="review")
+    booking = relationship('Bookings', backref="review")
 
 
 class Pictures(db.Model):
     __tablename__ = "Pictures"
-    id = db.Column(db.Integer, primary_key=True)
-    reviewID = db.Column(db.Integer, db.ForeignKey("Reviews.id"))
-    pictureLink = db.Column(db.String(500),nullable=True)
+    id: int = db.Column(db.Integer, primary_key=True)
+    reviewID: int = db.Column(db.Integer, db.ForeignKey("Reviews.id"))
+    pictureLink: str = db.Column(db.String(500), nullable=True)
+
 
 class Calendar(db.Model):
     __tablename__ = "Calendar"
-    userID = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
-    googleAccount = db.Column(db.String(500), nullable=False)
-    accountKey = db.Column(db.String(200), nullable=False)
+    userID: int = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
+    googleAccount: str = db.Column(db.String(500), nullable=False)
+    accountKey: str = db.Column(db.String(200), nullable=False)
+
 
 class Bookings(db.Model):
     __tablename__ = "Bookings"
-    id = db.Column(db.Integer, primary_key=True)
-    customerID = db.Column(db.Integer, db.ForeignKey("Customer.id"))
-    professionalID = db.Column(db.Integer, db.ForeignKey("Professional.id"))
+    id: int = db.Column(db.Integer, primary_key=True)
+    customerID: int = db.Column(db.Integer, db.ForeignKey("Customer.id"))
+    professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
 
-    serviceTime = db.Column(db.Time, default=date(2001, 5, 26))
-    location = db.Column(db.String(1000), nullable=True)
-    status = db.Column(Enum(Status), nullable=False,default=Status.BOOKED)
-    price = db.Column(db.Float,nullable=False)
-    bookingTime = db.Column(db.Time,default=datetime.utcnow)
-    specialInstructions = db.Column(db.String(500),nullable=True)
-    serviceName = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
-
+    beginServiceTime: datetime = db.Column(db.DateTime, default=datetime(2001, 5, 26))
+    endServiceTime: datetime = db.Column(db.DateTime, default=datetime(2001, 5, 26))
+    location: str = db.Column(db.String(1000), nullable=True)
+    status: Status = db.Column(Enum(Status), nullable=False, default=Status.BOOKED)
+    price: float = db.Column(db.Float, nullable=False)
+    bookingTime: datetime = db.Column(db.DateTime, default=datetime.utcnow)
+    specialInstructions: str = db.Column(db.String(500), nullable=True)
+    serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
 
 
 class Services(db.Model):
     __tablename__ = "Services"
-    serviceName = db.Column(db.String(200),primary_key=True,unique=True)
-    description = db.Column(db.String(500), nullable=False)
+    serviceName: str = db.Column(db.String(200), primary_key=True, unique=True)
+    description: str = db.Column(db.String(500), nullable=False)
 
-    professionals = db.relationship("Professional",secondary=professionalServices, back_populates="services")
-
-
+    professionals = db.relationship("Professional", secondary=professionalServices, back_populates="services")
 
 
 def runDBQueries():
@@ -198,7 +208,17 @@ def runDBQueries():
     # db.session.commit()
     # print(Services.query.all())
     # print(Professional.query.filter_by(id=36).first().reviews)
-    print(Services.query.filter_by(serviceName="landscaping").first().professionals[0].username)
+    # print(Services.query.filter_by(serviceName="landscaping").first().professionals[0].username)
+    # currService = Services.query.filter_by(serviceName="landscaping").first()
+    # print(currService.description)
+    # print(currService.professionals[0].username)
+
+    # currProfessional = Professional.query.filter_by(id=36)
+    # currProfessional.description
+    # currProfessional.services
+
+    print(Bookings.query.all()[0].beginServiceTime)
+
     # print("Running database queries")
     # print(date(2019, 4, 13))
     # print(Manager.query.all())
@@ -208,6 +228,6 @@ def runDBQueries():
 
     pass
 
+
 def createTables():
     db.create_all()
-
