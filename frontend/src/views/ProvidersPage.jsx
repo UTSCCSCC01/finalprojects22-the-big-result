@@ -107,6 +107,8 @@ function ProviderPage(props) {
             service={provider.service}
             description={provider.description}
             price={provider.price}
+            rating={provider.rating}
+            location = {provider.location}
             profilePicURL={provider.profilePicURL}
           />
         ))}

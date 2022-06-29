@@ -15,6 +15,12 @@ function Provider(props) {
           <p>
             <b>Price:</b> {props.price}
           </p>
+          <p>
+            <b>Avg Rating:</b> {props.rating}
+          </p>
+          <p>
+            <b>Location:</b> {props.location}
+          </p>
           <p>{props.description}</p>
         </div>
       </div>
