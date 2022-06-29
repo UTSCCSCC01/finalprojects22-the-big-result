@@ -26,7 +26,8 @@ function ProviderPage(props) {
   useEffect(() => {
     axios({
       method: "GET",
-      url: "http://127.0.0.1:5000/listServiceProviders",
+      // url: "http://127.0.0.1:5000/listServiceProviders",
+      url: `http://127.0.0.1:5000/listServiceProviders?rating=${filters.rating}&price=${filters.price}`,
     })
       .then((response) => {
         const res = response.data;
