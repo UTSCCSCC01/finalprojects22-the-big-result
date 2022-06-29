@@ -16,17 +16,32 @@ import "../components/Filters.css";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);
-
   const [filters, setFilters] = useState({
+    service: "",
     price: [0, 100],
     rating: 0,
     location: "",
   });
 
+  const updateServiceFilter = (svc) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      service: svc,
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://127.0.0.1:5000/listServiceProviders?rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`,
+      url: `http://127.0.0.1:5000/listServiceProviders?service=${filters.service}&rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`,
     })
       .then((response) => {
         const res = response.data;
@@ -38,19 +53,9 @@ function ProviderPage(props) {
       });
   }, [filters]);
 
-  const handleChange = (e) => {
-    const { value, name } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
-  };
-
   const filtersComponent = () => {
-    //TODO: Get minimum and maximum prices from database
     return (
       <div className="filters-container">
-        {/* <h2>Filters</h2> */}
         <div className="filters card">
           <div className="price filter-component">
             Price
@@ -99,7 +104,7 @@ function ProviderPage(props) {
     <div className="providers-page">
       {filtersComponent()}
       <h1>Service Providers</h1>
-      <ServiceList />
+      <ServiceList serviceFilter={updateServiceFilter} />
       <div className="providers">
         {providerList.map((provider) => (
           <Provider
@@ -108,7 +113,7 @@ function ProviderPage(props) {
             description={provider.description}
             price={provider.price}
             rating={provider.rating}
-            location = {provider.location}
+            location={provider.location}
             profilePicURL={provider.profilePicURL}
           />
         ))}

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ServiceCard from "./ServiceCard.jsx";
 
-function ServiceList() {
+function ServiceList(props) {
   const [arrServices, setArrServices] = useState([]);
   const [activeSvcId, setActiveSvcId] = useState("");
 
@@ -20,7 +20,13 @@ function ServiceList() {
   const serviceCards = () => {
     return arrServices.map((item) => {
       return (
-        <div className="card-container" onClick={() => setActiveSvcId(item.id)}>
+        <div
+          className="card-container"
+          onClick={() => {
+            props.serviceFilter(item.service);
+            return setActiveSvcId(item.id);
+          }}
+        >
           <ServiceCard
             key={item.id}
             service={item.service}
