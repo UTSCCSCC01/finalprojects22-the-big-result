@@ -1,26 +1,36 @@
-from flask import Blueprint, request
-from events import bookings, defaultAvailability
+from flask import Blueprint
+from events import recurringAvailabilities
 from flask import Blueprint, request, jsonify
 
 calender_blueprint = Blueprint('calender_blueprint', __name__)
 
-# GET: get the timeslots for the chosen date
-# get the start-end date, calculate available time slots and output them
 
-# ugly: no need to see bookings when changing the default availability...
+# all availabilities - recurring and non recurring merged
+@calender_blueprint.route('/getAvailability', methods=["GET"])
+def get_availability():
+    pass
 
-# get all the current availabilities to display
-@calender_blueprint.route('/defaultAvailability', methods=["GET"])
-def get_default_availability():
-    # format default availability if needed before passing to fronend
-    print("default availabilities: ", defaultAvailability)
-    return jsonify(defaultAvailability)
 
-# for professional
-# post the chosen default day time slots to backend on submit from fronend
-@calender_blueprint.route('/p/calendar/default', methods=["POST"])
-def set_default_availability():
-    pass 
+# recurring availabilities
+@calender_blueprint.route('/getRecurrAvailability', methods=["GET"])
+def get_recurring_availability():
+    return jsonify(recurringAvailabilities) # getting from mocked data in events.py
+
+@calender_blueprint.route('/addRecurrAvailability', methods=["POST"])
+def add_recurring_availability():
+    recurrEvents = request.json.get("events", None)
+    print(recurrEvents)
+    return {"events": recurrEvents}
+
+
+# non recurring availabilities
+@calender_blueprint.route('/getNonRecurrAvailability', methods=["GET"])
+def get_non_recurring_availability():
+    pass
+
+@calender_blueprint.route('/addNonRecurrAvailability', methods=["POST"])
+def add_non_recurring_availability():
+    pass
 
 
 

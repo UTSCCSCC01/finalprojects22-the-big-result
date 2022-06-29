@@ -35,54 +35,119 @@ var testDateUtc = moment.utc('2015-01-30 10:00:00');
 var localDate = testDateUtc.local();
 console.log(localDate.format(dateFormat));
 
+// constants
+const RECURRING = "recurring";
+const ACTUAL = "ACTUAL";
+const VIEW = "VIEW";
+const BOOKING = "BOOKING"
+const AVAILABILITY = "AVAILABILITY"
+const BOOKING_COLOR = "C20232"
+const AVAIL_COLOR = "7E0080"
+
+
 function ProfCalender() {
-  const [currEvents, setcurrEvents] = useState([]);
-  const [recurringEvents, setRecurringEvents] = useState([]); // todo repeat currEvents 4 times for a month from todays day
-  const [editMode, setEditMode] = useState(true);
+  // todo: change name from events to availability
+  const [eventsToRecurr, setEventsToRecurr] = useState([]); // events for one week that will recurr
+  const [allAvailabililties, setAllAvailabililties] = useState([]); // todo repeat eventsToRecurr 4 times for a month from todays day
+  const [bookings, setBookings] = useState([]);
+  const [allEvents, setAllEvents] = useState([]); // both bookings and availabilities
+  const [mode, setMode] = useState(VIEW);
+
 
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://localhost:5000/defaultAvailability`,
-    }).then((res) => {
-        // window.location = "/successlogin" // go to default 
+      url: `http://localhost:5000/getRecurrAvailability`,
 
-        console.log("default availability from backend: ", res.data);
+    }).then((res) => {
         const res_formatted = res.data.map((r) => {
           return { ...r, 
             start: moment(r.start, 'YYYY-MM-DD HH:mm:ss').toDate(), 
-            end: moment(r.end, 'YYYY-MM-DD HH:mm:ss').toDate() }
-
+            end: moment(r.end, 'YYYY-MM-DD HH:mm:ss').toDate(),
+            title: AVAILABILITY, 
+            color: AVAIL_COLOR}
         })
-        console.log("default availability from backend formatted: ", res.data);
-        setcurrEvents(res_formatted);
+        setEventsToRecurr(res_formatted);
+        setAllAvailabililties(recurrEvents(res_formatted, 2));
+
+      }).catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/getBookings`,
+
+    }).then((res) => {
+        const res_formatted = res.data.map((r) => {
+          return { ...r, 
+            start: moment(r.start, 'YYYY-MM-DD HH:mm:ss').toDate(), 
+            end: moment(r.end, 'YYYY-MM-DD HH:mm:ss').toDate(),
+            title: BOOKING,  
+            color: BOOKING_COLOR}
+        })
+        setBookings(res_formatted);
 
       }).catch((err) => console.log(err));
   }, []);
   
+  
+  const eventStyleGetter = (event, start, end, isSelected) => {
+      var backgroundColor = '#' + event.color;
+      var style = {
+          backgroundColor: backgroundColor,
+          borderRadius: '10px',
+          opacity: 0.7,
+          color: 'white',
+          border: '20px',
+          display: 'block',
+          boxShadow: 'black'
+      };
+      return { style: style };
+  }
 
   const handleSelect = ({ start, end }) => {
     console.log("selecting event ...");
-    const title = 'available'; //window.prompt("Are you sure this is the event time you want?");
 
     // new: duplicate the event for the next 4 weeks? (set a default)
     // const month = start.getDay(); # gets day of the week
     
-    setcurrEvents([
-        ...currEvents,
-        { start: start, end:end, title:title, id:currEvents.length},
+    setEventsToRecurr([
+        ...eventsToRecurr,
+        { start: start, 
+          end:end, 
+          title:AVAILABILITY, 
+          color: AVAIL_COLOR,
+          id:eventsToRecurr.length},
       ]);
     // todo: go to booking page when this is selected
   };
 
+
   const handleSelectEvent = (event) => {
-    alert("Setting availability for " + event.title);
-    // todo: allow deleting events here
+    console.log(event.title );
+    if (event.title == BOOKING) return;
+    console.log("selecting event...");
+    // TODO: confirm the 
+    const r = window.confirm("Would you like to remove this event?")
+    if(r) {
+      let eventsAfterDeletion = [];
+      eventsToRecurr.forEach(function(e) {
+        // need to re-add to the events to fix the ids
+        console.log(e.id, event)
+        if (e.id != event.id) 
+        eventsAfterDeletion.push({...e, id: eventsAfterDeletion.length });
+      });
+      console.log("after deletion", eventsAfterDeletion);
+      setEventsToRecurr(eventsAfterDeletion);
+    }
   }
 
+
   const onEventResize = (data) => {
+    if (data.event.type == BOOKING) return;
     console.log("data resizing...");
-    setcurrEvents(currEvents.map((e) => {
+    setEventsToRecurr(eventsToRecurr.map((e) => {
       if (e.id == data.event.id) {
         return { ...e, start: data.start, end: data.end }
       }
@@ -90,53 +155,110 @@ function ProfCalender() {
     }))
   };
 
+
   const onEventDrop = (data) => {
+    console.log(data)
+    if (data.event.type == BOOKING) return;
     console.log("event dropped...");
-    setcurrEvents(currEvents.map((e) => {
+    setEventsToRecurr(eventsToRecurr.map((e) => {
       if (e["id"] == data.event.id) {
         return { ...e, start: data.start, end: data.end }
       }
       return e
     }))
   };
-  console.log("currEvents displayed:", currEvents)
+  
 
-  // todo: have a default style for each calender instead of repeating   
+  const getNextWeek = (date) => {
+    // courtsey: https://stackoverflow.com/questions/1025693/how-to-get-next-week-date-in-javascript
+    var nextWeek = new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return nextWeek;
+  }
+
+
+  // todo: numWeeks
+  const recurrEvents = (eventsToRecur, numWeeks) => {
+    let recurredEvents = [];
+    eventsToRecur.forEach(function(e) {
+        recurredEvents.push({...e, id: recurredEvents.length });
+        recurredEvents.push({...e, 
+          start: getNextWeek(e.start), 
+          end: getNextWeek(e.end), 
+          id: recurredEvents.length })
+      });
+    return recurredEvents;
+  }
+
+
+  const onSubmitEdit = () => {
+    console.log("submitting edit...")
+    setMode(VIEW);
+    // todo: send data to backend
+    if (mode==RECURRING) {
+      setAllAvailabililties(recurrEvents(eventsToRecurr, 2));
+    }
+
+    // send to backend
+    axios({ 
+      method: "POST", 
+      url: "http://localhost:5000/addRecurrAvailability",
+      data: { events: eventsToRecurr }
+     })
+      .then(() => {
+        //  send info here
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+
+  // setEventsToRecurr(allAvailabililties) resets the recurr view if not submitting  
   return (
     <div>
-      <button onClick={() => setEditMode(false)}>Normal mode</button>
-      <button onClick={() => setEditMode(true)}>Edit mode default dates</button>
-      {/* <button onClick={showCalenderEditMode}>Edit mode actual dates</button> */}
+      <button onClick={() => {setMode(VIEW); setEventsToRecurr(allAvailabililties)}}>View</button>
+      <button onClick={() => {setMode(RECURRING)}}>Recurr</button>
+      <button onClick={() => {setMode(ACTUAL)}}>Actual</button>
       {/* todo: no overlap */}
-      {editMode && (
+
+      {mode==VIEW && (
+      <div>
         <div className="prof-calender">
-        <DragAndDropCalendar
-          views={["week"]}
-          selectable
-          localizer={localizer}
-          defaultDate={new Date()} 
-          defaultView="week"
-          events={currEvents}
-          style={{ height: "100vh" }}
-          onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelect}
-          onEventDrop={onEventDrop}
-          onEventResize={onEventResize}
-        />
+          <Calendar
+            views={["week", "day"]}
+            localizer={localizer}
+            defaultDate={new Date()} 
+            defaultView="week"
+            events={allAvailabililties.concat(bookings)}
+            style={{ height: "100vh" }}
+            eventPropGetter={(eventStyleGetter)}
+          />
+        </div>
       </div>
       )}
-      {!editMode && (
-        <div className="prof-calender">
-        <Calendar
-          views={["week", "month"]}
-          localizer={localizer}
-          defaultDate={new Date()} 
-          defaultView="week"
-          events={currEvents}
-          style={{ height: "100vh" }}
-        />
-      </div>
+
+      {(mode==RECURRING || mode==ACTUAL) && (
+        <div>
+          <div className={mode==RECURRING ? "prof-calender recurr" : "prof-calender non-recurr"}>
+            <DragAndDropCalendar
+              views={["week", "day"]} 
+              selectable
+              localizer={localizer}
+              defaultDate={new Date()} 
+              defaultView="week"
+              events={eventsToRecurr.concat(bookings)}
+              style={{ height: "100vh" }}
+              onSelectEvent={handleSelectEvent}
+              onSelectSlot={handleSelect}
+              onEventDrop={onEventDrop}
+              onEventResize={onEventResize}
+              eventPropGetter={(eventStyleGetter)}
+            />
+          </div>
+          <button onClick={onSubmitEdit}>Submit</button>
+        </div>
       )}
+      
     </div>
   );
 }

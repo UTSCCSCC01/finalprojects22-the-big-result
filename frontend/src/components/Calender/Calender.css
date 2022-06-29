@@ -10,3 +10,8 @@ button {
   color: black !important;
   background-color: white !important;
 }
+
+.recurr .rbc-toolbar {
+  visibility: hidden;
+  transition: linear;
+} 

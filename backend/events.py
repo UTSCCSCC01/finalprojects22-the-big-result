@@ -1,17 +1,17 @@
 bookings = [
   {
-    "id": 0,
+    "id": 100,
     "start": "2022-07-1 10:00:00",
     "end": "2022-07-1 14:00:00",
   }, 
   {
-    "id": 1,
+    "id": 101,
     "start": "2022-07-2 11:00:00",
     "end": "2022-07-2 15:00:00",
   },
 ]
 
-defaultAvailability = [
+recurringAvailabilities = [
   {
     "id": 0,
     "start": "2022-06-28 01:00:00",
