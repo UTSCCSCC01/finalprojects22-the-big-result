@@ -4,11 +4,6 @@
   text-align: center;
 }
 
-/* for equal width */
-/* .card-container {
-  flex: 1;
-} */
-
 .row {
   display: flex;
   flex-wrap: wrap;

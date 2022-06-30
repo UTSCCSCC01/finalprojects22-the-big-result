@@ -11,6 +11,7 @@ def get_service_provider_list():
     price_low = int(request.args.get('pricelow'))
     price_high = int(request.args.get('pricehigh'))
     location = request.args.get('location')
+    service = request.args.get('service')
 
     # TODO Rating on Card (frontend)
     # TODO Get rid of apply filters button
@@ -48,7 +49,9 @@ def get_service_provider_list():
     arr = []
     # TODO Should rating display providers with rating and up or just rating? (4 = 4 & 5 or just 4?)
     for i in all_providers["providers"]:
-        if (rate == 0 or i["rating"] >= rate) and price_low <= i["price"] and price_high >= i["price"] and (location == "" or location == i["location"]):
+        print(i["service"])
+        if (rate == 0 or i["rating"] >= rate) and price_low <= i["price"] and price_high >= i["price"] and \
+            (service == "" or i["service"] == service) and (location == "" or location == i["location"]):
             arr.append(i)
         
     some_providers = {
