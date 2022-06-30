@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ServiceCard from "../components/Services/ServiceCard.jsx";
+import Footer from "../components/Footer/Footer";
 
 function ServiceList() {
   const [arrServices, setArrServices] = useState([]);
@@ -33,6 +34,7 @@ function ServiceList() {
       <h1>List of Services</h1>
       <div class="row">{serviceCards}</div>
       <a href="/serviceProviders">See all providers!</a>
+      <Footer />
     </div>
   );
 }

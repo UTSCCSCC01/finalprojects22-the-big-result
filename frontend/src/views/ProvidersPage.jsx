@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import Provider from "../components/Provider/Provider";
+import Footer from "../components/Footer/Footer";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);
@@ -35,6 +36,7 @@ function ProviderPage(props) {
           />
         ))}
       </div>
+      <Footer />
     </div>
   );
 }
