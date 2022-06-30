@@ -1,6 +1,7 @@
 # from urllib import request
 from flask import request
 from flask import Blueprint, jsonify
+from DAOs import CustomersDAO, ProfessionalsDAO, ServicesDAO
 
 list_providers_blueprint = Blueprint('list_providers_blueprint', __name__)
 
@@ -46,16 +47,36 @@ def get_service_provider_list():
         ]
     } 
 
-    arr = []
-    # TODO Should rating display providers with rating and up or just rating? (4 = 4 & 5 or just 4?)
-    for i in all_providers["providers"]:
-        print(i["service"])
-        if (rate == 0 or i["rating"] >= rate) and price_low <= i["price"] and price_high >= i["price"] and \
-            (service == "" or i["service"] == service) and (location == "" or location == i["location"]):
-            arr.append(i)
+
+    profDAO = ProfessionalsDAO()
+    serviceDAO = ServicesDAO()
+    filterByRating = set(profDAO.getProfessionalsWithMinRating(minRating=rate))
+    filterByPrice = set(profDAO.getProfessionalsByAvgPriceRange(minPrice=price_low, maxPrice=price_high))
+    # filterByLocation = profDAO.getProfessionalsByLocation(location)
+    # filterByServices = serviceDAO.getProfessionalsForService(service)
+
+    results = filterByRating.intersection(filterByPrice)
+    results_formatted = []
+    for i in results:
+        results_formatted.append({ 
+            "name": i.firstName + " " + i.lastName,
+            "service": i.description.strip('][').split(',')[0],
+            "price": i.averageCost,
+            "rating": i.ratings,
+            "location": "Toronto, Ontario",
+            "profilePicURL": "https://picsum.photos/102"
+        })
         
+    # arr = []
+    # # TODO Should rating display providers with rating and up or just rating? (4 = 4 & 5 or just 4?)
+    # for i in all_providers["providers"]:
+    #     print(i["service"])
+    #     if (rate == 0 or i["rating"] >= rate) and price_low <= i["price"] and price_high >= i["price"] and \
+    #         (service == "" or i["service"] == service) and (location == "" or location == i["location"]):
+    #         arr.append(i)
+
     some_providers = {
-        "providers": arr
+        "providers": results_formatted
     }
 
     return some_providers

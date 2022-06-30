@@ -38,7 +38,7 @@ def createApp():
     app.register_blueprint(login_blueprint)
 
     CORS(app)
-    JWTManager(app)
+    # JWTManager(app)
 
     Bcrypt(app)
     app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
@@ -81,4 +81,4 @@ def databaseTestingStuff():
 if __name__ == "__main__":
     runDBQueries()
     # runDAOQueries()
-    # app.run(debug=True)
+    app.run(debug=True)
