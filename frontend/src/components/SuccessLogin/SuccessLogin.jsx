@@ -28,7 +28,7 @@ function SuccessLogin(props) {
   }, []);
 
   return (
-    <div>
+    <div className="page">
       {localStorage.getItem("token") && profileData && (
         <div>
           <p>First name: {profileData.profile_name}</p>

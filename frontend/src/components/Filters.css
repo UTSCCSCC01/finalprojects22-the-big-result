@@ -1,14 +1,12 @@
 .filters-container {
   width: 100%;
-  border-bottom: 1px solid #ebe9f5;
 }
 .filters {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
+  padding: 5px 0;
   margin: 20px 10%;
-  border: 1px solid black;
 }
 
 .filter-component {
@@ -16,7 +14,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid black;
   text-align: center;
 }
 

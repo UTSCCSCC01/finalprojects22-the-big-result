@@ -13,6 +13,7 @@ import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
 
 import "../components/Filters.css";
+import Footer from "../components/Footer/Footer";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);
@@ -101,10 +102,9 @@ function ProviderPage(props) {
   };
 
   return (
-    <div className="providers-page">
-      {filtersComponent()}
-      <h1>Service Providers</h1>
+    <div className="providers-page page" id="providers">
       <ServiceList serviceFilter={updateServiceFilter} />
+      {filtersComponent()}
       <div className="providers">
         {providerList.map((provider) => (
           <Provider

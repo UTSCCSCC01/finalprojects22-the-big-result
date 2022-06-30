@@ -5,7 +5,7 @@ import ServiceCard from "./ServiceCard.jsx";
 function ServiceList(props) {
   const [arrServices, setArrServices] = useState([]);
   const [activeSvcId, setActiveSvcId] = useState("");
-
+  
   useEffect(() => {
     axios({
       method: "GET",
