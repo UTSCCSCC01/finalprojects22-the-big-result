@@ -3,6 +3,7 @@ import axios from "axios";
 
 import Provider from "../components/Provider/Provider";
 import Footer from "../components/Footer/Footer";
+import HowItWorks from "../components/HowItWorks/HowItWorks";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);
@@ -36,6 +37,7 @@ function ProviderPage(props) {
           />
         ))}
       </div>
+      <HowItWorks />
       <Footer />
     </div>
   );
