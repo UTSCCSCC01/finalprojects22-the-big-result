@@ -303,6 +303,5 @@ def runDAOQueries():
 
     # print(serviceDao.getProfessionalsForService("agaga"))
 
-    print(profServDao.getAllServicesFromProfID(36))
 
     pass
