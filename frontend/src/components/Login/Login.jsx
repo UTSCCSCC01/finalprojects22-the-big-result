@@ -33,7 +33,7 @@ function Login() {
       .then((res) => {
         localStorage.setItem("token", res.data.access_token);
         // only go to profile tab when login is successful
-        window.location = "/successlogin";
+        window.location = "/";
         setFailedLogin(false);
       })
       .catch((err) => {

@@ -1,4 +1,6 @@
 #how-it-works {
+    border-top: 1px solid #ebe9f5;
+    border-bottom: 1px solid #ebe9f5;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,8 +8,7 @@
 }
 
 .p-steps {
-    padding: 30px;
-    /* font-size:larger; */
+    padding: 35px;
 }
 
 .hiw-container {

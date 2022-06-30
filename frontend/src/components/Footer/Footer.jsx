@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTreeCity } from "@fortawesome/free-solid-svg-icons";
-import { faAppleAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTwitter, faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons"
 import "./Footer.css";
 
 
@@ -10,9 +9,8 @@ import "./Footer.css";
 const Footer = () => {
     return (
         <footer className="footer">
-
             <p className="icons">
-                <FontAwesomeIcon icon={faTreeCity} size="lg" color="#white" /> <FontAwesomeIcon icon={faAppleAlt} color="#white" /> <FontAwesomeIcon icon="fa-brands fa-twitter" color="#white"/>
+                <FontAwesomeIcon icon={faFacebook} size="xl" color="#white"/> <FontAwesomeIcon icon={faTwitter} size="xl" color="#white"/> <FontAwesomeIcon icon={faInstagram} size="xl" color="#white"/>
             </p>
             <p className="text">© 2022 Amorr</p>
         </footer>
