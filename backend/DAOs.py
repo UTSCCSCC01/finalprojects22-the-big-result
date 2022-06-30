@@ -3,7 +3,7 @@ from typing import List
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
     AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status
 
-from datetime import time, date
+from datetime import time, date, datetime, timezone
 from sqlalchemy import select, update, delete, values
 from sqlalchemy import func
 
@@ -224,6 +224,18 @@ class BookingsDAO:
         return Bookings.query.filter_by(customerID=custID, status=status).all()
 
 
+    def addBooking(self,custID:int, profID: int,beginServDateTime: datetime, endServDateTime: datetime,
+                   location: str, status: Status, price: float, serviceName: str ,
+                   specialInstructions = ""):
+        newBooking = Bookings(customerID=custID,professionalID=profID,
+                              beginServiceDateTime=beginServDateTime,endServiceDateTime=endServDateTime,
+                              location=location,status=status,price=price,serviceName=serviceName,
+                              specialInstructions=specialInstructions)
+
+        db.session.add(newBooking)
+        db.session.commit()
+
+
 def runDAOQueries():
     custDao = CustomersDAO()
 
@@ -277,6 +289,8 @@ def runDAOQueries():
     # availNonRecDao.deleteAvailabilitiesForProfIDAndDay(40,date=date(2022,5,12))
 
     bookingsDao = BookingsDAO()
+
+    # bookingsDao.addBooking(35,40,datetime(2022,6,27,13,30),datetime(2022,6,27,15,30),"UTSC Campus",Status.BOOKED,80.5,"makeup",specialInstructions="Go fast!!!")
 
     # print(bookingsDao.getBookingsFromCustID(34))
     # print(bookingsDao.getBookingsFromStatusForProf(36, Status.BOOKED))
