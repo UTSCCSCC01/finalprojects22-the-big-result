@@ -6,6 +6,8 @@ import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 import Profile from "./components/Profile/Profile";
 import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+import LandingPage from "./views/LandingPage";
 
 function App() {
   return (
@@ -18,7 +20,9 @@ function App() {
           <Route path="/serviceProviders" element={<ProvidersPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/" element={<LandingPage />} />
         </Routes>
+        <Footer />
       </div>
     </BrowserRouter>
   );

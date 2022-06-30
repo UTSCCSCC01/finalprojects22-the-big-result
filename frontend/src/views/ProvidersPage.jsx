@@ -11,6 +11,7 @@ import {
 
 import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
+import Banner from "../components/Banner/Banner";
 
 import "../components/Filters.css";
 import Footer from "../components/Footer/Footer";
@@ -119,7 +120,6 @@ function ProviderPage(props) {
           />
         ))}
       </div>
-      <Footer />
     </div>
   );
 }

@@ -1,0 +1,21 @@
+#banner {
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+  padding: 50px;
+}
+
+#banner button {
+  background-color: black;
+}
+
+#banner button:hover {
+  background-color: #5646ab;
+}
+
+.banner-img {
+  height: 50vh;
+  padding: 20px;
+}

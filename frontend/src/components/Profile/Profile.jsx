@@ -23,7 +23,7 @@ function Profile(props) {
   }, []);
 
   return (
-    <div id="profile">
+    <div id="profile" className="page">
       <div className="profile-container">
         <div className="profile-inner-container">
           <div className="img-container">
