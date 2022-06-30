@@ -1,10 +1,12 @@
 from typing import List
 
-from models import db, Customer, Professional, Admin, Services, professionalServices, Reviews, AvailabilitiesRec, \
+from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
     AvailabilitiesNonRec, DayOfWeek, IsAvailable
 
 from datetime import time, date
 from sqlalchemy import select, update, delete, values
+from sqlalchemy import func
+
 
 
 class CustomersDAO:
@@ -76,6 +78,21 @@ class ProfessionalsDAO:
     def getFirstNReviewsForProfesional(self, id: int, numReviews=3) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
 
+    def getProfessionalsByLocation(self,location:str) -> List[Professional]:
+        return Professional.query.filter_by(location=location).all()
+
+    def getLowestAveragePrice(self) -> float:
+        return db.session.query(func.min(Professional.averageCost)).scalar()
+
+    def getHighestAveragePrice(self) ->float:
+        return db.session.query(func.max(Professional.averageCost)).scalar()
+
+    def getProfessionalsWithMinRating(self, minRating: float) -> List[Professional]:
+        return Professional.query.filter(Professional.ratings >= minRating).all()
+
+    # This is price inclusive
+    def getProfessionalsByAvgPriceRange(self, minPrice: float, maxPrice: float) -> List[Professional]:
+        return Professional.query.filter(Professional.averageCost.between(minPrice,maxPrice)).all()
 
 class AdminDAO:
 
@@ -111,6 +128,10 @@ class ServicesDAO:
     def getAllServices(self) -> List[Services]:
         return Services.query.all()
 
+    def serviceExists(self, serviceName: str) -> bool:
+        queryRes = Services.query.filter_by(serviceName=serviceName).first()
+        return queryRes is not None
+
     def getServiceByName(self, servicename: str) -> Services:
         return Services.query.filter(serviceName=servicename).first()
 
@@ -123,7 +144,12 @@ class ServicesDAO:
         return Services.query.filter_by(serviceName=servicename).first().professionals
 
 
+
 class ProfessionalServicesDAO:
+
+    def getProfessionalsByServicePrice(self,servicename: str, minPrice: float, maxPrice: float) -> List[Professional]:
+        return ProfessionalServices.query.filter(ProfessionalServices.serviceName == servicename,
+                                                 ProfessionalServices.defaultPrice.between(minPrice,maxPrice)).all()
 
     def getServiceFromUserID(self, id):
         return db.engine.execute(
@@ -189,6 +215,11 @@ def runDAOQueries():
     profDao = ProfessionalsDAO()
     # print(profDao.getAllServicesForProfessional(36))
     # print(profDao.getFirstNReviewsForProfesional(36,1))
+    # print(profDao.getLowestAveragePrice())
+    # print(profDao.getHighestAveragePrice())
+    # print(profDao.getProvidersWithMinRating(2))
+    # print(profDao.getProfessionalsByAvgPriceRange(0,70))
+
 
     serviceDao = ServicesDAO()
 
@@ -198,8 +229,9 @@ def runDAOQueries():
 
     # prof = profDao.getProfessionalOnId(36)
 
-    # profServDao = ProfessionalServicesDAO()
+    profServDao = ProfessionalServicesDAO()
     # print(profServDao.getServiceFromUserID(6))
+    # print(profServDao.getProfessionalsByServicePrice("hairstyling",70,100))
 
     # serviceDao.addService("nails","Making your nails look really pretty!")
 
