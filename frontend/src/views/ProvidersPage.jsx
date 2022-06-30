@@ -13,6 +13,7 @@ import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
 
 import "../components/Filters.css";
+import Footer from "../components/Footer/Footer";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);
@@ -118,6 +119,7 @@ function ProviderPage(props) {
           />
         ))}
       </div>
+      <Footer />
     </div>
   );
 }
