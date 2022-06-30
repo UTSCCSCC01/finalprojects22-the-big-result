@@ -76,21 +76,24 @@ def set_recurring_availability():
 # non recurring availabilities
 @calender_blueprint.route('/setNonRecurrAvailability', methods=["POST"])
 def set_non_recurring_availability():
-    """
-    professionalId : xhidhqwoe
-    events: {
-        'DATE' : { // YYYY-MM-DD
-            '0' : { // first time slot
-               "start" : HH:MM:SS (0-24)
-               "end" : HH:MM:SS (0-24)
-                }
 
+    professionalId = request.json.get("professionalId", None)
+    availabilities = request.json.get("events", None)
 
-            },
-       }
-    """
+    for date_string in availabilities:
+        calendar_date = date.fromisoformat(date_string)
+        # deleteAvailabilitiesForProfIDAndDay(professionalId, calendar_date)
 
-    """
-    No message, 200
-    """
-    pass
+        time_slots = availabilities[date_string]
+
+        for time_slot in time_slots:
+            start = time.fromisoformat(time_slot["start"])
+            end = time.fromisoformat(time_slot["end"])
+            # addAvailability(professionalId, calendar_date, start, end, 1)
+
+        if not len(time_slots):
+            time_object = time.fromisoformat("00:00:00")
+            # addAvailability(professionalId, calendar_date, time_object, time_object, 0)
+            pass
+
+    return {"success": "yes"}
