@@ -1,9 +1,11 @@
 from typing import List
 
-from models import db, Customer, Professional, Admin, Services, professionalServices, Reviews
+from models import db, Customer, Professional, Admin, Services, professionalServices, Reviews, AvailabilitiesRec, \
+    AvailabilitiesNonRec, DayOfWeek, IsAvailable
 
+from datetime import time, date
+from sqlalchemy import select, update, delete, values
 
-from sqlalchemy.orm import joinedload
 
 class CustomersDAO:
 
@@ -16,16 +18,17 @@ class CustomersDAO:
     def getAllCustomers(self) -> List[Customer]:
         return Customer.query.all()
 
-    def isValidLoginWithUsername(self, username:str, password: str) -> bool:
-        queryRes = Customer.query.filter_by(username=username,password=password).first()
+    def isValidLoginWithUsername(self, username: str, password: str) -> bool:
+        queryRes = Customer.query.filter_by(username=username, password=password).first()
         return queryRes is not None
 
-    def addCustomer(self,firstname: str, lastname: str, email: str, username: str, password: str) -> None:
-        newCustomer = Customer(firstName=firstname,lastName=lastname, email=email, username=username, password= password)
+    def addCustomer(self, firstname: str, lastname: str, email: str, username: str, password: str) -> None:
+        newCustomer = Customer(firstName=firstname, lastName=lastname, email=email, username=username,
+                               password=password)
         db.session.add(newCustomer)
         db.session.commit()
 
-    def userNameExists(self, username:str) -> bool:
+    def userNameExists(self, username: str) -> bool:
         queryRes = Customer.query.filter_by(username=username).first()
         return queryRes is not None
 
@@ -34,29 +37,29 @@ class CustomersDAO:
         return queryRes is not None
 
 
-
-
 class ProfessionalsDAO:
 
     def getProfessionalOnId(self, id: int) -> Professional:
         return Professional.query.filter_by(id=id).first()
 
-    def getProfessionalOnUsername(self, username: str) ->Professional:
+    def getProfessionalOnUsername(self, username: str) -> Professional:
         return Professional.query.filter_by(username=username).first()
 
     def getAllProfessionals(self) -> List[Professional]:
         return Professional.query.all()
 
-    def isValidLoginWithUsername(self, username:str, password: str) -> bool:
-        queryRes = Professional.query.filter_by(username=username,password=password).first()
+    def isValidLoginWithUsername(self, username: str, password: str) -> bool:
+        queryRes = Professional.query.filter_by(username=username, password=password).first()
         return queryRes is not None
 
-    def addProfessional(self,firstname: str, lastname: str, email: str, username: str, password: str, description = None, rating=0,averageCost=None) -> None:
-        newProfess = Professional(firstName=firstname,lastName=lastname, email=email, username=username, password= password,description=description, ratings=rating,averageCost=averageCost)
+    def addProfessional(self, firstname: str, lastname: str, email: str, username: str, password: str, description=None,
+                        rating=0, averageCost=None) -> None:
+        newProfess = Professional(firstName=firstname, lastName=lastname, email=email, username=username,
+                                  password=password, description=description, ratings=rating, averageCost=averageCost)
         db.session.add(newProfess)
         db.session.commit()
 
-    def userNameExists(self, username:str) -> bool:
+    def userNameExists(self, username: str) -> bool:
         queryRes = Professional.query.filter_by(username=username).first()
         return queryRes is not None
 
@@ -64,13 +67,13 @@ class ProfessionalsDAO:
         queryRes = Professional.query.filter_by(email=email).first()
         return queryRes is not None
 
-    def getAllServicesForProfessional(self, id:int) -> List[Services]:
+    def getAllServicesForProfessional(self, id: int) -> List[Services]:
         return Professional.query.filter_by(id=id).first().services
 
-    def getAllReviewsForProfesional(self,id:int) -> List[Reviews]:
+    def getAllReviewsForProfesional(self, id: int) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews
 
-    def getFirstNReviewsForProfesional(self,id:int, numReviews = 3) -> List[Reviews]:
+    def getFirstNReviewsForProfesional(self, id: int, numReviews=3) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
 
 
@@ -85,16 +88,16 @@ class AdminDAO:
     def getAllAdmins(self) -> List[Admin]:
         return Admin.query.all()
 
-    def isValidLoginWithUsername(self, username:str, password: str) -> bool:
-        queryRes = Admin.query.filter_by(username=username,password=password).first()
+    def isValidLoginWithUsername(self, username: str, password: str) -> bool:
+        queryRes = Admin.query.filter_by(username=username, password=password).first()
         return queryRes is not None
 
-    def addAdmin(self,firstname: str, lastname: str, email: str, username: str, password: str) -> None:
-        newAdmin = Admin(firstName=firstname,lastName=lastname, email=email, username=username, password= password)
+    def addAdmin(self, firstname: str, lastname: str, email: str, username: str, password: str) -> None:
+        newAdmin = Admin(firstName=firstname, lastName=lastname, email=email, username=username, password=password)
         db.session.add(newAdmin)
         db.session.commit()
 
-    def userNameExists(self, username:str) -> bool:
+    def userNameExists(self, username: str) -> bool:
         queryRes = Admin.query.filter_by(username=username).first()
         return queryRes is not None
 
@@ -103,28 +106,82 @@ class AdminDAO:
         return queryRes is not None
 
 
-
 class ServicesDAO:
 
     def getAllServices(self) -> List[Services]:
         return Services.query.all()
 
-    def getServiceByName(self,servicename:str) -> Services:
+    def getServiceByName(self, servicename: str) -> Services:
         return Services.query.filter(serviceName=servicename).first()
 
-    def addService(self,servicename,description) -> None:
-        newService = Services(serviceName=servicename,description=description)
+    def addService(self, servicename, description) -> None:
+        newService = Services(serviceName=servicename, description=description)
         db.session.add(newService)
         db.session.commit()
 
-    def getProfessionalsForService(self,servicename: str) -> List[Professional]:
+    def getProfessionalsForService(self, servicename: str) -> List[Professional]:
         return Services.query.filter_by(serviceName=servicename).first().professionals
 
 
 class ProfessionalServicesDAO:
 
     def getServiceFromUserID(self, id):
-        return db.engine.execute(f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
+        return db.engine.execute(
+            f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
+
+
+class AvailabilitiesRecDAO:
+
+    def getAvailabilitiesFromProfID(self, profID: int) -> List[AvailabilitiesRec]:
+        return AvailabilitiesRec.query.filter_by(professionalID=profID).all()
+
+    def getAvailabilitiesFromProfIDAndDay(self, profID: int, day: DayOfWeek) -> List[AvailabilitiesRec]:
+        return AvailabilitiesRec.query.filter_by(professionalID=profID, dayOfWeek=day.value).all()
+
+    def addAvailability(self, profID: int, day: DayOfWeek, startTime: time, endTime: time):
+        newAvailability = AvailabilitiesRec(professionalID=profID, dayOfWeek=day.value, startTime=startTime,
+                                            endTime=endTime)
+        db.session.add(newAvailability)
+        db.session.commit()
+
+    def deleteAvailabilitiesForProfIDAndDay(self, profID: int, day: DayOfWeek):
+        AvailabilitiesRec.query.filter_by(professionalID=profID, dayOfWeek=day.value).delete()
+        db.session.commit()
+
+    def deleteAllAvailabilitiesForProfID(self, profID: int):
+        AvailabilitiesRec.query.filter_by(professionalID=profID).delete()
+        db.session.commit()
+
+
+class AvailabilitiesNonRecDAO:
+
+    def getAvailabilitiesFromProfID(self, profID: int) -> List[AvailabilitiesNonRec]:
+        return AvailabilitiesNonRec.query.filter_by(professionalID=profID).all()
+
+    def getAvailabilitiesFromProfIDAndDate(self, profID: int, date: date) -> List[AvailabilitiesNonRec]:
+        return AvailabilitiesNonRec.query.filter_by(professionalID=profID, date=date).all()
+
+    def addAvailability(self, profID: int, date: date, startTime: time, endTime: time, isAvailable: IsAvailable):
+        newAvailability = AvailabilitiesNonRec(professionalID=profID, date=date, startTime=startTime,
+                                               endTime=endTime, isAvailable=isAvailable.value)
+        db.session.add(newAvailability)
+        db.session.commit()
+
+    def addListOfAvailabilities(self,availabilities: List[AvailabilitiesNonRec]):
+        for avail in availabilities:
+            if avail.isAvailable != 0 and avail.isAvailable != 1:
+                raise ValueError("isAvailable field must either be 0 or 1")
+            db.session.add(avail)
+        db.session.commit()
+
+    def deleteAvailabilitiesForProfIDAndDay(self, profID: int, date: date):
+        AvailabilitiesNonRec.query.filter_by(professionalID=profID, date=date).delete()
+        db.session.commit()
+
+    def deleteAllAvailabilitiesForProfID(self, profID: int):
+        AvailabilitiesNonRec.query.filter_by(professionalID=profID).delete()
+        db.session.commit()
+
 
 def runDAOQueries():
     custDao = CustomersDAO()
@@ -135,14 +192,11 @@ def runDAOQueries():
 
     serviceDao = ServicesDAO()
 
-    print(serviceDao.getProfessionalsForService("landscaping")[0])
+    # print(serviceDao.getProfessionalsForService("landscaping")[0])
 
     # print(serviceDao.getAllServices())
 
-
-
-    prof = profDao.getProfessionalOnId(36)
-
+    # prof = profDao.getProfessionalOnId(36)
 
     # profServDao = ProfessionalServicesDAO()
     # print(profServDao.getServiceFromUserID(6))
@@ -157,3 +211,20 @@ def runDAOQueries():
     # print(custDao.addCustomer("Anya1","Taflovich2","anya@utoronto.ca","anyaTaf3","haskellgooddy"))
 
     # print( Customer.query.filter_by(firstName='Mike').first())
+
+    availRecDao = AvailabilitiesRecDAO()
+
+    # print(availRecDao.getAvailabilitiesFromProfAndDayID(profID=36, day=DayOfWeek.TUESDAY))
+    # availRecDao.addAvailability(36,DayOfWeek.TUESDAY,startTime=time(hour=13,minute=15),endTime=time(hour=15,minute=15))
+    # availRecDao.deleteAvailabilitiesForProfIDAndDay(36,DayOfWeek.TUESDAY)
+
+    availNonRecDao = AvailabilitiesNonRecDAO()
+
+    # availNonRecList = [AvailabilitiesNonRec(professionalID=40,date=date(2022,6,12),startTime=time(9,14),endTime=time(11,14),isAvailable=1),AvailabilitiesNonRec(professionalID=40,date=date(2022,6,12),startTime=time(15,14),endTime=time(19,14),isAvailable=1)]
+    # print(availNonRecDao.getAvailabilitiesFromProfIDAndDate(36, date(year=2022, month=6, day=24)))
+    # availNonRecDao.addAvailability(40,date(2022,5,12),startTime=time(12,5),endTime=time(15,5),isAvailable=IsAvailable.true.value)
+    # availNonRecDao.addListOfAvailabilities(availNonRecList)
+
+    # availNonRecDao.deleteAvailabilitiesForProfIDAndDay(40,date=date(2022,5,12))
+
+    pass
