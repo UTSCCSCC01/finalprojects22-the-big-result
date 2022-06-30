@@ -241,6 +241,8 @@ def runDAOQueries():
 
     profDao = ProfessionalsDAO()
 
+    print(profDao.getProfessionalsByLocation("toronto"))
+
 
     # print(profDao.getAllServicesForProfessional(36))
     # print(profDao.getFirstNReviewsForProfesional(36,1))
