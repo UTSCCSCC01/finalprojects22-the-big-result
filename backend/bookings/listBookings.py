@@ -7,19 +7,28 @@ def getUpcomingBookings():
     return jsonify({ "bookings": [
             {
                 "customer": "Jason Brown",
-                "serviceType": "Hairstyling",
-                "serviceDate": "2 July 2022",
-                "serviceTime": "10:15",
+                "service": "Hairstyling",
+                "date": "2 July 2022",
+                "time": "10:15am",
                 "location": "72 Windrush Trail Toronto, Ontario",
                 "price": "10.00",
                 "picURL": "https://picsum.photos/100"
             },
             {
                 "customer": "Emily Williams",
-                "serviceType": "Hairstyling",
-                "serviceDate": "2 July 2022",
-                "serviceTime": "10:15",
+                "service": "Hairstyling",
+                "date": "2 July 2022",
+                "time": "10:15am",
                 "location": "39 Griffen Dr. Toronto, Ontario",
+                "price": "10.00",
+                "picURL": "https://picsum.photos/100"
+            },
+            {
+                "customer": "Paige Johnson",
+                "service": "Hairstyling",
+                "date": "2 July 2022",
+                "time": "10:15am",
+                "location": "5 Snowhill Crescent Toronto, Ontario",
                 "price": "10.00",
                 "picURL": "https://picsum.photos/100"
             }
