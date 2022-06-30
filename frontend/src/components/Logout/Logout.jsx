@@ -5,18 +5,14 @@ function Logout(props) {
     axios({ method: "POST", url: "http://localhost:5000/logout" })
       .then((res) => {
         localStorage.removeItem("token");
-        window.location = "/login"
+        window.location = "/login";
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  return (
-    <div>
-      <button onClick={logout}>Logout</button>
-    </div>
-  );
+  return <button onClick={logout}>Logout</button>;
 }
 
 export default Logout;
