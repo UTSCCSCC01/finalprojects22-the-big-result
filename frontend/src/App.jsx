@@ -6,7 +6,9 @@ import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 import ServiceList from "./views/ServicesList";
 import Profile from "./components/Profile/Profile";
-import CustomerBookingsPage from "./views/CustomerBookingsPage"
+import CustUpBookingsPage from "./views/CustUpBookingsPage"
+import CustPastBookingsPage from "./views/CustPastBookingsPage"
+// import BookingsPage from "./views/BookingsPage"
 
 function App() {
   return (
@@ -18,7 +20,10 @@ function App() {
         <Route path="/serviceProviders" element={<ProvidersPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/customerUpcomingBookings" element={<CustomerBookingsPage />} />
+        {/* <Route path="/customerUpcomingBookings" element={<BookingsPage type="Upcoming" />} />
+        <Route path="/customerPastBookings" element={<BookingsPage type="Past" />} /> */}
+        <Route path="/customerUpcomingBookings" element={<CustUpBookingsPage/>} />
+        <Route path="/customerPastBookings" element={<CustPastBookingsPage/>} />
       </Routes>
     </BrowserRouter>
   );

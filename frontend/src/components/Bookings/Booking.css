@@ -37,3 +37,13 @@
   .metadata-text {
     margin: auto 0;
   }
+
+  .btn-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-row-gap: 7px;
+  }
+
+  /* .review-btn {
+    display: hidden;
+  } */

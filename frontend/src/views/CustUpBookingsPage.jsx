@@ -3,7 +3,7 @@ import axios from "axios";
 
 import BookingCustomerUpcoming from "../components/Bookings/BookingCustomerUpcoming";
 
-function CustomerBookingsPage(props) {
+function CustUpBookingsPage(props) {
   const [bookingsList, setBookingsList] = useState([]);
 
   useEffect(() => {
@@ -41,4 +41,4 @@ function CustomerBookingsPage(props) {
   );
 }
 
-export default CustomerBookingsPage;
+export default CustUpBookingsPage;
