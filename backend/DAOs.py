@@ -141,7 +141,10 @@ class ServicesDAO:
         db.session.commit()
 
     def getProfessionalsForService(self, servicename: str) -> List[Professional]:
-        return Services.query.filter_by(serviceName=servicename).first().professionals
+        retQuery = Services.query.filter_by(serviceName=servicename).first()
+        if retQuery is None:
+            return []
+        return retQuery.professionals
 
 
 
@@ -151,9 +154,10 @@ class ProfessionalServicesDAO:
         return ProfessionalServices.query.filter(ProfessionalServices.serviceName == servicename,
                                                  ProfessionalServices.defaultPrice.between(minPrice,maxPrice)).all()
 
-    def getServiceFromUserID(self, id):
-        return db.engine.execute(
-            f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
+
+    # def getServiceFromUserID(self, id):
+    #     return db.engine.execute(
+    #         f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
 
 
 class AvailabilitiesRecDAO:
@@ -241,7 +245,7 @@ def runDAOQueries():
 
     profDao = ProfessionalsDAO()
 
-    print(profDao.getProfessionalsByLocation("toronto"))
+    # print(profDao.getProfessionalsByLocation("toronto"))
 
 
     # print(profDao.getAllServicesForProfessional(36))
@@ -296,5 +300,9 @@ def runDAOQueries():
 
     # print(bookingsDao.getBookingsFromCustID(34))
     # print(bookingsDao.getBookingsFromStatusForProf(36, Status.BOOKED))
+
+    # print(serviceDao.getProfessionalsForService("agaga"))
+
+    print(profServDao.getAllServicesFromProfID(36))
 
     pass
