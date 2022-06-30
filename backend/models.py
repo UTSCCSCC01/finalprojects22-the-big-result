@@ -59,6 +59,21 @@ class Status(enum.Enum):
     RESCHEDULED = 5
 
 
+class DayOfWeek(enum.Enum):
+    SUNDAY = 0
+    MONDAY = 1
+    TUESDAY = 2
+    WEDNESDAY = 3
+    THURSDAY = 4
+    FRIDAY = 5
+    SATURDAY = 6
+
+
+class IsAvailable(enum.Enum):
+    false = 0
+    true = 1
+
+
 professionalServices = db.Table('ProfessionalServices',
                                 db.Column('professionalID', db.Integer, db.ForeignKey('Professional.id'),
                                           primary_key=True),
@@ -192,6 +207,31 @@ class Services(db.Model):
     professionals = db.relationship("Professional", secondary=professionalServices, back_populates="services")
 
 
+class AvailabilitiesRec(db.Model):
+    __tablename__ = "AvailabilitiesRec"
+    id: int = db.Column(db.Integer, primary_key=True)
+    professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
+    dayOfWeek: int = db.Column(db.Integer)
+    startTime = db.Column(db.Time)
+    endTime = db.Column(db.Time)
+
+    professional: Professional = relationship('Professional', backref='availabilitiesRec', lazy=True)
+
+
+
+class AvailabilitiesNonRec(db.Model):
+    __tablename__ = "AvailabilitiesNonRec"
+    id: int = db.Column(db.Integer, primary_key=True)
+    professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
+    date: date = db.Column(db.Date, nullable=False)
+    startTime = db.Column(db.Time, nullable=False)
+    endTime = db.Column(db.Time, nullable=False)
+    isAvailable: int = db.Column(db.Integer, nullable=False)
+
+    professional: Professional = relationship('Professional', backref='availabilitiesNonRec', lazy=True)
+
+
+
 def runDBQueries():
     # poggers = TestUser(username='poggers', email='pog@example.com')
     # db.session.add(poggers)
@@ -217,7 +257,7 @@ def runDBQueries():
     # currProfessional.description
     # currProfessional.services
 
-    print(Bookings.query.all()[0].beginServiceTime)
+    # print(Bookings.query.all()[0].beginServiceTime)
 
     # print("Running database queries")
     # print(date(2019, 4, 13))
@@ -225,6 +265,25 @@ def runDBQueries():
 
     # print(Reviews.query.filter_by(id=4).first().booking.location)
     # print(Customer.query.filter_by(id=34).first().bookings[0].specialInstructions)
+
+    # print(DayOfWeek(5))
+    # avail = AvailabilitiesRec.query.first()
+    # print(avail.professionalID)
+    # print(avail.dayOfWeek)
+    # print(avail.startTime)
+    # print(avail.endTime)
+    # print(avail.professional.firstName)
+
+    #
+    # availNonRec = AvailabilitiesNonRec.query.first()
+    # print(availNonRec.professionalID)
+    # print(availNonRec.date)
+    # print(availNonRec.startTime)
+    # print(availNonRec.endTime)
+    # print(availNonRec.isAvailable)
+    # print(availNonRec.professional.firstName)
+
+
 
     pass
 
