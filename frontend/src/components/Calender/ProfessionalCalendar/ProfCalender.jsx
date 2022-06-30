@@ -1,47 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import axios from "axios";
-import moment from "moment";
-// import events from "./events";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+
+import {eventStyleGetter, recurrEvents, getTimeFromDate, concatEvents} from "./EventActions";
+
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import './Calender.css';
+import '../Calender.css';
+
+import axios from "axios";
+import moment from "moment";
+
 
 moment.locale("en-GB", {week: {dow: 1, doy: 1,}});
 const localizer = momentLocalizer(moment);
 
-// Calendar.momentLocalizer(moment);
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
-
-// TODO: send recurr availability as time not date 	getHours(), getMinutes
-
-// new: formatting events
-// const event = [
-//   {
-//     start: moment('2021-03-14', 'YYYY-MM-DD').toDate(),
-//     end: moment('2021-03-14', 'YYYY-MM-DD').add(2, "hours").toDate(),
-//     title: "Cumple"
-//   }
-// ];
-
-// new: events are the availability of the professionals
-// make date object new Date('2015-01-30 10:00')
-// repeat each event for next 4 months
-// no overlapping availability
-// can move avialble events around
-
-var dateFormat = 'YYYY-DD-MM HH:mm:ss'; // 'YYYY-DD-MM HH:mm:ss';
-var testDateUtc = moment.utc('2015-01-30 10:00:00');
-var localDate = testDateUtc.local();
-console.log(localDate.format(dateFormat));
-const datee = new Date();
-console.log(datee.getHours().toString(), datee.getSeconds().toString());
-
 // constants
-const RECURRING = "recurring";
-const ACTUAL = "ACTUAL";
+const RECURRING = "RECURRING";
+const NONRECURR = "NON-RECURRING";
 const VIEW = "VIEW";
 const BOOKING = "BOOKING"
 const AVAILABILITY = "AVAILABILITY"
@@ -52,6 +30,7 @@ const AVAIL_COLOR = "7E0080"
 function ProfCalender() {
   // todo: change name from events to availability
   const [eventsToRecurr, setEventsToRecurr] = useState([]); // events for one week that will recurr
+  const [nonRecurrEvents, setNonRecurrEvents] = useState([]);
   const [allAvailabililties, setAllAvailabililties] = useState([]); // todo repeat eventsToRecurr 4 times for a month from todays day
   const [bookings, setBookings] = useState([]);
   const [allEvents, setAllEvents] = useState([]); // both bookings and availabilities
@@ -62,6 +41,7 @@ function ProfCalender() {
     axios({
       method: "GET",
       url: `http://localhost:5000/getRecurrAvailability`,
+      data: { professionalId: "01"} // make sure valid prof id
 
     }).then((res) => {
         const res_formatted = res.data.map((r) => {
@@ -72,7 +52,25 @@ function ProfCalender() {
             color: AVAIL_COLOR}
         })
         setEventsToRecurr(res_formatted);
-        setAllAvailabililties(recurrEvents(res_formatted, 2));
+        setAllAvailabililties(recurrEvents(res_formatted, 4));
+
+      }).catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `http://localhost:5000/getNonRecurrAvailability`,
+
+    }).then((res) => {
+        const res_formatted = res.data.map((r) => {
+          return { ...r, 
+            start: moment(r.start, 'YYYY-MM-DD HH:mm:ss').toDate(), 
+            end: moment(r.end, 'YYYY-MM-DD HH:mm:ss').toDate(),
+            title: AVAILABILITY,  
+            color: AVAIL_COLOR}
+        })
+        setNonRecurrEvents(res_formatted);
 
       }).catch((err) => console.log(err));
   }, []);
@@ -94,22 +92,7 @@ function ProfCalender() {
 
       }).catch((err) => console.log(err));
   }, []);
-  
-  
-  // event, start, end, isSelected
-  const eventStyleGetter = (event, start, end, isSelected) => {
-      var backgroundColor = '#' + event.color;
-      var style = {
-          backgroundColor: backgroundColor,
-          borderRadius: '10px',
-          opacity: 0.7,
-          color: 'white',
-          border: '20px',
-          display: 'block',
-          boxShadow: 'black'
-      };
-      return { style: style };
-  }
+    
 
   const handleSelect = ({ start, end }) => {
     console.log("selecting event ...");
@@ -174,44 +157,12 @@ function ProfCalender() {
   };
   
 
-  const getNextWeek = (date) => {
-    // courtsey: https://stackoverflow.com/questions/1025693/how-to-get-next-week-date-in-javascript
-    var nextWeek = new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000);
-    return nextWeek;
-  }
-
-
-  // todo: numWeeks
-  const recurrEvents = (eventsToRecur, numWeeks) => {
-    let recurredEvents = [];
-    eventsToRecur.forEach(function(e) {
-        recurredEvents.push({...e, id: recurredEvents.length });
-        recurredEvents.push({...e, 
-          start: getNextWeek(e.start), 
-          end: getNextWeek(e.end), 
-          id: recurredEvents.length })
-      });
-    return recurredEvents;
-  }
-
-  const getTimeFromDate = (date) => {
-    return date.getHours().toString().padStart(2, '0') + ":" +
-          date.getMinutes().toString().padStart(2, '0') + ":" +
-          date.getSeconds().toString().padStart(2, '0');
-  }
-
   const onSubmitEditRecurr = () => {
-    console.log("submitting edit...")
-    setMode(VIEW);
-    // todo: send data to backend
-    if (mode==RECURRING) {
-      setAllAvailabililties(recurrEvents(eventsToRecurr, 2));
-    }
+    console.log("submitting recurr edit...");
 
     // backend stores recurring availabilities in times HH:MM:SS
     const eventsToRecurrFormatted = [];
     eventsToRecurr.forEach(function(e) {
-      console.log("THIS IS e", e, e.start.getDay());
       eventsToRecurrFormatted.push({ 
           dayOfWeek: e.start.getDay(),
           start: getTimeFromDate(e.start), 
@@ -225,11 +176,33 @@ function ProfCalender() {
       data: { events: eventsToRecurrFormatted }
      })
       .then(() => {
-        //  done sending info
+        setMode(VIEW);
       })
       .catch((err) => {
         console.log(err);
       });
+    
+    // TODO: instead make a call to /getAllAvailabilities to get merged availabiliteis
+    // ugly: how is merged availability data formatted
+    setAllAvailabililties(recurrEvents(eventsToRecurr, 4));
+  }
+
+  const onSubmitEditNonRecurr = () => {
+    console.log("submitting non-recurr edit...");
+    
+    axios({ 
+      method: "POST", 
+      url: "http://localhost:5000/addNonRecurrAvailability",
+      data: { events: nonRecurrEvents }
+     })
+      .then(() => {
+        setMode(VIEW);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
+    // UGLY: how to merge availabilities here? 
   }
 
 
@@ -238,7 +211,7 @@ function ProfCalender() {
     <div>
       <button onClick={() => {setMode(VIEW); setEventsToRecurr(allAvailabililties)}}>View</button>
       <button onClick={() => {setMode(RECURRING)}}>Recurr</button>
-      <button onClick={() => {setMode(ACTUAL)}}>Non </button>
+      <button onClick={() => {setMode(NONRECURR)}}>Non-recurr</button>
       {/* todo: no overlap */}
 
       {mode==VIEW && (
@@ -251,7 +224,7 @@ function ProfCalender() {
             localizer={localizer}
             defaultDate={new Date()} 
             defaultView="week"
-            events={allAvailabililties.concat(bookings)}
+            events={concatEvents(allAvailabililties, bookings)}
             style={{ height: "100vh" }}
             eventPropGetter={(eventStyleGetter)}
           />
@@ -259,7 +232,7 @@ function ProfCalender() {
       </div>
       )}
 
-      {(mode==RECURRING || mode==ACTUAL) && (
+      {(mode==RECURRING || mode==NONRECURR) && (
         <div>
           <h2>{mode}</h2>
           <p>editing {mode==RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
@@ -270,7 +243,7 @@ function ProfCalender() {
               localizer={localizer}
               defaultDate={new Date()} 
               defaultView="week"
-              events={eventsToRecurr.concat(bookings)}
+              events={concatEvents(eventsToRecurr, bookings)}
               style={{ height: "100vh" }}
               onSelectEvent={handleSelectEvent}
               onSelectSlot={handleSelect}
@@ -279,7 +252,7 @@ function ProfCalender() {
               eventPropGetter={(eventStyleGetter)}
             />
           </div>
-          <button onClick={onSubmitEditRecurr}>Submit</button>
+          <button onClick={mode==RECURRING ? onSubmitEditRecurr : onSubmitEditNonRecurr}>Submit</button>
         </div>
       )}
       

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from events import recurringAvailabilities
+from events import recurringAvailabilities, nonRecurringAvailabilities
 from flask import Blueprint, request, jsonify
 
 calender_blueprint = Blueprint('calender_blueprint', __name__)
@@ -26,7 +26,7 @@ def add_recurring_availability():
 # non recurring availabilities
 @calender_blueprint.route('/getNonRecurrAvailability', methods=["GET"])
 def get_non_recurring_availability():
-    pass
+    return jsonify(nonRecurringAvailabilities)
 
 @calender_blueprint.route('/addNonRecurrAvailability', methods=["POST"])
 def add_non_recurring_availability():

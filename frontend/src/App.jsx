@@ -7,7 +7,7 @@ import ProviderPage from "./components/Provider/ProviderPage";
 import SignUp from "./views/SignUp";
 import ServiceList from "./views/ServicesList";
 import Book from './components/Booking/Book'; // NEW
-import ProfCalender from './components/Calender/ProfCalender' // NEW
+import ProfCalender from './components/Calender/ProfessionalCalendar/ProfCalender' // NEW
 import CustCalender from './components/Calender/CustCalender';
 
 function App() {
