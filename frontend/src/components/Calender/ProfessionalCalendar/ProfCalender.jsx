@@ -17,6 +17,14 @@ const localizer = momentLocalizer(moment);
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
+export const navigateContants = {
+  PREVIOUS: 'PREV',
+  NEXT: 'NEXT',
+  TODAY: 'TODAY',
+  DATE: 'DATE'
+};
+
+// todo: put this in export block 
 // constants
 const RECURRING = "RECURRING";
 const NONRECURR = "NON-RECURRING";
@@ -205,26 +213,31 @@ function ProfCalender() {
     // UGLY: how to merge availabilities here? 
   }
 
+  const onNavigate2 =(date, view) => {
+    console.log('NAVIGATING >>>', date, view);
+  }
+
 
   // setEventsToRecurr(allAvailabililties) resets the recurr view if not submitting  
   return (
     <div>
       <div className="tabs">
         <button className="tab active" onClick={() => {setMode(VIEW); setEventsToRecurr(allAvailabililties)}}>
-          View
+          VIEW
         </button>
         <button className="tab" onClick={() => {setMode(RECURRING)}}>
-          Recurr
+          RECURRING AVAILABILITY
         </button>
         <button className="tab" onClick={() => {setMode(NONRECURR)}}>
-          Non-Recurr
+          ONE-TIME AVAILABILITY
         </button>
       </div>
       {/* todo: no overlap */}
 
       {mode==VIEW && (
       <div>
-        <p>editing {mode==RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
+        <p>{mode==RECURRING ? 'Edit your weekly recurring availability' : 
+        'Add your non-recurring availability'}</p>
         <div className="prof-calender">
           <Calendar
             views={["week", "day"]}
@@ -234,6 +247,7 @@ function ProfCalender() {
             events={concatEvents(allAvailabililties, bookings)}
             style={{ height: "100vh" }}
             eventPropGetter={(eventStyleGetter)}
+            onNavigate={onNavigate2}
           />
         </div>
       </div>

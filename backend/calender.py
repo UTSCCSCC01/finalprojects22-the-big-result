@@ -22,12 +22,6 @@ def get_availability():
     --> Then, get all bookings for that day and exclude those times from the schedule
     """
 
-
-
-
-
-
-
     """ [
     '0' : { // SUNDAY
         '0' : { // first time slot
