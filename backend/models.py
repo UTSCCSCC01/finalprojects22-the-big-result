@@ -3,7 +3,7 @@ from typing import List
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date
-from sqlalchemy import Enum
+from sqlalchemy import Enum, func
 from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
@@ -52,11 +52,11 @@ db = SQLAlchemy()
 # Actual database objects here
 
 class Status(enum.Enum):
-    BOOKED = 1
-    CANCELLED = 2
-    IN_PROGRESS = 3
-    RESOLVED = 4
-    RESCHEDULED = 5
+    BOOKED = "BOOKED"
+    CANCELLED = "CANCELLED"
+    IN_PROGRESS = "IN_PROGRESS"
+    RESOLVED = "RESOLVED"
+    RESCHEDULED = "RESCHEDULED"
 
 
 class DayOfWeek(enum.Enum):
@@ -115,6 +115,7 @@ class Professional(User):
     description: str = db.Column(db.Text, nullable=True)
     ratings: float = db.Column(db.Float, nullable=False, default=0)
     averageCost: float = db.Column(db.Float)
+    location: str = db.Column(db.String(500),default= "UTSC")
 
     # List of services
     services = relationship("Services", secondary=professionalServices, lazy='subquery', back_populates="professionals")
@@ -189,12 +190,12 @@ class Bookings(db.Model):
     customerID: int = db.Column(db.Integer, db.ForeignKey("Customer.id"))
     professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
 
-    beginServiceTime: datetime = db.Column(db.DateTime, default=datetime(2001, 5, 26))
-    endServiceTime: datetime = db.Column(db.DateTime, default=datetime(2001, 5, 26))
+    beginServiceDateTime: datetime = db.Column(db.DateTime, default=datetime(2001, 5, 26))
+    endServiceDateTime: datetime = db.Column(db.DateTime, default=datetime(2001, 5, 26))
     location: str = db.Column(db.String(1000), nullable=True)
     status: Status = db.Column(Enum(Status), nullable=False, default=Status.BOOKED)
     price: float = db.Column(db.Float, nullable=False)
-    bookingTime: datetime = db.Column(db.DateTime, default=datetime.utcnow)
+    bookingDateTime: datetime = db.Column(db.DateTime, default=datetime.today())
     specialInstructions: str = db.Column(db.String(500), nullable=True)
     serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
 

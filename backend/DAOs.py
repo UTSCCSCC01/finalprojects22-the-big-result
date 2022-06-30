@@ -1,9 +1,9 @@
 from typing import List
 
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
-    AvailabilitiesNonRec, DayOfWeek, IsAvailable
+    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status
 
-from datetime import time, date
+from datetime import time, date, datetime, timezone
 from sqlalchemy import select, update, delete, values
 from sqlalchemy import func
 
@@ -141,7 +141,10 @@ class ServicesDAO:
         db.session.commit()
 
     def getProfessionalsForService(self, servicename: str) -> List[Professional]:
-        return Services.query.filter_by(serviceName=servicename).first().professionals
+        retQuery = Services.query.filter_by(serviceName=servicename).first()
+        if retQuery is None:
+            return []
+        return retQuery.professionals
 
 
 
@@ -151,9 +154,10 @@ class ProfessionalServicesDAO:
         return ProfessionalServices.query.filter(ProfessionalServices.serviceName == servicename,
                                                  ProfessionalServices.defaultPrice.between(minPrice,maxPrice)).all()
 
-    def getServiceFromUserID(self, id):
-        return db.engine.execute(
-            f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
+
+    # def getServiceFromUserID(self, id):
+    #     return db.engine.execute(
+    #         f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
 
 
 class AvailabilitiesRecDAO:
@@ -208,11 +212,42 @@ class AvailabilitiesNonRecDAO:
         AvailabilitiesNonRec.query.filter_by(professionalID=profID).delete()
         db.session.commit()
 
+class BookingsDAO:
+
+
+    def getBookingsFromProfID(self, profID: int) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID).all()
+
+    def getBookingsFromCustID(self, custID: int) -> List[Bookings]:
+        return Bookings.query.filter_by(customerID=custID).all()
+
+    def getBookingsFromStatusForProf(self,profID: id, status: Status) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID, status=status).all()
+
+    def getBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
+        return Bookings.query.filter_by(customerID=custID, status=status).all()
+
+
+    def addBooking(self,custID:int, profID: int,beginServDateTime: datetime, endServDateTime: datetime,
+                   location: str, status: Status, price: float, serviceName: str ,
+                   specialInstructions = ""):
+        newBooking = Bookings(customerID=custID,professionalID=profID,
+                              beginServiceDateTime=beginServDateTime,endServiceDateTime=endServDateTime,
+                              location=location,status=status,price=price,serviceName=serviceName,
+                              specialInstructions=specialInstructions)
+
+        db.session.add(newBooking)
+        db.session.commit()
+
 
 def runDAOQueries():
     custDao = CustomersDAO()
 
     profDao = ProfessionalsDAO()
+
+    # print(profDao.getProfessionalsByLocation("toronto"))
+
+
     # print(profDao.getAllServicesForProfessional(36))
     # print(profDao.getFirstNReviewsForProfesional(36,1))
     # print(profDao.getLowestAveragePrice())
@@ -258,5 +293,15 @@ def runDAOQueries():
     # availNonRecDao.addListOfAvailabilities(availNonRecList)
 
     # availNonRecDao.deleteAvailabilitiesForProfIDAndDay(40,date=date(2022,5,12))
+
+    bookingsDao = BookingsDAO()
+
+    # bookingsDao.addBooking(35,40,datetime(2022,6,27,13,30),datetime(2022,6,27,15,30),"UTSC Campus",Status.BOOKED,80.5,"makeup",specialInstructions="Go fast!!!")
+
+    # print(bookingsDao.getBookingsFromCustID(34))
+    # print(bookingsDao.getBookingsFromStatusForProf(36, Status.BOOKED))
+
+    # print(serviceDao.getProfessionalsForService("agaga"))
+
 
     pass

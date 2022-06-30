@@ -81,6 +81,6 @@ def databaseTestingStuff():
 
 
 if __name__ == "__main__":
-    runDBQueries()
+    # runDBQueries()
     # runDAOQueries()
     app.run(debug=True)
