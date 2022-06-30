@@ -3,11 +3,11 @@ import { faTreeCity } from "@fortawesome/free-solid-svg-icons";
 import "./ServiceCard.css";
 import "../Card.css";
 
-const ServiceCard = (props) => {
+const ServiceCard = ({ service, active }) => {
   return (
-    <div className="service-card card">
+    <div className={"service-card card " + (active ? "active-svc" : "")}>
       <FontAwesomeIcon icon={faTreeCity} size="lg" color="#5646ab" />
-      <h3>{props.service}</h3>
+      <h3>{service}</h3>
     </div>
   );
 };

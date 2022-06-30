@@ -12,9 +12,11 @@ function Login() {
     axios({
       method: "GET",
       url: `http://localhost:5000/verify-loggedin`,
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     })
-      .then(() => (window.location = "/successlogin"))
+      // .then((res) => {
+      //   console.log(res);
+      //   window.location = "/successlogin";
+      // })
       .catch((err) => console.log(err));
   }, []);
 
@@ -64,7 +66,7 @@ function Login() {
   };
 
   return (
-    <div id="login">
+    <div id="login" className="page">
       <h1>Login as a</h1>
       <div className="tabs">
         <button className="tab active" id="customer" onClick={handleTabs}>
