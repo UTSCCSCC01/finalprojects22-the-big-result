@@ -15,6 +15,8 @@ const localizer = momentLocalizer(moment);
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 
+// TODO: send recurr availability as time not date 	getHours(), getMinutes
+
 // new: formatting events
 // const event = [
 //   {
@@ -30,10 +32,12 @@ const DragAndDropCalendar = withDragAndDrop(Calendar);
 // no overlapping availability
 // can move avialble events around
 
-var dateFormat = 'YYYY-DD-MM HH:mm:ss';
+var dateFormat = 'YYYY-DD-MM HH:mm:ss'; // 'YYYY-DD-MM HH:mm:ss';
 var testDateUtc = moment.utc('2015-01-30 10:00:00');
 var localDate = testDateUtc.local();
 console.log(localDate.format(dateFormat));
+const datee = new Date();
+console.log(datee.getHours().toString(), datee.getSeconds().toString());
 
 // constants
 const RECURRING = "recurring";
@@ -92,6 +96,7 @@ function ProfCalender() {
   }, []);
   
   
+  // event, start, end, isSelected
   const eventStyleGetter = (event, start, end, isSelected) => {
       var backgroundColor = '#' + event.color;
       var style = {
@@ -189,8 +194,13 @@ function ProfCalender() {
     return recurredEvents;
   }
 
+  const getTimeFromDate = (date) => {
+    return date.getHours().toString().padStart(2, '0') + ":" +
+          date.getMinutes().toString().padStart(2, '0') + ":" +
+          date.getSeconds().toString().padStart(2, '0');
+  }
 
-  const onSubmitEdit = () => {
+  const onSubmitEditRecurr = () => {
     console.log("submitting edit...")
     setMode(VIEW);
     // todo: send data to backend
@@ -198,14 +208,24 @@ function ProfCalender() {
       setAllAvailabililties(recurrEvents(eventsToRecurr, 2));
     }
 
-    // send to backend
+    // backend stores recurring availabilities in times HH:MM:SS
+    const eventsToRecurrFormatted = [];
+    eventsToRecurr.forEach(function(e) {
+      console.log("THIS IS e", e, e.start.getDay());
+      eventsToRecurrFormatted.push({ 
+          dayOfWeek: e.start.getDay(),
+          start: getTimeFromDate(e.start), 
+          end: getTimeFromDate(e.end) 
+      })
+    })
+
     axios({ 
       method: "POST", 
       url: "http://localhost:5000/addRecurrAvailability",
-      data: { events: eventsToRecurr }
+      data: { events: eventsToRecurrFormatted }
      })
       .then(() => {
-        //  send info here
+        //  done sending info
       })
       .catch((err) => {
         console.log(err);
@@ -218,11 +238,13 @@ function ProfCalender() {
     <div>
       <button onClick={() => {setMode(VIEW); setEventsToRecurr(allAvailabililties)}}>View</button>
       <button onClick={() => {setMode(RECURRING)}}>Recurr</button>
-      <button onClick={() => {setMode(ACTUAL)}}>Actual</button>
+      <button onClick={() => {setMode(ACTUAL)}}>Non </button>
       {/* todo: no overlap */}
 
       {mode==VIEW && (
       <div>
+        <h2>VIEW</h2>
+        <p>editing {mode==RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
         <div className="prof-calender">
           <Calendar
             views={["week", "day"]}
@@ -239,6 +261,8 @@ function ProfCalender() {
 
       {(mode==RECURRING || mode==ACTUAL) && (
         <div>
+          <h2>{mode}</h2>
+          <p>editing {mode==RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
           <div className={mode==RECURRING ? "prof-calender recurr" : "prof-calender non-recurr"}>
             <DragAndDropCalendar
               views={["week", "day"]} 
@@ -255,7 +279,7 @@ function ProfCalender() {
               eventPropGetter={(eventStyleGetter)}
             />
           </div>
-          <button onClick={onSubmitEdit}>Submit</button>
+          <button onClick={onSubmitEditRecurr}>Submit</button>
         </div>
       )}
       
