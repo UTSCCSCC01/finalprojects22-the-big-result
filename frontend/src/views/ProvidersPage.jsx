@@ -15,6 +15,7 @@ import Banner from "../components/Banner/Banner";
 
 import "../components/Filters.css";
 import Footer from "../components/Footer/Footer";
+import HowItWorks from "../components/HowItWorks/HowItWorks";
 
 function ProviderPage(props) {
   const [providerList, setProviderList] = useState([]);

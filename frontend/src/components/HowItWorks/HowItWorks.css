@@ -1,0 +1,41 @@
+#how-it-works {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+
+.p-steps {
+    padding: 30px;
+    /* font-size:larger; */
+}
+
+.hiw-container {
+    width: 70%;
+}
+
+.profile-img {
+    border-radius: 5px;
+}
+
+.hiw-inner-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 2rem;
+}
+
+.img-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.img-container img {
+    height: 100%;
+    max-width: 90%;
+    object-fit: scale-down;
+}
+
+.description-container {
+    text-align: left;
+}

@@ -6,4 +6,11 @@
 .text {
   text-align: center;
   padding: 30px 30px;
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.icons {
+  text-align: center;
+  padding-top: 30px;
 }
