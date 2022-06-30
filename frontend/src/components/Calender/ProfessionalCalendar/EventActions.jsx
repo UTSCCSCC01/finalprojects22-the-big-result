@@ -31,7 +31,7 @@ const eventStyleGetter = (event, start, end, isSelected) => {
   var style = {
       backgroundColor: backgroundColor,
       borderRadius: '10px',
-      opacity: 1,
+      opacity: 0.8,
       color: 'white',
       border: '20px',
       display: 'block',

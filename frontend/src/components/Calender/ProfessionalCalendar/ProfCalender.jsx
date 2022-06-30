@@ -24,7 +24,7 @@ const VIEW = "VIEW";
 const BOOKING = "BOOKING"
 const AVAILABILITY = "AVAILABILITY"
 const BOOKING_COLOR = "C20232"
-const AVAIL_COLOR = "7E0080"
+const AVAIL_COLOR = "5646AB"
 
 
 function ProfCalender() {
@@ -209,14 +209,21 @@ function ProfCalender() {
   // setEventsToRecurr(allAvailabililties) resets the recurr view if not submitting  
   return (
     <div>
-      <button onClick={() => {setMode(VIEW); setEventsToRecurr(allAvailabililties)}}>View</button>
-      <button onClick={() => {setMode(RECURRING)}}>Recurr</button>
-      <button onClick={() => {setMode(NONRECURR)}}>Non-recurr</button>
+      <div className="tabs">
+        <button className="tab active" onClick={() => {setMode(VIEW); setEventsToRecurr(allAvailabililties)}}>
+          View
+        </button>
+        <button className="tab" onClick={() => {setMode(RECURRING)}}>
+          Recurr
+        </button>
+        <button className="tab" onClick={() => {setMode(NONRECURR)}}>
+          Non-Recurr
+        </button>
+      </div>
       {/* todo: no overlap */}
 
       {mode==VIEW && (
       <div>
-        <h2>VIEW</h2>
         <p>editing {mode==RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
         <div className="prof-calender">
           <Calendar
@@ -234,7 +241,6 @@ function ProfCalender() {
 
       {(mode==RECURRING || mode==NONRECURR) && (
         <div>
-          <h2>{mode}</h2>
           <p>editing {mode==RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
           <div className={mode==RECURRING ? "prof-calender recurr" : "prof-calender non-recurr"}>
             <DragAndDropCalendar

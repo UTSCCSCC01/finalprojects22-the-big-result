@@ -1,24 +1,7 @@
 #signup {
   display: flex;
+  flex: 1 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.active {
-  background: purple;
-}
-
-.tabs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 15px auto;
-  width: fit-content;
-  padding: 10px;
-}
-
-.tabs .tab {
-  border-radius: 0;
-  border: none;
 }
