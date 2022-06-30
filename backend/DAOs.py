@@ -1,7 +1,7 @@
 from typing import List
 
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
-    AvailabilitiesNonRec, DayOfWeek, IsAvailable
+    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status
 
 from datetime import time, date
 from sqlalchemy import select, update, delete, values
@@ -208,11 +208,28 @@ class AvailabilitiesNonRecDAO:
         AvailabilitiesNonRec.query.filter_by(professionalID=profID).delete()
         db.session.commit()
 
+class BookingsDAO:
+
+
+    def getBookingsFromProfID(self, profID: int) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID).all()
+
+    def getBookingsFromCustID(self, custID: int) -> List[Bookings]:
+        return Bookings.query.filter_by(customerID=custID).all()
+
+    def getBookingsFromStatusForProf(self,profID: id, status: Status) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID, status=status).all()
+
+    def getBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
+        return Bookings.query.filter_by(customerID=custID, status=status).all()
+
 
 def runDAOQueries():
     custDao = CustomersDAO()
 
     profDao = ProfessionalsDAO()
+
+
     # print(profDao.getAllServicesForProfessional(36))
     # print(profDao.getFirstNReviewsForProfesional(36,1))
     # print(profDao.getLowestAveragePrice())

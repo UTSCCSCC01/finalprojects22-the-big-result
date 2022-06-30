@@ -52,11 +52,11 @@ db = SQLAlchemy()
 # Actual database objects here
 
 class Status(enum.Enum):
-    BOOKED = 1
-    CANCELLED = 2
-    IN_PROGRESS = 3
-    RESOLVED = 4
-    RESCHEDULED = 5
+    BOOKED = "BOOKED"
+    CANCELLED = "CANCELLED"
+    IN_PROGRESS = "IN_PROGRESS"
+    RESOLVED = "RESOLVED"
+    RESCHEDULED = "RESCHEDULED"
 
 
 class DayOfWeek(enum.Enum):
