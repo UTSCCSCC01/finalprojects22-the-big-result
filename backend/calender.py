@@ -1,6 +1,7 @@
 from flask import Blueprint
 from events import recurringAvailabilities, nonRecurringAvailabilities
 from flask import Blueprint, request, jsonify
+from datetime import date, time
 
 calender_blueprint = Blueprint('calender_blueprint', __name__)
 
@@ -22,12 +23,6 @@ def get_availability():
     --> Then, get all bookings for that day and exclude those times from the schedule
     """
 
-
-
-
-
-
-
     """ [
     '0' : { // SUNDAY
         '0' : { // first time slot
@@ -45,55 +40,37 @@ def get_availability():
 
     pass
 
+
 # recurring availabilities
 @calender_blueprint.route('/getRecurrAvailability', methods=["GET"])
 def get_recurring_availability():
-    """
-    professionalId: xikn21o9
-    """
 
+    professionalId = request.json.get("professionalId", None)
+    all_recurring_avails = []  # getAvailabilitiesFromProfID(professionalId)
+    formatted = [[] for _ in range(7)]
+    for recur_avail in all_recurring_avails:
+        formatted[recur_avail.dayOfWeek] = {
+            "start": recur_avail.startTime.isoformat(),
+            "end": recur_avail.endTime.isoformat()
+        }
 
-    """
-    [
-    '0' : { // SUNDAY
-        '0' : { // first time slot
-           "start" : HH:MM:SS (0-24)
-           "end" : HH:MM:SS (0-24)
-            }
+    return jsonify(all_recurring_avails)
 
-
-        },
-    '1' : {} // Nothing on monday
-   ]
-
-    """
-
-    return jsonify(recurringAvailabilities) # getting from mocked data in events.py
 
 @calender_blueprint.route('/setRecurrAvailability', methods=["POST"])
 def set_recurring_availability():
-    """
-    professionalId : xhidhqwoe
-    events: [
-        '0' : { // SUNDAY
-            '0' : { // first time slot
-               "start" : HH:MM:SS (0-24)
-               "end" : HH:MM:SS (0-24)
-                }
 
+    professionalId = request.json.get("professionalId", None)
+    availabilities = request.json.get("events", None)
+    #  deleteAllAvailabilitiesForProfID(professionalId)
 
-            },
-        '1' : {} // Nothing on monday
-       ]
-    """
+    for i in range(7):
+        for availability in availabilities[str(i)]:
+            start = time.fromisoformat(availability["start"])
+            end = time.fromisoformat(availability["end"])
+            # addAvailability(professionalId, i, start, end)
 
-    recurrEvents = request.json.get("events", None)
-    print(recurrEvents)
-
-    """
-    No message, 200
-    """
-    return {"events": recurrEvents}
+    return {"success": "yes"}
 
 
 # non recurring availabilities
@@ -117,6 +94,3 @@ def set_non_recurring_availability():
     No message, 200
     """
     pass
-
-
-
