@@ -221,7 +221,7 @@ function ProfCalender() {
 
     axios({ 
       method: "POST", 
-      url: "http://localhost:5000/addRecurrAvailability",
+      url: "http://localhost:5000/setRecurrAvailability",
       data: { events: eventsToRecurrFormatted }
      })
       .then(() => {
