@@ -18,7 +18,7 @@ function SignUp() {
     }
   };
   return (
-    <div id="signup">
+    <div id="signup" className="page">
       <h1>Sign up as a</h1>
       <div className="tabs">
         <button className="tab active" id="customer" onClick={handleChange}>

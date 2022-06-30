@@ -101,7 +101,7 @@ function ProviderPage(props) {
   };
 
   return (
-    <div className="providers-page">
+    <div className="providers-page page">
       {filtersComponent()}
       <h1>Service Providers</h1>
       <ServiceList serviceFilter={updateServiceFilter} />
