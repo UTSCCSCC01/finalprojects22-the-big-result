@@ -14,7 +14,7 @@ bookings = [
 recurringAvailabilities = [
   {
     "id": 0,
-    "start": "2022-06-28 01:00:00",
+    "start": "2022-06-28 09:00:00",
     "end": "2022-06-28 11:00:00",
   }, 
   {
@@ -39,7 +39,13 @@ recurringAvailabilities = [
   }, 
 ]
 
-# actualAvailability = []
+nonRecurringAvailabilities = [
+  {
+    "id": 102,
+    "start": "2022-06-28 13:00:00",
+    "end": "2022-06-28 13:30:00",
+  }, 
+]
 
 
 customer_data = [

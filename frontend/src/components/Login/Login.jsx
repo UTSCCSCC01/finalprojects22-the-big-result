@@ -96,9 +96,9 @@ function Login() {
       {failedLogin && (
         <p className="error">Username or password is incorrect.</p>
       )}
-      <small>
+      <p>
         Don't have an account? <a href="/signup">Sign Up</a>
-      </small>
+      </p>
     </div>
   );
 }

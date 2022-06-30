@@ -132,13 +132,11 @@ function SignUpProvider() {
           options={servicesList}
         />
       )}
-      {failedSignup && (
-        <p className="error">User already exists.</p>
-      )}
+      {failedSignup && <p className="error">User already exists.</p>}
       <button type="submit">Sign Up!</button>
-      <small>
+      <p>
         Already have an account? <a href="/login">Log In</a>
-      </small>
+      </p>
     </form>
   );
 }

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from events import recurringAvailabilities
+from events import recurringAvailabilities, nonRecurringAvailabilities
 from flask import Blueprint, request, jsonify
 
 calender_blueprint = Blueprint('calender_blueprint', __name__)
@@ -112,7 +112,6 @@ def set_non_recurring_availability():
             },
        }
     """
-
 
     """
     No message, 200
