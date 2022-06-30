@@ -90,3 +90,7 @@ button:hover {
   padding: 5px;
   border-radius: 5px;
 }
+
+.landing-page .providers-page {
+  background-color: white;
+}

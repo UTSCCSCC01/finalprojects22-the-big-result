@@ -12,7 +12,7 @@ import LandingPage from "./views/LandingPage";
 function App() {
   return (
     <BrowserRouter>
-      <div>
+      <>
         <Navbar />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -23,7 +23,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
         </Routes>
         <Footer />
-      </div>
+      </>
     </BrowserRouter>
   );
 }

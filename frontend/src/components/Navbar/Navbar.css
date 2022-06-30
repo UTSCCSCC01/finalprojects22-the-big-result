@@ -16,3 +16,11 @@
 .navbar-right a:focus {
   text-decoration: underline;
 }
+
+.signup-btn {
+  background: white;
+}
+
+#navbar .signup-btn a {
+  color: #5646ab;
+}

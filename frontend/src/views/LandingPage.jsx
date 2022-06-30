@@ -13,11 +13,11 @@ import Banner from "../components/Banner/Banner";
 import HowItWorks from "../components/HowItWorks/HowItWorks";
 import ProviderPage from "./ProvidersPage";
 
-function LandingPage(props) {
+function LandingPage() {
   return (
     <div className="landing-page">
       <Banner />
-      <ProviderPage/>
+      <ProviderPage />
       <HowItWorks />
     </div>
   );

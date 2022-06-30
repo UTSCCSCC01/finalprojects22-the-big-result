@@ -55,10 +55,10 @@ function Navbar() {
               <Logout />
             ) : (
               <>
-                <button>
+                <button className="signup-btn">
                   <a href="/signup">Sign Up</a>
                 </button>
-                <button>
+                <button className="login-btn">
                   <a href="/login">Login</a>
                 </button>
               </>
