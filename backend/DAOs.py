@@ -276,4 +276,9 @@ def runDAOQueries():
 
     # availNonRecDao.deleteAvailabilitiesForProfIDAndDay(40,date=date(2022,5,12))
 
+    bookingsDao = BookingsDAO()
+
+    # print(bookingsDao.getBookingsFromCustID(34))
+    # print(bookingsDao.getBookingsFromStatusForProf(36, Status.BOOKED))
+
     pass
