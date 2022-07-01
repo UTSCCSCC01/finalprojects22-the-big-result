@@ -27,6 +27,19 @@
 button {
   color: black !important;
   background-color: white !important;
+  
+}
+
+.tab {
+  border-style: solid !important;
+  border-color: grey !important;
+  border-width: 1px;
+  transition-duration: 0.3s;
+}
+
+.tab:hover {
+  background-color: #8b84af !important; /* Green */
+  color: white !important;
 }
 
 .recurr .rbc-toolbar {

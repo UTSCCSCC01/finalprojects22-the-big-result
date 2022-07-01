@@ -1,10 +1,10 @@
 from flask import Blueprint
-from events import recurringAvailabilities, nonRecurringAvailabilities
+from events import recurringAvailabilities, allAvailabilities
 from flask import Blueprint, request, jsonify
 
 calender_blueprint = Blueprint('calender_blueprint', __name__)
 
-
+# NEW non recurring availabilities
 # all availabilities - recurring and non recurring merged
 @calender_blueprint.route('/getAvailability', methods=["GET"])
 def get_availability():
@@ -36,10 +36,12 @@ def get_availability():
 
     If customer, split the time slots into <1 hour> periods
     """
+    #print(request.json.get("events", None))
+    # print(request.json.get("start", None))
+    # print(request.json.get("professionalId", None))
+    return jsonify(allAvailabilities)
 
-    pass
-
-# recurring availabilities
+# NEW recurring availabilities
 @calender_blueprint.route('/getRecurrAvailability', methods=["GET"])
 def get_recurring_availability():
     """
@@ -64,6 +66,7 @@ def get_recurring_availability():
 
     return jsonify(recurringAvailabilities) # getting from mocked data in events.py
 
+# NEW non recurring availabilities
 @calender_blueprint.route('/setRecurrAvailability', methods=["POST"])
 def set_recurring_availability():
     """
@@ -90,7 +93,7 @@ def set_recurring_availability():
     return {"events": recurrEvents}
 
 
-# non recurring availabilities
+
 @calender_blueprint.route('/setNonRecurrAvailability', methods=["POST"])
 def set_non_recurring_availability():
     """
@@ -110,7 +113,9 @@ def set_non_recurring_availability():
     """
     No message, 200
     """
-    pass
+    nonRecurrEvents = request.json.get("events", None)
+    print(nonRecurrEvents)
+    return nonRecurrEvents
 
 
 

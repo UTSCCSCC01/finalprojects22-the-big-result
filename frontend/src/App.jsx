@@ -8,8 +8,9 @@ import SignUp from "./views/SignUp";
 import ServiceList from "./views/ServicesList";
 import Profile from "./components/Profile/Profile";
 import Book from './components/Booking/Book'; // NEW
-import ProfCalender from './components/Calender/ProfessionalCalendar/ProfCalender' // NEW
-import CustCalender from './components/Calender/CustCalender';
+// import CustCalender from './components/Calender/CustomerCalendar/CustomerCalendar/CustCalender';
+import Edit from './components/Calender/ProfessionalCalendar/Edit'
+import View from './components/Calender/ProfessionalCalendar/View'
 
 function App() {
   return (
@@ -24,7 +25,11 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/booking" element={<Book />} /> // new
-        <Route path="/p/calendar" element={<ProfCalender />} /> // new
+        <Route path="/p/calendar/view" element={<View />} /> // new
+        <Route path="/p/calendar/edit/recurr" element={<Edit mode='RECURRING'/>} /> // new
+        <Route path="/p/calendar/edit/non-recurr" element={<Edit mode='NON-RECURRING'/>} /> // new
+
+
         {/* <Route path="/c/calendar" element={<CustCalender />} /> // new */}
         {/* <Route path="/c/calender" element={<CustCalender />} /> // new */}
        
