@@ -249,6 +249,7 @@ class BookingsDAO:
             .filter(Bookings.endServiceDateTime < rangeEnd).all()
 
 
+
 def runDAOQueries():
     custDao = CustomersDAO()
 
@@ -305,14 +306,17 @@ def runDAOQueries():
 
     bookingsDao = BookingsDAO()
     # print(bookingsDao.getBookingsFromProfIDinRangeIncl(40,datetime(2022,5,26),datetime(2022,5,28)))
-    print(bookingsDao.getBookingsFromProfIDinRangeExcl(40,datetime(2022,5,26),datetime(2022,5,28)))
+    # print(bookingsDao.getBookingsFromProfIDinRangeExcl(40,datetime(2022,5,26),datetime(2022,5,28)))
 
+    # print(type(bookingsDao.getBookingsFromProfID(36)[0].endServiceDateTime))
     # bookingsDao.addBooking(35,40,datetime(2022,6,27,13,30),datetime(2022,6,27,15,30),"UTSC Campus",Status.BOOKED,80.5,"makeup",specialInstructions="Go fast!!!")
 
     # print(bookingsDao.getBookingsFromCustID(34))
     # print(bookingsDao.getBookingsFromStatusForProf(36, Status.BOOKED))
 
     # print(serviceDao.getProfessionalsForService("agaga"))
+
+    # print(bookingsDao.getBookingsFromCustID(34))
 
 
     pass
