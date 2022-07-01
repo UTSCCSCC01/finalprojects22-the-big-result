@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta, time
 
 from flask import Blueprint, jsonify, request
+from DAOs import BookingsDAO
 from events import bookings
 
 book_blueprint = Blueprint('book_blueprint', __name__)
@@ -10,7 +11,7 @@ def get_week_by_professional(professional_id: int, start_date: date):
     range_start = datetime.combine(start_date, time(0, 0, 0))
     range_end = datetime.combine(start_date + timedelta(days=7), time(0, 0, 0))
 
-    week_bookings = []  # getBookingsFromProfIDinRangeIncl(professionalId, range_start, range_end)
+    week_bookings = BookingsDAO.getBookingsFromProfIDinRangeIncl(professional_id, range_start, range_end)
     week_bookings = sorted(week_bookings, key=lambda b: b.beginServiceDateTime, reverse=True)
 
     return week_bookings
@@ -25,25 +26,6 @@ def add_bookings():
 
 @book_blueprint.route('/getBookings', methods=["GET"])
 def get_bookings():
-    """
-    professionalId: xikn21o9
-    start: YYYY-MM-DD
-    --> provide the bookings for the next 7 days
-    """
-
-    """
-    {
-    '0' : { // SUNDAY
-            '0' : { // first time slot
-               "start" : HH:MM:SS (0-24)
-               "end" : HH:MM:SS (0-24)
-                }
-
-
-            },
-        '1' : {} // Nothing on monday
-    }
-    """
     professional_id = request.json.get("professionalId", None)
     start_date = date.fromisoformat(request.json.get("start", None))
     weekly_bookings = get_week_by_professional(professional_id, start_date)

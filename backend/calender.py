@@ -3,6 +3,7 @@ from events import recurringAvailabilities, allAvailabilities
 from flask import Blueprint, request, jsonify
 from datetime import date, time, timedelta, datetime
 from book import get_week_by_professional
+from DAOs import AvailabilitiesRecDAO, AvailabilitiesNonRecDAO
 
 calender_blueprint = Blueprint('calender_blueprint', __name__)
 
@@ -22,15 +23,14 @@ def get_availability():
     # Map out their availabilities and bookings in O(A + B) time
     for i in range(7):
         current_date = start_date + timedelta(days=i)
-        availabilities = []  # getAvailabilitiesFromProfIDAndDate(professionalId, current_date)
-        # or getAvailabilitiesFromProfIDAndDate(professionalId, i)
+        availabilities = AvailabilitiesNonRecDAO.getAvailabilitiesFromProfIDAndDate(professionalId, current_date) or \
+            AvailabilitiesRecDAO.getAvailabilitiesFromProfIDAndDate(professionalId, i)
 
-        if len(availabilities) == 1:  # and availabilities[0] is AvailabilitiesNonRecDAO and not availabilities[
-            # 0].isAvailable
+        if len(availabilities) == 1 and availabilities[0] is AvailabilitiesNonRecDAO and not availabilities[
+             0].isAvailable:
             availabilities = []
 
         if not availabilities:
-            weekly_schedule.append([])
             continue
 
         for availability in availabilities:
@@ -78,7 +78,7 @@ def get_availability():
 @calender_blueprint.route('/getRecurrAvailability', methods=["GET"])
 def get_recurring_availability():
     professionalId = request.json.get("professionalId", None)
-    all_recurring_avails = []  # getAvailabilitiesFromProfID(professionalId)
+    all_recurring_avails = AvailabilitiesRecDAO.getAvailabilitiesFromProfID(professionalId)
     formatted = [[] for _ in range(7)]
     for recur_avail in all_recurring_avails:
         formatted[recur_avail.dayOfWeek] = {
@@ -94,16 +94,15 @@ def get_recurring_availability():
 def set_recurring_availability():
     professionalId = request.json.get("professionalId", None)
     availabilities = request.json.get("events", None)
-    #  deleteAllAvailabilitiesForProfID(professionalId)
+    AvailabilitiesRecDAO.deleteAllAvailabilitiesForProfID(professionalId)
 
     for i in range(7):
         for availability in availabilities[str(i)]:
             start = time.fromisoformat(availability["start"])
             end = time.fromisoformat(availability["end"])
-            # addAvailability(professionalId, i, start, end)
+            AvailabilitiesRecDAO.addAvailability(professionalId, i, start, end)
 
     return {"success": "yes"}
-
 
 
 @calender_blueprint.route('/setNonRecurrAvailability', methods=["POST"])
@@ -113,18 +112,16 @@ def set_non_recurring_availability():
 
     for date_string in availabilities:
         calendar_date = date.fromisoformat(date_string)
-        # deleteAvailabilitiesForProfIDAndDay(professionalId, calendar_date)
-
+        AvailabilitiesNonRecDAO.deleteAvailabilitiesForProfIDAndDay(professionalId, calendar_date)
         time_slots = availabilities[date_string]
 
         for time_slot in time_slots:
             start = time.fromisoformat(time_slot["start"])
             end = time.fromisoformat(time_slot["end"])
-            # addAvailability(professionalId, calendar_date, start, end, 1)
+            AvailabilitiesNonRecDAO.addAvailability(professionalId, calendar_date, start, end, 1)
 
         if not time_slots:
             time_object = time.fromisoformat("00:00:00")
-            # addAvailability(professionalId, calendar_date, time_object, time_object, 0)
-            pass
+            AvailabilitiesNonRecDAO.addAvailability(professionalId, calendar_date, time_object, time_object, 0)
 
     return {"success": "yes"}
