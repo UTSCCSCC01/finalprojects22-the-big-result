@@ -1,50 +1,82 @@
 from flask import Blueprint
 from events import recurringAvailabilities, nonRecurringAvailabilities
 from flask import Blueprint, request, jsonify
-from datetime import date, time
+from datetime import date, time, timedelta, datetime
+from book import get_week_by_professional
 
 calender_blueprint = Blueprint('calender_blueprint', __name__)
 
 
-# all availabilities - recurring and non recurring merged
+# all availabilities - recurring and non-recurring merged
 @calender_blueprint.route('/getAvailability', methods=["GET"])
 def get_availability():
-    """
-    professionalId: xikn21o9
-    start: YYYY-MM-DD
-    type: customer
-    --> provide the avail for the next 7 days
+    # Get relevant data
+    professionalId = request.json.get("professionalId", None)
+    start_date = date.fromisoformat(request.json.get("start", None))
+    isCustomer = request.json.get("type", None) == "Customer"  # TODO: change format to chunk 30-min peroids into
+    # sessions if it's a customer
 
-    [3-7], booked 5-6
-    becomes [3-5, 6-7]
+    weekly_schedule = [[0 for _ in range(24 * 2 + 1)] for _ in range(7)]
+    bookings = get_week_by_professional(professionalId, start_date)
 
-    --> For each day, see if there is an actual avail
-    --> If not, take the schedule in recur
-    --> Then, get all bookings for that day and exclude those times from the schedule
-    """
+    # Map out their availabilities and bookings in O(A + B) time
+    for i in range(7):
+        current_date = start_date + timedelta(days=i)
+        availabilities = []  # getAvailabilitiesFromProfIDAndDate(professionalId, current_date)
+        # or getAvailabilitiesFromProfIDAndDate(professionalId, i)
 
-    """ [
-    '0' : { // SUNDAY
-        '0' : { // first time slot
-           "start" : HH:MM:SS (0-24)
-           "end" : HH:MM:SS (0-24)
-            }
+        if len(availabilities) == 1:  # and availabilities[0] is AvailabilitiesNonRecDAO and not availabilities[
+            # 0].isAvailable
+            availabilities = []
 
+        if not availabilities:
+            weekly_schedule.append([])
+            continue
 
-        },
-    '1' : {} // Nothing on monday
-   ]
+        for availability in availabilities:
+            start_index = availability.startTime.hour * 2 + availability.startTime.minute // 30
+            end_index = availability.endTime.hour * 2 + availability.endTime.minute // 30 + 1
+            weekly_schedule[i][start_index] += 1
+            weekly_schedule[i][end_index] += -1
 
-    If customer, split the time slots into <1 hour> periods
-    """
+        # Go through the bookings for that day, and filter that time out
+        while bookings:
+            booking = bookings.pop()
+            if booking.beginServiceDateTime.date() > current_date:
+                bookings.append(booking)
+                break
 
-    pass
+            start_time = booking.beginServiceDateTime.time()
+            end_time = booking.endServiceDateTime.time()
+
+            weekly_schedule[i][start_index][start_time.hour * 2 + start_time.minute // 30] += -1
+            weekly_schedule[i][start_index][end_time.hour * 2 + end_time.minute // 30 + 1] += 1
+
+    # Calculate finalized schedule for the week and format it for the user
+    formatted_schedule = []
+    for i in range(7):
+        formatted_schedule.append([])
+        counter = 0
+        start_time = None
+        for x in range(len(weekly_schedule[i])):
+            counter += weekly_schedule[i][x]
+            if counter > 0:  # available
+                if not start_time:
+                    start_time = time(x // 2, (x % 2) * 30, 0)
+            elif start_time:  # no longer available
+                end_time = time(x // 2, (x % 2) * 30, 0)
+                formatted_schedule[i].append({
+                    "start": start_time.isoformat(),
+                    "end": end_time.isoformat()
+                })
+                start_time = None
+
+    return jsonify(formatted_schedule)
 
 
 # recurring availabilities
 @calender_blueprint.route('/getRecurrAvailability', methods=["GET"])
 def get_recurring_availability():
-
     professionalId = request.json.get("professionalId", None)
     all_recurring_avails = []  # getAvailabilitiesFromProfID(professionalId)
     formatted = [[] for _ in range(7)]
@@ -59,7 +91,6 @@ def get_recurring_availability():
 
 @calender_blueprint.route('/setRecurrAvailability', methods=["POST"])
 def set_recurring_availability():
-
     professionalId = request.json.get("professionalId", None)
     availabilities = request.json.get("events", None)
     #  deleteAllAvailabilitiesForProfID(professionalId)
@@ -76,7 +107,6 @@ def set_recurring_availability():
 # non recurring availabilities
 @calender_blueprint.route('/setNonRecurrAvailability', methods=["POST"])
 def set_non_recurring_availability():
-
     professionalId = request.json.get("professionalId", None)
     availabilities = request.json.get("events", None)
 
@@ -91,7 +121,7 @@ def set_non_recurring_availability():
             end = time.fromisoformat(time_slot["end"])
             # addAvailability(professionalId, calendar_date, start, end, 1)
 
-        if not len(time_slots):
+        if not time_slots:
             time_object = time.fromisoformat("00:00:00")
             # addAvailability(professionalId, calendar_date, time_object, time_object, 0)
             pass
