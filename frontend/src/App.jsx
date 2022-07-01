@@ -6,7 +6,8 @@ import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 import ServiceList from "./views/ServicesList";
 import Profile from "./components/Profile/Profile";
-import ProfessionalBookingsPage from "./views/ProfessionalBookingsPage";
+import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
+import ProfessionalPastBookingsPage from "./views/ProfessionalPastBookingsPage";
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
         <Route path="/serviceProviders" element={<ProvidersPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/professionalUpcomingBookings" element={<ProfessionalBookingsPage/>}/>
+        <Route path="/professionalUpcomingBookings" element={<ProfessionalUpBookingsPage/>}/>
+        <Route path="/professionalPastBookings" element={<ProfessionalPastBookingsPage/>}/>
       </Routes>
     </BrowserRouter>
   );

@@ -3,7 +3,7 @@ import axios from "axios";
 
 import BookingProfessionalUpcoming from "../components/Bookings/BookingProfessionalUpcoming";
 
-function ProfessionalBookingsPage(props) {
+function ProfessionalUpBookingsPage(props) {
   const [bookingsList, setBookingsList] = useState([]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ function ProfessionalBookingsPage(props) {
       method: "GET",
       url: "http://127.0.0.1:5000/professionalUpcomingBookings",
     })
-      .then((response) =>{
+      .then((response) => {
         const res = response.data;
         setBookingsList(res.bookings);
       })
@@ -36,10 +36,9 @@ function ProfessionalBookingsPage(props) {
             picURL={booking.picURL}
           />
         ))}
-
       </div>
     </div>
   );
 }
 
-export default ProfessionalBookingsPage;
+export default ProfessionalUpBookingsPage;
