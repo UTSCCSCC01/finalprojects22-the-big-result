@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// SWAP OUT WITH PAST
 import BookingProfessionalPast from "../components/Bookings/BookingProfessionalPast";
 
 function ProfessionalPastBookingsPage(props) {
