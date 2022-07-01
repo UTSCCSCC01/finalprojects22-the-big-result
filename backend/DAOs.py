@@ -239,6 +239,15 @@ class BookingsDAO:
         db.session.add(newBooking)
         db.session.commit()
 
+    def getBookingsFromProfIDinRangeIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\
+            .filter(Bookings.beginServiceDateTime < rangeEnd).all()
+
+
+    def getBookingsFromProfIDinRangeExcl(self, profID: int, rangeStart: datetime, rangeEnd: datetime) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.beginServiceDateTime) \
+            .filter(Bookings.endServiceDateTime < rangeEnd).all()
+
 
 def runDAOQueries():
     custDao = CustomersDAO()
@@ -295,6 +304,8 @@ def runDAOQueries():
     # availNonRecDao.deleteAvailabilitiesForProfIDAndDay(40,date=date(2022,5,12))
 
     bookingsDao = BookingsDAO()
+    # print(bookingsDao.getBookingsFromProfIDinRangeIncl(40,datetime(2022,5,26),datetime(2022,5,28)))
+    print(bookingsDao.getBookingsFromProfIDinRangeExcl(40,datetime(2022,5,26),datetime(2022,5,28)))
 
     # bookingsDao.addBooking(35,40,datetime(2022,6,27,13,30),datetime(2022,6,27,15,30),"UTSC Campus",Status.BOOKED,80.5,"makeup",specialInstructions="Go fast!!!")
 
