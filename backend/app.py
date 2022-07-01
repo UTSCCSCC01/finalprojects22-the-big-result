@@ -7,7 +7,7 @@ import time
 from dotenv import load_dotenv
 import os
 
-from DAOs import runQueries
+from DAOs import runDAOQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
@@ -41,11 +41,10 @@ def createApp():
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
 
-    CORS(app)
-    JWTManager(app)
+    # JWTManager(app)
 
     Bcrypt(app)
-    app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
+    # app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
     JWTManager(app)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
@@ -53,6 +52,8 @@ def createApp():
     app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=60)
 
+    CORS(app)
+    
     db.init_app(app)
     app.app_context().push()
 
@@ -84,5 +85,5 @@ def databaseTestingStuff():
 
 if __name__ == "__main__":
     # runDBQueries()
-    # runQueries()
+    # runDAOQueries()
     app.run(debug=True)

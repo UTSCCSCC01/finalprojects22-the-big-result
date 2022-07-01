@@ -4,13 +4,12 @@
   text-align: center;
 }
 
-/* for equal width */
-/* .card-container {
-  flex: 1;
-} */
-
 .row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.active-svc {
+  background-color: #d9d5ea;
 }
