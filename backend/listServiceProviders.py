@@ -5,6 +5,14 @@ from DAOs import CustomersDAO, ProfessionalsDAO, ServicesDAO
 
 list_providers_blueprint = Blueprint('list_providers_blueprint', __name__)
 
+profDAO = ProfessionalsDAO()
+serviceDAO = ServicesDAO()
+
+@list_providers_blueprint.route("/priceRange")
+def get_price_range():
+    res = jsonify({"priceRange":[profDAO.getLowestAveragePrice(), profDAO.getHighestAveragePrice()]})
+    print("res", res)
+
 @list_providers_blueprint.route("/listServiceProviders")
 def get_service_provider_list():
 
@@ -12,58 +20,66 @@ def get_service_provider_list():
     price_low = int(request.args.get('pricelow'))
     price_high = int(request.args.get('pricehigh'))
     location = request.args.get('location')
-    service = request.args.get('service')
+    service = request.args.get('service').lower()
 
     # TODO Rating on Card (frontend)
     # TODO Get rid of apply filters button
-    all_providers= { "providers": [
-        {
-            "name": "Mike Ross",
-            "service": "Landscaping",
-            "description": "Landscaper who will make your yard look pretty",
-            "price": 50,
-            "rating": 3,
-            "location": "Toronto, Ontario",
-            "profilePicURL": "https://picsum.photos/100"
-        },
-        {
-            "name": "Steven Adams",
-            "service": "Hairstyle",
-            "description": "Over 5+ years of serving satisfied customers",
-            "price": 60,
-            "rating": 4,
-            "location": "Waterloo, Ontario",
-            "profilePicURL": "https://picsum.photos/101"
-        },
-        {
-            "name": "Alice Schulz",
-            "service": "Hairstyle",
-            "description": "Best in the business for all your haircutting needs",
-            "price": 70,
-            "rating": 5,
-            "location": "Toronto, Ontario",
-            "profilePicURL": "https://picsum.photos/102"
-        }
-        ]
-    } 
+    # all_providers= { "providers": [
+    #     {
+    #         "name": "Mike Ross",
+    #         "service": "Landscaping",
+    #         "description": "Landscaper who will make your yard look pretty",
+    #         "price": 50,
+    #         "rating": 3,
+    #         "location": "Toronto, Ontario",
+    #         "profilePicURL": "https://picsum.photos/100"
+    #     },
+    #     {
+    #         "name": "Steven Adams",
+    #         "service": "Hairstyle",
+    #         "description": "Over 5+ years of serving satisfied customers",
+    #         "price": 60,
+    #         "rating": 4,
+    #         "location": "Waterloo, Ontario",
+    #         "profilePicURL": "https://picsum.photos/101"
+    #     },
+    #     {
+    #         "name": "Alice Schulz",
+    #         "service": "Hairstyle",
+    #         "description": "Best in the business for all your haircutting needs",
+    #         "price": 70,
+    #         "rating": 5,
+    #         "location": "Toronto, Ontario",
+    #         "profilePicURL": "https://picsum.photos/102"
+    #     }
+    #     ]
+    # } 
 
 
-    profDAO = ProfessionalsDAO()
-    serviceDAO = ServicesDAO()
     filterByRating = set(profDAO.getProfessionalsWithMinRating(minRating=rate))
     filterByPrice = set(profDAO.getProfessionalsByAvgPriceRange(minPrice=price_low, maxPrice=price_high))
-    # filterByLocation = profDAO.getProfessionalsByLocation(location)
-    # filterByServices = serviceDAO.getProfessionalsForService(service)
 
     results = filterByRating.intersection(filterByPrice)
+    if location != "":
+        filterByLocation = profDAO.getProfessionalsByLocation(location) 
+        results = results.intersection(filterByLocation)
+    if service != "":
+        filterByServices = serviceDAO.getProfessionalsForService(service)
+        results = results.intersection(filterByServices)
     results_formatted = []
     for i in results:
+        if service != "":
+            svc = service
+        elif i.services:
+            svc = i.services[0].serviceName
+        else:
+            svc = ""
         results_formatted.append({ 
             "name": i.firstName + " " + i.lastName,
-            "service": i.description.strip('][').split(',')[0],
+            "service": svc,
             "price": i.averageCost,
             "rating": i.ratings,
-            "location": "Toronto, Ontario",
+            "location": i.location,
             "profilePicURL": "https://picsum.photos/102"
         })
         
