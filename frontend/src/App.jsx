@@ -6,6 +6,8 @@ import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
 import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 import Profile from "./components/Profile/Profile";
+import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
+import ProfessionalPastBookingsPage from "./views/ProfessionalPastBookingsPage";
 import Book from './components/Booking/Book'; // NEW
 import CustomerCalendar from './components/Calender/CustomerCalendar/CustomerCalendar';
 import ProfCalendarEdit from './components/Calender/ProfessionalCalendar/ProfCalendarEdit'
@@ -29,6 +31,8 @@ function App() {
           <Route path="/serviceProviders" element={<ProvidersPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/professionalUpcomingBookings" element={<ProfessionalUpBookingsPage/>}/>
+          <Route path="/professionalPastBookings" element={<ProfessionalPastBookingsPage/>}/>
           <Route path="/booking" element={<Book />} /> 
           <Route path="/p/calendar/view" element={<ProfCalendarView />} /> 
           <Route path="/p/calendar/edit/recurr" element={<ProfCalendarEdit mode='RECURRING'/>} />
