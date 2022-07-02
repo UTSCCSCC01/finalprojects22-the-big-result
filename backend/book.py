@@ -5,13 +5,13 @@ from DAOs import BookingsDAO
 from events import bookings
 
 book_blueprint = Blueprint('book_blueprint', __name__)
-
+bookingDAO_Object = BookingsDAO()
 
 def get_week_by_professional(professional_id: int, start_date: date):
     range_start = datetime.combine(start_date, time(0, 0, 0))
     range_end = datetime.combine(start_date + timedelta(days=7), time(0, 0, 0))
 
-    week_bookings = BookingsDAO.getBookingsFromProfIDinRangeIncl(professional_id, range_start, range_end)
+    week_bookings = bookingDAO_Object.getBookingsFromProfIDinRangeIncl(professional_id, range_start, range_end)
     week_bookings = sorted(week_bookings, key=lambda b: b.beginServiceDateTime, reverse=True)
 
     return week_bookings
@@ -26,8 +26,8 @@ def add_bookings():
 
 @book_blueprint.route('/getBookings', methods=["GET"])
 def get_bookings():
-    professional_id = request.json.get("professionalId", None)
-    start_date = date.fromisoformat(request.json.get("start", None))
+    professional_id = int(request.headers.get("professionalId", None))
+    start_date = date.fromisoformat(request.headers.get("start", None))
     weekly_bookings = get_week_by_professional(professional_id, start_date)
 
     formatted_schedule = []
