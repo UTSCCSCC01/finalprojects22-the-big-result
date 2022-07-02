@@ -58,7 +58,7 @@ function AvailabilityCalendar(props) {
         professionalId: "36", 
         start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
         type: 'customer'
-      } // make sure valid prof id
+      } 
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 

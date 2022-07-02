@@ -13,10 +13,10 @@ function BookingConfirmation(props) {
     axios({ 
       method: "POST", url: "http://localhost:5000/addBookings",
       data: { 
-        professionalId: "36", 
+        professionalId: props.bookingInfo.professionalId, 
         start: props.bookingInfo.start,
         end: props.bookingInfo.end,
-        date: props.bookingInfo.start,
+        date: props.bookingInfo.date,
         location: props.bookingInfo.location,
         price: props.bookingInfo.price,
         customerId: props.bookingInfo.customerId,

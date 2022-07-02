@@ -41,7 +41,6 @@ def add_bookings():
 @book_blueprint.route('/getBookings', methods=["GET"])
 def get_bookings():
     professional_id = int(request.headers.get("professionalId", None))
-    print('start_date for booking:', request.headers.get("start", None))
     start_date = date.fromisoformat(request.headers.get("start", None))
     weekly_bookings = get_week_by_professional(professional_id, start_date)
 
@@ -63,5 +62,4 @@ def get_bookings():
                 "end": end_time.isoformat()
             })
 
-    print('booking schedule', formatted_schedule)
     return jsonify(formatted_schedule)
