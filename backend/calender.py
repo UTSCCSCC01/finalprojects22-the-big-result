@@ -3,7 +3,7 @@ import math
 from flask import Blueprint
 
 from models import DayOfWeek, IsAvailable, AvailabilitiesNonRec
-from events import recurringAvailabilities, allAvailabilities
+# from events import recurringAvailabilities, allAvailabilities
 from flask import Blueprint, request, jsonify
 from datetime import date, time, timedelta, datetime
 from book import get_week_by_professional
