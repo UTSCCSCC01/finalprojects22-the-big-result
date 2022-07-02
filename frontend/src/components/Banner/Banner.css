@@ -16,7 +16,7 @@
 #banner #get-started:hover {
   background-color: white;
   color: black;
-  border: 1px solid black;
+  box-shadow: inset 0 0 1.5px #5646ab;
 }
 
 .banner-img {
