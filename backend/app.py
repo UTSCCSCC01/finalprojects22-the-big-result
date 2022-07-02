@@ -36,7 +36,7 @@ def createApp():
     app.register_blueprint(sampleBlueprint, url_prefix='/example')
     app.register_blueprint(signup_blueprint)
     app.register_blueprint(services_blueprint)
-    app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
+    app.register_blueprint(serviceProviderBlueprint)
     app.register_blueprint(list_providers_blueprint)
     app.register_blueprint(login_blueprint)
     app.register_blueprint(list_bookings_blueprint)

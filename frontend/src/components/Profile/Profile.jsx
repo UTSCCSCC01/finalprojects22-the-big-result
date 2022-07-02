@@ -9,7 +9,7 @@ function Profile(props) {
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://localhost:5000/serviceProvider/`,
+      url: `http://127.0.0.1:5000/serviceProvider?firstName=${props.firstName}&lastName=${props.lastName}`,
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     })
       .then((response) => {

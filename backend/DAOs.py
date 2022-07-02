@@ -47,6 +47,9 @@ class ProfessionalsDAO:
     def getProfessionalOnUsername(self, username: str) -> Professional:
         return Professional.query.filter_by(username=username).first()
 
+    def getProfessionalOnName(self, firstName: str, lastName: str) -> Professional:
+        return Professional.query.filter_by(firstName=firstName, lastName=lastName).first()
+
     def getAllProfessionals(self) -> List[Professional]:
         return Professional.query.all()
 
