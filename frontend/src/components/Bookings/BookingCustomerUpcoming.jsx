@@ -13,7 +13,7 @@ function BookingCustomerUpcoming(props) {
             <h2 className="highlight">{props.service}</h2>
             <h3>with {props.provider}</h3>
             <p>on {props.date}</p>
-            <p>at {props.time}</p>
+            <p>from {props.startTime} to {props.endTime}</p>
             <p>for cost of ${props.cost}
             </p>
             {/* <p>{props.description}</p>   */}

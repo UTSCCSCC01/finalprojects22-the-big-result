@@ -10,6 +10,9 @@ function CustUpBookingsPage(props) {
     axios({
       method: "GET",
       url: "http://127.0.0.1:5000/customerUpcomingBookings",
+      headers: {
+        customerId: 34
+      }
     })
       .then((response) => {
         const res = response.data;
@@ -33,7 +36,8 @@ function CustUpBookingsPage(props) {
             cost={booking.cost}
             picURL={booking.picURL}
             date={booking.date}
-            time={booking.time}
+            startTime={booking.startTime}
+            endTime={booking.endTime}
           />
         ))}
       </div>
