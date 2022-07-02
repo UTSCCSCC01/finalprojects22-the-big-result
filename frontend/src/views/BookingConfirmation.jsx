@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import "../components/Form.css";
 
-function BookingConfirmation() {
+function BookingConfirmation(props) {
   //separated these out into different states for ease, can combine into 1 if we want
   const [service, setService] = useState("hairstyling"); // TODO: change workflow so this can filled 
   const [provider, setProvider] = useState("Adam Young"); // TODO: fill in valid provider
@@ -10,41 +10,19 @@ function BookingConfirmation() {
   const [rate, setRate] = useState("");// TODO: change workflow so this can filled
 
   useEffect(() => {
-    // TODO: make another endpoint to set a particular timeslot as booked - 
-    // TODO: get professional name from that endpoint too 
-    // TODO: get service name 
-    // TODO: get $ rate from same endpoint
-    // axios({
-    //   method: "GET", url: `http://localhost:5000/getAvailabilitySlotInfo?`,
-    //   headers: { 
-    //     professionalId: "36",
-    //     start: null,
-    //    }
-    // }).then((res) => {
-    //   // TODO set the time, with setTime
-    //   }).catch((err) => console.log(err));
-  
+    // TODO: get unconfirmed booking info from props
   }, []);
 
 
   const onConfirmation = () => {
-    // axios({
-    //   method: "POST", url: `http://localhost:5000/addBooking?`,
-    //   data: { 
-    //     professionalId: "36",
-    //     start: null,
-    //     end: null,
-    //     date: null
-    //   }
-    // }).then((res) => {
-    //   // TODO 
-    //   }).catch((err) => console.log(err));
+    // TODO: add booking
   }
 
   const onMakeChanges = () => {
-    window.location = "/c/calendar/view"; // go back to booking
+    window.location = "/c/calendar/view"; // TODO: go back to customer calendar
   }
 
+  // TODO: get unconfirmed booking info from props
   return (
     <div className="page">
       <h2>Service</h2>
