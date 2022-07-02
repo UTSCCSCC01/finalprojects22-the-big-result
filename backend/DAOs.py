@@ -70,10 +70,10 @@ class ProfessionalsDAO:
         return queryRes is not None
 
     def getAllServicesForProfessional(self, id: int) -> List[Services]:
-        return Professional.query.filter_by(id=id).first().services
+        return Professional.query.filter_by(id=id).first().services.all()
 
     def getAllReviewsForProfesional(self, id: int) -> List[Reviews]:
-        return Professional.query.filter_by(id=id).first().reviews
+        return Professional.query.filter_by(id=id).first().reviews.all()
 
     def getFirstNReviewsForProfesional(self, id: int, numReviews=3) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
@@ -316,7 +316,6 @@ def runDAOQueries():
 
     # print(serviceDao.getProfessionalsForService("agaga"))
 
-    print(bookingsDao.getBookingsFromCustID(34)[0].review)
-
+    # print(bookingsDao.getBookingsFromCustID(34)[0].review)
 
     pass
