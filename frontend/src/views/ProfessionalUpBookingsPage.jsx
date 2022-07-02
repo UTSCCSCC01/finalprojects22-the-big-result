@@ -10,6 +10,9 @@ function ProfessionalUpBookingsPage(props) {
     axios({
       method: "GET",
       url: "http://127.0.0.1:5000/professionalUpcomingBookings",
+      headers: {
+        professionalId: 36
+      }
     })
       .then((response) => {
         const res = response.data;
@@ -30,7 +33,8 @@ function ProfessionalUpBookingsPage(props) {
             customer={booking.customer}
             service={booking.service}
             date={booking.date}
-            time={booking.time}
+            startTime={booking.startTime}
+            endTime={booking.endTime}
             location={booking.location}
             price={booking.price}
             picURL={booking.picURL}
