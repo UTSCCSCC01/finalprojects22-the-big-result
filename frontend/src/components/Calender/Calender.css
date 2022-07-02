@@ -1,0 +1,56 @@
+.prof-calender {
+  margin: 50px 300px;
+}
+
+.rbc-calendar {
+  font-size: small;
+  width: 100%;
+  margin: 0; 
+}
+
+.rbc-time-view {
+  width: 100%;
+  align-self: center;
+}
+
+.rbc-toolbar-label {
+  width: 10px !important;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+  width: 5px !important;
+  margin: auto;
+  display: inline-block;
+  text-align: center !important;
+}
+
+button {
+  color: black !important;
+  background-color: white !important;
+  
+}
+
+.tab {
+  border-style: solid !important;
+  border-color: grey !important;
+  border-width: 1px;
+  transition-duration: 0.3s;
+}
+
+.tab:hover {
+  background-color: #8b84af !important; /* Green */
+  color: white !important;
+}
+
+.recurr .rbc-toolbar {
+  visibility: hidden;
+  transition: linear;
+} 
+
+.recurr .rbc-button-link {
+  visibility: hidden;
+}
+
+.calendar h2 {
+  padding-top: 50px;
+}

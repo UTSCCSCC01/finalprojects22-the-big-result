@@ -2,8 +2,6 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  padding: 50px 0;
-  min-height: calc(100vh - 100px);
 }
 
 body {
@@ -12,6 +10,13 @@ body {
   letter-spacing: 2px;
   font-size: 12px;
   color: #1c2b49;
+  padding: 0;
+  margin: 0;
+}
+
+.page {
+  padding: 50px 0;
+  min-height: calc(100vh - 100px);
 }
 
 /*Buttons*/
@@ -21,7 +26,7 @@ button {
   color: white;
   padding: 10px;
   border-radius: 5px;
-  transition: color 0.5s, background-color 0.5s;
+  transition: color 0.5s, background-color 0.5s, border 0.5s;
 }
 
 button,
@@ -84,4 +89,8 @@ button:hover {
   width: min-content;
   padding: 5px;
   border-radius: 5px;
+}
+
+.landing-page .providers-page {
+  background-color: white;
 }

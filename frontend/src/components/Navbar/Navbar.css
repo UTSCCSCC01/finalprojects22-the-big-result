@@ -1,0 +1,26 @@
+#navbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar-right > * {
+  margin: 0 10px;
+}
+
+#navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-right a:hover,
+.navbar-right a:focus {
+  text-decoration: underline;
+}
+
+.signup-btn {
+  background: white;
+}
+
+#navbar .signup-btn a {
+  color: #5646ab;
+}

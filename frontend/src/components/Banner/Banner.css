@@ -1,0 +1,25 @@
+#banner {
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+  padding: 50px;
+  border-bottom: 1px solid #ebe9f5;
+}
+
+#banner #get-started {
+  background-color: black;
+}
+
+#banner button:hover,
+#banner #get-started:hover {
+  background-color: white;
+  color: black;
+  box-shadow: inset 0 0 1.5px #5646ab;
+}
+
+.banner-img {
+  height: 50vh;
+  padding: 20px;
+}
