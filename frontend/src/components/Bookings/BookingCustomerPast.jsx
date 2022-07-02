@@ -3,10 +3,7 @@ import "../Card.css";
 
 function BookingCustomerPast(props) {
     return (
-      <div
-        onClick={() => (window.location = "/booking")}
-        className="booking-card card"
-      >
+      <div className="booking-card card">
         <div class="metadata">
           <img src={props.picURL} alt={props.provider} />
           <div className="metadata-text">
