@@ -22,7 +22,7 @@ function ProfessionalUpBookingsPage(props) {
   }, []);
 
   return(
-    <div className="bookings-page">
+    <div className="bookings-page page">
       <h1>Upcoming Bookings</h1>
       <div className="bookings">
         {bookingsList.map((booking) => (
