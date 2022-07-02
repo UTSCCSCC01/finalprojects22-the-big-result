@@ -21,6 +21,12 @@
   padding: 0 20px;
 }
 
+.price-slider {
+  display: flex;
+  width: 100%;
+  column-gap: 1em;
+}
+
 .filters > * {
   flex: 2;
 }
