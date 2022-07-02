@@ -11,6 +11,9 @@ function CustPastBookingsPage(props) {
     axios({
       method: "GET",
       url: "http://127.0.0.1:5000/customerPastBookings",
+      headers: {
+        customerId: 34
+      }
     })
       .then((response) => {
         const res = response.data;
@@ -34,7 +37,8 @@ function CustPastBookingsPage(props) {
             cost={booking.cost}
             picURL={booking.picURL}
             date={booking.date}
-            time={booking.time}
+            startTime={booking.startTime}
+            endTime={booking.endTime}
           />
         ))}
       </div>
