@@ -1,5 +1,5 @@
 .prof-calender {
-  margin: 100px 300px;
+  margin: 50px 300px;
 }
 
 .rbc-calendar {
@@ -49,4 +49,8 @@ button {
 
 .recurr .rbc-button-link {
   visibility: hidden;
+}
+
+.calendar h2 {
+  padding-top: 50px;
 }

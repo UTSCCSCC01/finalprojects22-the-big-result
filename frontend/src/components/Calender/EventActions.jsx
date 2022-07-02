@@ -9,7 +9,6 @@ export const getNextWeek = (date) => {
 
 export const recurrEvents = (eventsToRecur, numWeeks) => {
   let recurredEvents = [];
-
   eventsToRecur.forEach(function(e) {
     let currStart = e.start;
     let currEnd = e.end;
@@ -29,7 +28,6 @@ export const getTimeFromDate = (date) => {
 }
 
 export const getDateFromDateTime = (date) => {
-  console.log('DATE BEING FORMATTED', date, date.getMonth().toString().padStart(2, '0'));
   return date.getFullYear().toString().padStart(4, '0') + "-" +
         (date.getMonth()+1).toString().padStart(2, '0') + "-" +
         date.getDate().toString().padStart(2, '0');
@@ -50,14 +48,12 @@ export const eventStyleGetter = (event, start, end, isSelected) => {
 }
 
 export const concatEvents = (eventsArr1, eventArr2) => {
-  let res = [];
-  eventsArr1.concat(eventArr2).forEach(e => {
-    res.push({...e, id: res.length});
-  });
+  let res = []; // re-make ids
+  eventsArr1.concat(eventArr2).forEach(e => {res.push({...e, id: res.length})});
   return res;
 }
 
-// get sunday of the date given
+// get sunday of the week of the date given
 export const getSunday = (date) => {
   let d = new Date(date);
   d.setDate(d.getDate() - d.getDay());
@@ -67,20 +63,14 @@ export const getSunday = (date) => {
 export const shiftDayFromSunday = (date, numDaysToShiftBy) => {
   let d = new Date(date);
   d.setDate(d.getDate() + numDaysToShiftBy);
-  
   return d;
 }
 
-// format to pass to backend
-// used for both allAvailabilities and recurrent avialbilities
-export const formatGETAvailabilitiesData = (res, curSunday, dataType) => {
-  // todo: deal with weeksFromCurrWeek later instead of curSunday
-  // todo: res => data
+export const formatWeekEventsForGET = (res, curSunday, dataType) => {
   let dataFormatted = [];
   for (let dayi = 0; dayi < 7; dayi++) {
-      let daySlots = res.data[dayi]; // week slots for that day
-      // find the date based on sundayOfCurrWeek and dayi, make date object with that and weekSlots starts
-      let resDate = shiftDayFromSunday(curSunday, dayi); // shift sunday to dayi
+      let daySlots = res.data[dayi]; 
+      let resDate = shiftDayFromSunday(curSunday, dayi); 
 
       daySlots.forEach((slot) => {   
         let splitTime = slot.start.split(':');
@@ -110,16 +100,14 @@ export const formatGETAvailabilitiesData = (res, curSunday, dataType) => {
             color: Constants.AVAIL_COLOR
           })
         }
-        
       });
   }
   return dataFormatted;
 }
 
-export const formatSETRecurrAvailabilitiesData = (recurrAvailabilities) => {
+export const formatWeekEventsForPOST = (recurrAvailabilities) => {
   let dataFormatted = {};
   for (let weekdayI=0; weekdayI < 7; weekdayI++) dataFormatted[weekdayI.toString()] = [];
-
   recurrAvailabilities.forEach(function(e) {
     let dayOfWeekI = e.start.getDay().toString();
     dataFormatted[dayOfWeekI].push({ 
@@ -127,19 +115,13 @@ export const formatSETRecurrAvailabilitiesData = (recurrAvailabilities) => {
           end: getTimeFromDate(e.end) 
       })
     })
-  
     return dataFormatted;
 }
 
-// TODO formatting this and getAvailabilities with start time
-// UGLY: lets leave the next/prev button till later - instead make copies of events for next year?
 
-// these will overwrite the whole day
 export const formatSETNonRecurrAvailabilitiesData = (nonRecurrEvents) => {
-  let dataFormatted = {"somethn": 1};
+  let dataFormatted = {};
   
-  // add recurring and non recurring availabilities for that day
-  console.log("WHYYYY", nonRecurrEvents);
   nonRecurrEvents.forEach((e) => {
     console.log(e);
     dataFormatted[getDateFromDateTime(e.start)] = []; 
@@ -156,8 +138,3 @@ export const formatSETNonRecurrAvailabilitiesData = (nonRecurrEvents) => {
     console.log(dataFormatted);
     return dataFormatted;
 }
-
-// TODO
-
-// export {getNextWeek, recurrEvents, getTimeFromDate, eventStyleGetter, concatEvents, getSunday, shiftDayFromSunday, 
-//         formatGETAvailabilitiesData, formatSETRecurrAvailabilitiesData, formatSETNonRecurrAvailabilitiesData, getDateFromDateTime};
