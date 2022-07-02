@@ -4,7 +4,7 @@ from typing import List
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date
 from sqlalchemy import Enum, func
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 db = SQLAlchemy()
 
@@ -167,7 +167,7 @@ class Reviews(db.Model):
     description: str = db.Column(db.Text, nullable=False)
     ratings: int = db.Column(db.Integer, db.CheckConstraint("ratings >= 1 AND ratings <= 5"), nullable=False)
 
-    booking = relationship('Bookings', backref="review")
+    booking = relationship('Bookings', backref= backref("review", uselist=False))
 
 
 class Pictures(db.Model):
