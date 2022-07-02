@@ -199,6 +199,8 @@ class Bookings(db.Model):
     specialInstructions: str = db.Column(db.String(500), nullable=True)
     serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
 
+    review: Reviews
+
 
 class Services(db.Model):
     __tablename__ = "Services"

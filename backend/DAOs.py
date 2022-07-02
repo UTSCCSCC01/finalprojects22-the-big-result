@@ -316,7 +316,7 @@ def runDAOQueries():
 
     # print(serviceDao.getProfessionalsForService("agaga"))
 
-    # print(bookingsDao.getBookingsFromCustID(34))
+    print(bookingsDao.getBookingsFromCustID(34)[0].review)
 
 
     pass
