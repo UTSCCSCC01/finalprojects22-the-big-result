@@ -9,7 +9,7 @@ import ServiceList from "./views/ServicesList";
 import Profile from "./components/Profile/Profile";
 import Book from './components/Booking/Book'; // NEW
 import ProfCalender from './components/Calender/ProfessionalCalendar/ProfCalender' // NEW
-import CustCalender from './components/Calender/CustCalender';
+import CustCalender from './components/Calender/CustomerCalendar/CustomerCalendar';
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/booking" element={<Book />} /> // new
         <Route path="/p/calendar" element={<ProfCalender />} /> // new
-        {/* <Route path="/c/calendar" element={<CustCalender />} /> // new */}
+        <Route path="/c/calendar/view" element={<CustCalender />} /> // new
         {/* <Route path="/c/calender" element={<CustCalender />} /> // new */}
        
       </Routes>
