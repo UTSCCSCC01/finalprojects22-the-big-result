@@ -14,7 +14,7 @@ moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
 
 
-function CustomerCalendar() {
+function AvailabilityCalendar(props) {
   const [viewAvailabilities, setViewAvailabilities] = useState([]);
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
 
@@ -28,40 +28,27 @@ function CustomerCalendar() {
     } // make sure valid prof id
    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
-       let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
-       setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
+       let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
+       setViewAvailabilities(resFormatted); 
      }).catch((err) => console.log(err));
  }, []);
 
 
  const handleSelectEvent = (event) => {
-  console.log("selecting event...");
-
-  // go to confirmation page
-  //custID:int, profID: int,beginServDateTime: datetime, endServDateTime: datetime, location: str, status: Status, price: float, serviceName: str , specialInstructions = ""):
-
-  axios({ 
-    method: "POST", url: "http://localhost:5000/addBookings",
-    data: { 
-      professionalId: "36", // TODO: customerId, 
+    console.log("selecting event...");
+    // send booking info back to parent
+    props.sendBookingInfo({ 
+      professionalId: "36",
       start: EvFn.getTimeFromDate(event.start),
       end: EvFn.getTimeFromDate(event.end),
       date: EvFn.getDateFromDateTime(event.start),
-      location: "somethnd",
-      price: "price",
-      customerId: "30", // make sure valid
+      location: "UTSC",
+      price: "59.99",
+      customerId: "41",
       serviceName: 'hairstyling',
-      instructions: 'instructions'
-    }
-   }).then(() => {
-      window.location = "/confirmation";
-    }).catch((err) => {
-      console.log(err);
+      instructions: 'be areful with hair'
     });
-
   }
-
-
 
   const onNavigate =(date, view) => {
     console.log('navigating to...', date, view, EvFn.getSunday(date));
@@ -74,12 +61,11 @@ function CustomerCalendar() {
       } // make sure valid prof id
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
-        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
-        setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
+        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
+        setViewAvailabilities(resFormatted); 
       }).catch((err) => console.log(err));
-    setViewDate(new Date(EvFn.getSunday(date) - 7)); // ugly for some weird reason I have to subtract 7... sunday of prev week?
+    setViewDate(new Date(EvFn.getSunday(date) - 7)); 
   }
-
 
   return (
     <div>
@@ -102,6 +88,5 @@ function CustomerCalendar() {
     </div>
   );
 }
-// NOTE: only see their recurring events when changing them ,no bookigns, bookings only appear in the view tab
 
-export default CustomerCalendar;
+export default AvailabilityCalendar;
