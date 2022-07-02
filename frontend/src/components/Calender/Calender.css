@@ -24,21 +24,16 @@
   text-align: center !important;
 }
 
-button {
-  color: black !important;
-  background-color: white !important;
-  
-}
-
-.tab {
+.calendar .tab {
   border-style: solid !important;
-  border-color: grey !important;
   border-width: 1px;
   transition-duration: 0.3s;
+  background-color: white !important;
+  color: #5646ab;
 }
 
-.tab:hover {
-  background-color: #8b84af !important; /* Green */
+.calendar .tab:hover {
+  background-color: #8b84af !important;
   color: white !important;
 }
 
