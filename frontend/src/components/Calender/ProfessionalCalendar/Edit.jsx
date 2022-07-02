@@ -20,9 +20,7 @@ const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 function Edit(props) {
   
-  const [weeksFromCurrWeek, setWeekFromCurrWeek] = useState(0); // todo: if next week its + 1, do this instead of passing sundayOfWeek so let EventActions do the job
   const [eventsToRecurr, setEventsToRecurr] = useState([]); // events for one week that will recurr
-  const [nonRecurrEvents, setNonRecurrEvents] = useState([]);
   const [viewAvailabilities, setViewAvailabilities] = useState([]); // todo repeat eventsToRecurr 4 times for a month from todays day
   const [bookings, setBookings] = useState([]);
   const [mode, setMode] = useState(Constants.VIEW);
@@ -30,34 +28,47 @@ function Edit(props) {
 
 
   useEffect(() => {
-    console.log('propsssssssssssssssssssssssssssssssss'. props)
     if (props.mode==Constants.RECURRING) {
       setMode(Constants.RECURRING);
       axios({
         method: "GET", url: `http://localhost:5000/getRecurrAvailability`,
-        data: { professionalId: "01" }
+        headers: { 
+          professionalId: "36",
+          start: EvFn.getDateFromDateTime(viewDate) }
       }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(new Date());
-        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek);
+        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.AVAILABILITY);
         setEventsToRecurr(resFormatted);
-        setViewAvailabilities(EvFn.recurrEvents(resFormatted, 4));
         }).catch((err) => console.log(err));
     }
     else if (props.mode==Constants.NONRECURR) {
       setMode(Constants.NONRECURR);
       axios({
         method: "GET", url: `http://localhost:5000/getAvailability`,
-        data: { professionalId: "01" }
+        headers: { 
+         professionalId: "36", 
+         start: EvFn.getDateFromDateTime(viewDate), 
+         type: 'professional'        
+        } // make sure valid prof id
       }).then((res) => {
-        let sundayOfCurrWeek = EvFn.getSunday(new Date());
-        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek);
-        setEventsToRecurr(resFormatted);
-        setViewAvailabilities(EvFn.recurrEvents(resFormatted, 4));
+        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
+        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
+        setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
+      }).catch((err) => console.log(err));
+      axios({
+        method: "GET", url: `http://localhost:5000/getBookings`,
+        headers: { 
+         professionalId: "36", 
+         start: EvFn.getDateFromDateTime(viewDate) } // make sure valid prof id
+      }).then((res) => {
+          let sundayOfCurrWeek = EvFn.getSunday(viewDate);
+          const resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.BOOKING);
+          setBookings(resFormatted);
         }).catch((err) => console.log(err));
     } 
   }, []);
 
-    
+  // TODO LATER: prevent from putting availability on booking
   const handleSelect = ({ start, end }) => {
     console.log("selecting event ...");
     if (mode == Constants.RECURRING) {
@@ -69,12 +80,12 @@ function Edit(props) {
           id:eventsToRecurr.length},
       ]);
     } else if (mode == Constants.NONRECURR) {
-      setNonRecurrEvents([ ...nonRecurrEvents,
+      setViewAvailabilities([ ...viewAvailabilities,
         { start: start, 
           end: end, 
           title:Constants.NONRECURR, 
           color: Constants.NON_RECURR_AVAIL_COLOR,
-          id:nonRecurrEvents.length},
+          id:viewAvailabilities.length},
       ]);
     }
   };
@@ -82,8 +93,8 @@ function Edit(props) {
 
   const handleSelectEvent = (event) => {
     console.log("selecting event...", mode);
-
-    if (mode==Constants.RECURRING && event.title == Constants.RECURRING) {
+    if (event.title==Constants.BOOKING) return;
+    if (mode==Constants.RECURRING) {
       const w = window.confirm("Would you like to remove this event?")
       if (w) {
         let eventsAfterDeletion = [];
@@ -97,35 +108,38 @@ function Edit(props) {
         setEventsToRecurr(eventsAfterDeletion);
       }
       // todo: remove repeated code: put into a function and pass in the methods as parameters
-    } else if (mode==Constants.NONRECURR && event.title == Constants.NONRECURR) { // non recurring
+    } else if (mode==Constants.NONRECURR) { // non recurring
       const w = window.confirm("Would you like to remove this event?")
       if (w) {
         let eventsAfterDeletion = [];
-        nonRecurrEvents.forEach(function(e) {
+        viewAvailabilities.forEach(function(e) {
           // need to re-add to the events to fix the ids
           console.log(e.id, event)
           if (e.id != event.id) 
           eventsAfterDeletion.push({...e, id: eventsAfterDeletion.length });
         });
         console.log("after deletion", eventsAfterDeletion);
-        setNonRecurrEvents(eventsAfterDeletion);
+        setViewAvailabilities(eventsAfterDeletion);
       }
     }
   }
 
   const onEventResize = (data) => {
     console.log("data resizing...");
-    if (mode==Constants.RECURRING && data.event.title == Constants.RECURRING) {
+    if (data.event.title==Constants.BOOKING) return;
+    if (mode==Constants.RECURRING) {
       setEventsToRecurr(eventsToRecurr.map((e) => {
         if (e.id == data.event.id) {
           return { ...e, start: data.start, end: data.end }
         }
         return e
       }))
-    } else if (mode==Constants.NONRECURR && data.event.title == Constants.NONRECURR) {
-      setNonRecurrEvents(nonRecurrEvents.map((e) => {
+    } else if (mode==Constants.NONRECURR) {
+      setViewAvailabilities(viewAvailabilities.map((e) => {
         if (e.id == data.event.id) {
-          return { ...e, start: data.start, end: data.end }
+          return { ...e, start: data.start, end: data.end,
+            color: Constants.NON_RECURR_AVAIL_COLOR, title: Constants.NONRECURR
+           }
         }
         return e
       }))
@@ -133,19 +147,21 @@ function Edit(props) {
   };
 
   const onEventDrop = (data) => {
-    console.log("event dropped...");
-    if (mode == Constants.RECURRING && data.event.title == Constants.RECURRING) {
+    console.log("event dropped..."); // TODO: let them know in <-p> that the edits are weekly
+    if (data.event.title==Constants.BOOKING) return;
+    if (mode == Constants.RECURRING) {
       setEventsToRecurr(eventsToRecurr.map((e) => {
         if (e["id"] == data.event.id) {
           return { ...e, start: data.start, end: data.end }
         }
         return e
       }))
-    } else if (mode==Constants.NONRECURR && data.event.title == Constants.NONRECURR) {
-      setNonRecurrEvents(nonRecurrEvents.map((e) => {
+    } else if (mode==Constants.NONRECURR) {
+      setViewAvailabilities(viewAvailabilities.map((e) => {
         if (e["id"] == data.event.id) {
-          console.log( { ...e, start: data.start, end: data.end })
-          return { ...e, start: data.start, end: data.end }
+          return { ...e, start: data.start, end: data.end, 
+            color: Constants.NON_RECURR_AVAIL_COLOR, title: Constants.NONRECURR 
+          }
         }
         return e
       }))
@@ -153,53 +169,78 @@ function Edit(props) {
   };
   
   const onSubmitEditRecurr = () => {
+    console.log('***********************************');
+    console.log('***********************************');
+    console.log('***********************************');
     console.log("submitting recurr edit...");
 
-    // backend stores recurring availabilities in times HH:MM:SS
-    const eventsToRecurrFormatted = EvFn.formatSETRecurrAvailabilitiesData(eventsToRecurr); //[];
+    const eventsToRecurrFormatted = 
+      EvFn.formatSETRecurrAvailabilitiesData(eventsToRecurr);
 
     axios({ 
       method: "POST", 
       url: "http://localhost:5000/setRecurrAvailability",
-      data: { events: eventsToRecurrFormatted, professionalId: "01" }
-     })
-      .then(() => {
-        window.location = "/p/calendar/view";
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      data: { events: eventsToRecurrFormatted, professionalId: "36" }
+    }).then(() => {
+      window.location = "/p/calendar/view";
+    }).catch((err) => {
+      console.log(err);
+    });
 
-      
-    
     // TODO: instead make a call to /getAllAvailabilities to get merged availabiliteis
-    setViewAvailabilities(EvFn.recurrEvents(eventsToRecurr, 4));
-    window.location = "/p/calendar/view";
   }
 
   // TODO: all requests in another file? called requests.jsx? 
   const onSubmitEditNonRecurr = () => {
     console.log("submitting non-recurr edit...");
 
-    const nonRecurrEventsFormatted = EvFn.formatSETNonRecurrAvailabilitiesData(nonRecurrEvents);
+    const allAvailabilitiesFormatted = 
+      EvFn.formatSETRecurrAvailabilitiesData(viewAvailabilities);
     
     axios({ 
       method: "POST", url: "http://localhost:5000/setNonRecurrAvailability",
-      data: { events: nonRecurrEventsFormatted, professionalId: "01"
+      data: { 
+        events: allAvailabilitiesFormatted, 
+        professionalId: "36", 
+        start: EvFn.getDateFromDateTime(viewDate)
       }
      }).then(() => {
         window.location = "/p/calendar/view";
       }).catch((err) => {
         console.log(err);
       });
-    
-      
-      
+
   }
 
   const onNavigate =(date, view) => {
-    console.log('navigating to...', date, view);
-    setViewDate(EvFn.getSunday(date));
+    console.log('navigating to...', date, view, EvFn.getSunday(date));
+    // TODO: fix view 
+     // TODO TODO TODO TODO: use viewDate to send request for getAvailability 
+    // TODO fix later on with new Date
+    axios({
+      method: "GET", url: `http://localhost:5000/getAvailability`,
+      headers: { 
+        professionalId: "36", 
+        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
+        type: 'professional'
+      } // make sure valid prof id
+    }).then((res) => {
+        let sundayOfCurrWeek = EvFn.getSunday(date);
+        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
+        setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
+      }).catch((err) => console.log(err));
+      
+    axios({
+      method: "GET", url: `http://localhost:5000/getBookings`,
+      headers: { 
+        professionalId: "36", 
+        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)) } // make sure valid prof id
+    }).then((res) => {
+        let sundayOfCurrWeek = EvFn.getSunday(date);
+        const resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.BOOKING);
+        setBookings(resFormatted);
+      }).catch((err) => console.log(err));
+    setViewDate(new Date(EvFn.getSunday(date) - 7)); // ugly for some weird reason I have to subtract 7... sunday of prev week?
   }
 
   // setEventsToRecurr(viewAvailabilities) resets the recurr view if not submitting  
@@ -215,7 +256,7 @@ function Edit(props) {
             localizer={localizer}
             defaultDate={new Date()} 
             defaultView="week"
-            events={props.mode==Constants.RECURRING ? eventsToRecurr : EvFn.concatEvents(nonRecurrEvents, eventsToRecurr)} // change to viewAvailabilities if theyre merged correctly in backend
+            events={props.mode==Constants.RECURRING ? eventsToRecurr : EvFn.concatEvents(viewAvailabilities, bookings)} // change to viewAvailabilities if theyre merged correctly in backend
             style={{ height: "100vh" }}
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelect}
@@ -223,6 +264,7 @@ function Edit(props) {
             onEventResize={onEventResize}
             no-overlap
             eventPropGetter={(EvFn.eventStyleGetter)}
+            onNavigate={onNavigate}
           />
         </div>
         {/* how to switch back to view mode when button is pressed since View is in ProfessionalCalendar */}

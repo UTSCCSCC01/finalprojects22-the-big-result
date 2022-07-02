@@ -13,6 +13,7 @@ import View from './components/Calender/ProfessionalCalendar/View'
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import LandingPage from "./views/LandingPage";
+import ServiceList from './components/Services/ServicesList'
 
 function App() {
   return (

@@ -12,9 +12,14 @@ import axios from "axios";
 import moment from "moment";
 
 
-moment.locale("en-GB");
+// moment.locale('en-GB', {
+//   week: {
+//       dow: 1,
+//       doy: 1,
+//   },
+// });
+moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
-
 
 
 function View() {
@@ -23,38 +28,66 @@ function View() {
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
 
   useEffect(() => {
+    // TODO: endpoints have names for them?
+    // TODO TODO TODO TODO: use viewDate to send request for getAvailability 
+   axios({
+     method: "GET", url: `http://localhost:5000/getAvailability`,
+     headers: { 
+      professionalId: "36", 
+      start: EvFn.getDateFromDateTime(viewDate),
+      type: 'professional'
+    } // make sure valid prof id
+   }).then((res) => {
+       let sundayOfCurrWeek = EvFn.getSunday(viewDate);
+       let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
+       setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
+     }).catch((err) => console.log(err));
+     
+   axios({
+     method: "GET", url: `http://localhost:5000/getBookings`,
+     headers: { 
+      professionalId: "36", 
+     start: EvFn.getDateFromDateTime(viewDate) } // make sure valid prof id
+   }).then((res) => {
+       let sundayOfCurrWeek = EvFn.getSunday(viewDate);
+       const resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.BOOKING);
+       setBookings(resFormatted);
+     }).catch((err) => console.log(err));
+ }, []);
+
+
+  const onNavigate =(date, view) => {
+    console.log('navigating to...', date, view, EvFn.getSunday(date));
+    // TODO: fix view 
+     // TODO TODO TODO TODO: use viewDate to send request for getAvailability 
+    // TODO fix later on with new Date
     axios({
       method: "GET", url: `http://localhost:5000/getAvailability`,
-      data: { professionalId: "01", start: EvFn.getDateFromDateTime(viewDate) } // make sure valid prof id
+      headers: { 
+        professionalId: "36", 
+        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
+        type: 'professional'
+      } // make sure valid prof id
     }).then((res) => {
-        let sundayOfCurrWeek = EvFn.getSunday(new Date());
-        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek);
-        setViewAvailabilities(EvFn.recurrEvents(resFormatted, 4)); // TODO read TODO below: instead of repeating get availability for this week
+        let sundayOfCurrWeek = EvFn.getSunday(date);
+        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
+        setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
       }).catch((err) => console.log(err));
       
     axios({
       method: "GET", url: `http://localhost:5000/getBookings`,
-      data: { professionalId: "01"} // make sure valid prof id
+      headers: { 
+        professionalId: "36", 
+        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)) } // make sure valid prof id
     }).then((res) => {
-        const resFormatted = res.data.map((r) => {
-          return { ...r, 
-            start: moment(r.start, 'YYYY-MM-DD HH:mm:ss').toDate(), 
-            end: moment(r.end, 'YYYY-MM-DD HH:mm:ss').toDate(),
-            title: Constants.BOOKING,  
-            color: Constants.BOOKING_COLOR}
-        })
+        let sundayOfCurrWeek = EvFn.getSunday(date);
+        const resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.BOOKING);
         setBookings(resFormatted);
       }).catch((err) => console.log(err));
-  }, []);
-
-
-  const onNavigate =(date, view) => {
-    console.log('navigating to...', date, view);
-    setViewDate(EvFn.getSunday(date)); // TODO TODO TODO TODO: use viewDate to send request for getAvailability 
+    setViewDate(new Date(EvFn.getSunday(date) - 7)); // ugly for some weird reason I have to subtract 7... sunday of prev week?
   }
 
 
-  // setEventsToRecurr(viewAvailabilities) resets the recurr view if not submitting  
   return (
     <div>
       <div>

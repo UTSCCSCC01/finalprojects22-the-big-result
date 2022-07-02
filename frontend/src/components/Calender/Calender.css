@@ -46,3 +46,7 @@ button {
   visibility: hidden;
   transition: linear;
 } 
+
+.recurr .rbc-button-link {
+  visibility: hidden;
+}

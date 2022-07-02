@@ -29,8 +29,9 @@ export const getTimeFromDate = (date) => {
 }
 
 export const getDateFromDateTime = (date) => {
+  console.log('DATE BEING FORMATTED', date, date.getMonth().toString().padStart(2, '0'));
   return date.getFullYear().toString().padStart(4, '0') + "-" +
-        date.getMonth().toString().padStart(2, '0') + "-" +
+        (date.getMonth()+1).toString().padStart(2, '0') + "-" +
         date.getDate().toString().padStart(2, '0');
 }
 
@@ -60,7 +61,6 @@ export const concatEvents = (eventsArr1, eventArr2) => {
 export const getSunday = (date) => {
   let d = new Date(date);
   d.setDate(d.getDate() - d.getDay());
-  console.log("sunday being passed", d)
   return d; 
 }
 
@@ -73,7 +73,7 @@ export const shiftDayFromSunday = (date, numDaysToShiftBy) => {
 
 // format to pass to backend
 // used for both allAvailabilities and recurrent avialbilities
-export const formatGETAvailabilitiesData = (res, curSunday) => {
+export const formatGETAvailabilitiesData = (res, curSunday, dataType) => {
   // todo: deal with weeksFromCurrWeek later instead of curSunday
   // todo: res => data
   let dataFormatted = [];
@@ -95,9 +95,22 @@ export const formatGETAvailabilitiesData = (res, curSunday) => {
         resDate.setSeconds(parseInt(splitTime[2]));
         let end = new Date(resDate); 
         
+        if (dataType==Constants.BOOKING) {
+          dataFormatted.push({
+            start: start, end: end, 
+            id: dataFormatted.length, 
+            title: Constants.BOOKING, 
+            color: Constants.BOOKING_COLOR
+          })
+        } else if (dataType==Constants.AVAILABILITY) {
+          dataFormatted.push({
+            start: start, end: end, 
+            id: dataFormatted.length, 
+            title: Constants.AVAILABILITY, 
+            color: Constants.AVAIL_COLOR
+          })
+        }
         
-        console.log("startEnd", start, end);
-        dataFormatted.push({'start': start, 'end': end, id: dataFormatted.length, title: Constants.RECURRING, color: Constants.RECURR_AVAIL_COLOR})
       });
   }
   return dataFormatted;
