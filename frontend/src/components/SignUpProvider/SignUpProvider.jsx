@@ -15,7 +15,10 @@ function SignUpProvider() {
     }).then((res) => {
       let services = [];
       res.data.services.forEach((element) =>
-        services.push({ label: element, value: element.toLowerCase() })
+        services.push({
+          label: element.service,
+          value: element.service.toLowerCase(),
+        })
       );
       setServicesList(services);
     });
