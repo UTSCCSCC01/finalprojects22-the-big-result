@@ -41,6 +41,7 @@ def createApp():
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
 
+    CORS(app)
     # JWTManager(app)
 
     Bcrypt(app)
