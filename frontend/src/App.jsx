@@ -5,30 +5,39 @@ import Login from "./components/Login/Login";
 import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
 import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
-import ServiceList from "./views/ServicesList";
 import Profile from "./components/Profile/Profile";
 import Book from './components/Booking/Book'; // NEW
-import ProfCalender from './components/Calender/ProfessionalCalendar/ProfCalender' // NEW
-import CustCalender from './components/Calender/CustomerCalendar/CustomerCalendar';
+import CustomerCalendar from './components/Calender/CustomerCalendar/CustomerCalendar';
+import ProfCalendarEdit from './components/Calender/ProfessionalCalendar/ProfCalendarEdit'
+import ProfCalendarView from './components/Calender/ProfessionalCalendar/ProfCalendarView'
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+import LandingPage from "./views/LandingPage";
+import ServiceList from './components/Services/ServicesList'
 
 function App() {
   return (
     
     
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/successLogin" element={<SuccessLogin />} />
-        <Route path="/services" element={<ServiceList />} />
-        <Route path="/serviceProviders" element={<ProvidersPage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/booking" element={<Book />} /> // new
-        <Route path="/p/calendar" element={<ProfCalender />} /> // new
-        <Route path="/c/calendar/view" element={<CustCalender />} /> // new
-        {/* <Route path="/c/calender" element={<CustCalender />} /> // new */}
-       
-      </Routes>
+      <>
+        <Navbar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/successLogin" element={<SuccessLogin />} />
+          <Route path="/services" element={<ServiceList />} />
+          <Route path="/serviceProviders" element={<ProvidersPage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/booking" element={<Book />} /> 
+          <Route path="/p/calendar/view" element={<ProfCalendarView />} /> 
+          <Route path="/p/calendar/edit/recurr" element={<ProfCalendarEdit mode='RECURRING'/>} />
+          <Route path="/p/calendar/edit/non-recurr" element={<ProfCalendarEdit mode='NON-RECURRING'/>} />
+          <Route path="/c/calendar/view" element={<CustomerCalendar />} />
+          <Route path="/" element={<LandingPage />} />
+        </Routes>
+        <Footer />
+      </>
     </BrowserRouter>
   );
 }

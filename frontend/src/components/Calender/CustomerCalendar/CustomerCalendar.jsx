@@ -28,7 +28,7 @@ function CustomerCalendar() {
     } // make sure valid prof id
    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
-       let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
+       let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
        setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
      }).catch((err) => console.log(err));
  }, []);
@@ -38,13 +38,20 @@ function CustomerCalendar() {
   console.log("selecting event...");
 
   // go to confirmation page
+  //custID:int, profID: int,beginServDateTime: datetime, endServDateTime: datetime, location: str, status: Status, price: float, serviceName: str , specialInstructions = ""):
+
   axios({ 
     method: "POST", url: "http://localhost:5000/addBookings",
     data: { 
-      professionalId: "36", 
+      professionalId: "36", // TODO: customerId, 
       start: EvFn.getTimeFromDate(event.start),
       end: EvFn.getTimeFromDate(event.end),
       date: EvFn.getDateFromDateTime(event.start),
+      location: "somethnd",
+      price: "price",
+      customerId: "30", // make sure valid
+      serviceName: 'hairstyling',
+      instructions: 'instructions'
     }
    }).then(() => {
       window.location = "/confirmation";
@@ -67,7 +74,7 @@ function CustomerCalendar() {
       } // make sure valid prof id
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
-        let resFormatted = EvFn.formatGETAvailabilitiesData(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
+        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); // TODO: change constant to AVAILABILITY
         setViewAvailabilities(resFormatted); // TODO read TODO below: instead of repeating get availability for this week
       }).catch((err) => console.log(err));
     setViewDate(new Date(EvFn.getSunday(date) - 7)); // ugly for some weird reason I have to subtract 7... sunday of prev week?
