@@ -6,6 +6,9 @@ import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
 import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 import Profile from "./components/Profile/Profile";
+import CustUpBookingsPage from "./views/CustUpBookingsPage"
+import CustPastBookingsPage from "./views/CustPastBookingsPage"
+// import BookingsPage from "./views/BookingsPage"
 import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
 import ProfessionalPastBookingsPage from "./views/ProfessionalPastBookingsPage";
 import Book from './components/Booking/Book'; // NEW
@@ -19,8 +22,6 @@ import ServiceList from './components/Services/ServicesList'
 
 function App() {
   return (
-    
-    
     <BrowserRouter>
       <>
         <Navbar />
@@ -31,6 +32,10 @@ function App() {
           <Route path="/serviceProviders" element={<ProvidersPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/signup" element={<SignUp />} />
+          {/* <Route path="/customerUpcomingBookings" element={<BookingsPage type="Upcoming" />} />
+          <Route path="/customerPastBookings" element={<BookingsPage type="Past" />} /> */}
+          <Route path="/customerUpcomingBookings" element={<CustUpBookingsPage/>} />
+          <Route path="/customerPastBookings" element={<CustPastBookingsPage/>} />
           <Route path="/professionalUpcomingBookings" element={<ProfessionalUpBookingsPage/>}/>
           <Route path="/professionalPastBookings" element={<ProfessionalPastBookingsPage/>}/>
           <Route path="/booking" element={<Book />} /> 
