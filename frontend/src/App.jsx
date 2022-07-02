@@ -6,6 +6,8 @@ import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
 import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 import Profile from "./components/Profile/Profile";
+import Book from './components/Booking/Book'; // NEW
+import CustomerCalendar from './components/Calender/CustomerCalendar/CustomerCalendar';
 import ProfCalendarEdit from './components/Calender/ProfessionalCalendar/ProfCalendarEdit'
 import ProfCalendarView from './components/Calender/ProfessionalCalendar/ProfCalendarView'
 import Navbar from "./components/Navbar/Navbar";
@@ -15,6 +17,8 @@ import ServiceList from './components/Services/ServicesList'
 
 function App() {
   return (
+    
+    
     <BrowserRouter>
       <>
         <Navbar />
@@ -25,9 +29,11 @@ function App() {
           <Route path="/serviceProviders" element={<ProvidersPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/booking" element={<Book />} /> 
           <Route path="/p/calendar/view" element={<ProfCalendarView />} /> 
           <Route path="/p/calendar/edit/recurr" element={<ProfCalendarEdit mode='RECURRING'/>} />
           <Route path="/p/calendar/edit/non-recurr" element={<ProfCalendarEdit mode='NON-RECURRING'/>} />
+          <Route path="/c/calendar/view" element={<CustomerCalendar />} />
           <Route path="/" element={<LandingPage />} />
         </Routes>
         <Footer />
