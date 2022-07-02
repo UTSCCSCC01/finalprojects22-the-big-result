@@ -121,11 +121,6 @@ def get_recurring_availability():
 # NEW non recurring availabilities
 @calender_blueprint.route('/setRecurrAvailability', methods=["POST"])
 def set_recurring_availability():
-    print('*************')
-    print('*************')
-    print('*************')
-    print('*************')
-    print('*************')
     professional_id = int(request.json.get("professionalId", None))
     availabilities = request.json.get("events", None)
     recDAO_Object.deleteAllAvailabilitiesForProfID(professional_id)
@@ -136,10 +131,6 @@ def set_recurring_availability():
             end = time.fromisoformat(availability["end"])
             recDAO_Object.addAvailability(professional_id, DayOfWeek(i), start, end)
 
-    print('##################')
-    print('##################')
-    print('##################')
-    print('##################')
     print(availabilities)
     return {"success": "yes"}
 
