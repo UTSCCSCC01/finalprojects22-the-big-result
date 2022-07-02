@@ -30,10 +30,10 @@ def get_bookings():
     start_date = date.fromisoformat(request.headers.get("start", None))
     weekly_bookings = get_week_by_professional(professional_id, start_date)
 
-    formatted_schedule = []
+    formatted_schedule = {}
     for i in range(7):
         current_date = start_date + timedelta(days=i)
-        formatted_schedule.append([])
+        formatted_schedule[str(i)] = []
 
         while weekly_bookings:
             booking = weekly_bookings.pop()
@@ -43,7 +43,7 @@ def get_bookings():
 
             start_time = booking.beginServiceDateTime.time()
             end_time = booking.endServiceDateTime.time()
-            formatted_schedule[i].append({
+            formatted_schedule[str(i)].append({
                 "start": start_time.isoformat(),
                 "end": end_time.isoformat()
             })
