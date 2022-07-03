@@ -16,6 +16,7 @@ import "../components/Filters.css";
 import Footer from "../components/Footer/Footer";
 
 function ProviderPage(props) {
+  const [priceRange, setPriceRange] = useState([]);
   const [providerList, setProviderList] = useState([]);
   const [filters, setFilters] = useState({
     service: "",
@@ -39,6 +40,26 @@ function ProviderPage(props) {
     }));
   };
 
+  // useEffect(() => {
+  //   axios({
+  //     method: "GET",
+  //     url: `http://127.0.0.1:5000/priceRange`,
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       const [minPrice, maxPrice] = response.priceRange;
+  //       setFilters((prevFilters) => ({
+  //         ...prevFilters,
+  //         price: [minPrice, maxPrice],
+  //       }));
+  //       setPriceRange([minPrice, maxPrice]);
+  //     })
+  //     .catch((err) => {
+  //       console.log("ERR");
+  //       console.log(err.response);
+  //     });
+  // }, []);
+
   useEffect(() => {
     axios({
       method: "GET",
@@ -60,11 +81,15 @@ function ProviderPage(props) {
         <div className="filters card">
           <div className="price filter-component">
             Price
-            <Slider
-              name="price"
-              value={filters.price}
-              onChange={handleChange}
-            />
+            <div className="price-slider">
+              <p>{"$" + filters.price[0]}</p>
+              <Slider
+                name="price"
+                value={filters.price}
+                onChange={handleChange}
+              />
+              <p>{"$" + filters.price[1]}</p>
+            </div>
           </div>
           <div className="rating filter-component">
             Rating
@@ -93,9 +118,6 @@ function ProviderPage(props) {
               </Select>
             </FormControl>
           </div>
-          <div className="filter-component">
-            <button>Apply Filters</button>
-          </div>
         </div>
       </div>
     );
@@ -108,6 +130,7 @@ function ProviderPage(props) {
       <div className="providers">
         {providerList.map((provider) => (
           <Provider
+            id={provider.id}
             name={provider.name}
             service={provider.service}
             description={provider.description}

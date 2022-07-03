@@ -4,7 +4,7 @@ import "../Card.css";
 function Provider(props) {
   return (
     <div
-      onClick={() => (window.location = "/profile")}
+      onClick={() => (window.location = `/profile/${props.id}`)}
       className="provider-card card"
     >
       <div className="metadata">

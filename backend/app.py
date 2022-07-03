@@ -20,6 +20,9 @@ from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
 from login import login_blueprint
 from datetime import timedelta
 from listServiceProviders import list_providers_blueprint
+from bookings.listBookings import list_bookings_blueprint
+from calender import calender_blueprint # new
+from book import book_blueprint # new
 
 
 def getDBURL() -> str:
@@ -33,10 +36,14 @@ def createApp():
     app.register_blueprint(sampleBlueprint, url_prefix='/example')
     app.register_blueprint(signup_blueprint)
     app.register_blueprint(services_blueprint)
-    app.register_blueprint(serviceProviderBlueprint, url_prefix="/serviceProvider")
+    app.register_blueprint(serviceProviderBlueprint)
     app.register_blueprint(list_providers_blueprint)
     app.register_blueprint(login_blueprint)
+    app.register_blueprint(list_bookings_blueprint)
+    app.register_blueprint(calender_blueprint) # new
+    app.register_blueprint(book_blueprint) # new
 
+    CORS(app)
     # JWTManager(app)
 
     Bcrypt(app)

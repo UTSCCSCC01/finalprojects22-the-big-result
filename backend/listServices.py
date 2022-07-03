@@ -1,11 +1,21 @@
 from flask import Blueprint
+from DAOs import ServicesDAO
 
 services_blueprint = Blueprint('services_blueprint', __name__)
 
 @services_blueprint.route('/services-list', methods=["GET"])
 def services():
+    services = ServicesDAO().getAllServices();
+
+    temp = []
+    for i in range(len(services)):
+        temp.append({
+            "id": i,
+            "service": services[i].serviceName
+        })
+    
     list_services = {
-        "services": [{"id":1, "service":"Makeup"}, {"id":2, "service":"Hairstyle"}, 
-        {"id":3, "service":"Landscaping"}, {"id":4 , "service":"Nails"}]
+        "services": temp
     }
+
     return list_services

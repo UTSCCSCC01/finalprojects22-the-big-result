@@ -47,6 +47,9 @@ class ProfessionalsDAO:
     def getProfessionalOnUsername(self, username: str) -> Professional:
         return Professional.query.filter_by(username=username).first()
 
+    def getProfessionalOnName(self, firstName: str, lastName: str) -> Professional:
+        return Professional.query.filter_by(firstName=firstName, lastName=lastName).first()
+
     def getAllProfessionals(self) -> List[Professional]:
         return Professional.query.all()
 
@@ -70,10 +73,10 @@ class ProfessionalsDAO:
         return queryRes is not None
 
     def getAllServicesForProfessional(self, id: int) -> List[Services]:
-        return Professional.query.filter_by(id=id).first().services
+        return Professional.query.filter_by(id=id).first().services.all()
 
     def getAllReviewsForProfesional(self, id: int) -> List[Reviews]:
-        return Professional.query.filter_by(id=id).first().reviews
+        return Professional.query.filter_by(id=id).first().reviews.all()
 
     def getFirstNReviewsForProfesional(self, id: int, numReviews=3) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
@@ -316,7 +319,6 @@ def runDAOQueries():
 
     # print(serviceDao.getProfessionalsForService("agaga"))
 
-    print(bookingsDao.getBookingsFromCustID(34)[0].review)
-
+    # print(bookingsDao.getBookingsFromCustID(34)[0].review)
 
     pass
