@@ -12,9 +12,11 @@ function Login() {
     axios({
       method: "GET",
       url: `http://localhost:5000/verify-loggedin`,
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     })
-      .then(() => (window.location = "/successlogin"))
+      // .then((res) => {
+      //   console.log(res);
+      //   window.location = "/successlogin";
+      // })
       .catch((err) => console.log(err));
   }, []);
 
@@ -31,7 +33,7 @@ function Login() {
       .then((res) => {
         localStorage.setItem("token", res.data.access_token);
         // only go to profile tab when login is successful
-        window.location = "/successlogin";
+        window.location = "/";
         setFailedLogin(false);
       })
       .catch((err) => {
@@ -64,7 +66,7 @@ function Login() {
   };
 
   return (
-    <div id="login">
+    <div id="login" className="page">
       <h1>Login as a</h1>
       <div className="tabs">
         <button className="tab active" id="customer" onClick={handleTabs}>
@@ -96,9 +98,9 @@ function Login() {
       {failedLogin && (
         <p className="error">Username or password is incorrect.</p>
       )}
-      <small>
+      <p>
         Don't have an account? <a href="/signup">Sign Up</a>
-      </small>
+      </p>
     </div>
   );
 }

@@ -1,21 +1,17 @@
 #profile {
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
 .profile-container {
-  width: 60%;
+  width: 70%;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ebe9f5;
 }
 
-#profile h1 {
-  align-self: flex-start;
-}
-
-.profile-container h1 {
-  text-align: left;
+.profile-img {
+  border-radius: 5px;
 }
 
 .profile-inner-container {
@@ -27,15 +23,22 @@
 .img-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+}
+
+.img-container img {
+  height: 100%;
+  object-fit: cover;
 }
 
 .reviews-container {
   display: flex;
   flex: 1;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 60%;
+  text-align: left;
+  width: 70%;
+}
+
+.description-container {
+  text-align: left;
 }

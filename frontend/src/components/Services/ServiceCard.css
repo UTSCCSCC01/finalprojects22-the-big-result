@@ -1,23 +1,15 @@
 .service-card {
+  padding: 10px 20px 5px 20px;
+  margin: 10px;
   text-align: center;
-  border-style: solid;
-  border-width: thin;
-  margin: 16px;
-  padding: 100px;
-  font-size: 24px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px #ccc;
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-}
 .row {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
-  width: 100%;
+  justify-content: center;
+}
+
+.active-svc {
+  background-color: #d9d5ea;
 }

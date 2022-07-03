@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"
 import axios from "axios";
 import "./Profile.css";
 import Review from "../Review/Review";
 
 function Profile(props) {
   const [profileData, setProfileData] = useState([]);
+  const { id } = useParams();
 
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://localhost:5000/serviceProvider/`,
+      url: `http://127.0.0.1:5000/serviceProvider?id=${id}`,
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
     })
       .then((response) => {
@@ -23,37 +25,44 @@ function Profile(props) {
   }, []);
 
   return (
-    <div id="profile">
+    <div id="profile" className="page">
       <div className="profile-container">
-        <h1>Profile</h1>
         <div className="profile-inner-container">
           <div className="img-container">
-            <img src={profileData.profilePictureLink} alt=""></img>
-            <div className="name-review-container">
-              <h2>{profileData.name}</h2>
-              <h3>Rating: {profileData.rating}</h3>
-            </div>
+            <img
+              className="profile-img"
+              src={profileData.profilePictureLink}
+              alt=""
+            ></img>
           </div>
 
           <div className="description-container">
+            <div className="name-review-container">
+              <h1 className="highlight">{profileData.name}</h1>
+              <h3>Rating: {profileData.rating}</h3>
+            </div>
             <p>{profileData.description}</p>
-            <p>Services: {profileData.services}</p>
+            <p className="svc-tag">{profileData.services}</p>
+            <button>Book Now!</button>
           </div>
         </div>
       </div>
-
+      <br />
       <div className="reviews-container">
         <h1>Reviews</h1>
         {Object.keys(profileData).length > 0 &&
-          profileData.reviews.length > 0 && (
+          profileData.reviews.length > 0 &&
+          profileData.reviews.map((review) => (
             <Review
-              imageLink={profileData.reviews[0].imageLink}
-              rating={profileData.reviews[0].rating}
-              reviewDescription={profileData.reviews[0].reviewDescription}
-              reviewedBy={profileData.reviews[0].reviewedBy}
-              service={profileData.reviews[0].service}
+              imageLink={review.imageLink}
+              rating={review.rating}
+              reviewDescription={review.reviewDescription}
+              reviewedBy={review.reviewedBy}
+              service={review.service}
             />
-          )}
+          ))}
+        <br />
+        <button>See All Reviews </button>
       </div>
     </div>
   );

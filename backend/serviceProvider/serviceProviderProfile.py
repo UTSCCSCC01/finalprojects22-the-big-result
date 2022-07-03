@@ -1,28 +1,45 @@
+from flask import request
 from flask import Blueprint, jsonify
+from DAOs import ProfessionalsDAO, CustomersDAO
 
 serviceProviderBlueprint = Blueprint("serviceProvider", __name__)
 
-@serviceProviderBlueprint.route("/")
+@serviceProviderBlueprint.route("/serviceProvider")
 def getServiceProviderProfile():
-    return jsonify({
-        "name": "Steven Adams",
-        "rating": 4.5,
-        "description": "High quality hairdresser available for work!",
-        "services": "Hairstyle",
-        "profilePictureLink": "https://picsum.photos/200",
-        "calendar": "Some calendar stuff here that we would probably need later on",
-        "reviews": getReviews(3)
-    })
 
+    dao = ProfessionalsDAO()
+    professional = dao.getProfessionalOnId(request.args.get("id"))
 
-def getReviews(numRevs = 1)-> list:
+    return {
+            "name": professional.firstName + " " + professional.lastName,
+            "rating": professional.ratings,
+            "description": professional.description,
+            "services": getServices(professional.services),
+            "profilePictureLink": "https://picsum.photos/200",
+            "calendar": "Some calendar stuff here that we would probably need later on",
+            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id))
+        }
+
+def getServices(services):
+    result = ""
+    for service in services:
+        if result == "":
+            result = service.serviceName
+        else:
+            result = result + "," + service.serviceName
+    return result
+
+def getReviews(reviews, numRevs = 3) -> list:
     reviewList = []
-    for i in range(numRevs):
+    custDAO = CustomersDAO()
+
+    for i in range(min(len(reviews), numRevs)):
+        customer = custDAO.getCustomerOnID(reviews[i].customerID)
         reviewList.append({
-            "service": "hairstyle",
-            "reviewedBy": "Bob Marley",
-            "rating": 3.7,
-            "imageLink":"https://picsum.photos/100",
-            "reviewDescription":"elit sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Posuere urna nec tincidunt praesent semper feugiat nibh sed. Gravida cum sociis natoque penatibus et magnis dis. Orci dapibus ultrices in iaculis."
+            "service": reviews[i].booking.serviceName,
+            "reviewedBy": customer.firstName + " " + customer.lastName,
+            "rating": reviews[i].ratings,
+            "imageLink": "https://picsum.photos/100",
+            "reviewDescription": reviews[i].description
         })
     return reviewList
