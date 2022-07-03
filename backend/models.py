@@ -199,7 +199,7 @@ class Bookings(db.Model):
     specialInstructions: str = db.Column(db.String(500), nullable=True)
     serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
 
-    review: Reviews
+    review: Reviews  # This works because of the backref param in the Reviews ORM class
 
 
 class Services(db.Model):
