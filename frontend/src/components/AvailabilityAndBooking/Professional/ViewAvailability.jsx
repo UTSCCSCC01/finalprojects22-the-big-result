@@ -37,17 +37,18 @@ function ViewAvailability(props) {
        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
        setViewAvailabilities(resFormatted); 
      }).catch((err) => console.log(err));
-     
+   
    axios({
      method: "GET", url: `http://localhost:5000/getBookings`,
      headers: { 
       professionalId: "36", 
-     start: EvFn.getDateFromDateTime(viewDate) 
+      start: EvFn.getDateFromDateTime(viewDate) 
     }
    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
        const resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.BOOKING);
        setBookings(resFormatted);
+       console.log(resFormatted);
      }).catch((err) => console.log(err));
  }, []);
 

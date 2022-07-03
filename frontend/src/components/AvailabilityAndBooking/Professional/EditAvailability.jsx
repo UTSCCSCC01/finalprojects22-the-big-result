@@ -170,7 +170,7 @@ function ProfCalendarEdit(props) {
       data: { events: eventsToRecurrFormatted, professionalId: "36" 
     }
     }).then(() => {
-      window.location = "/p/calendar/view";
+      window.location = "/p/availability";
     }).catch((err) => console.log(err) );
   }
 
@@ -185,7 +185,7 @@ function ProfCalendarEdit(props) {
         start: EvFn.getDateFromDateTime(viewDate)
       }
      }).then(() => {
-        window.location = "/p/calendar/view";
+        window.location = "/p/availability";
       }).catch((err) => console.log(err) );
   }
 
@@ -242,8 +242,10 @@ function ProfCalendarEdit(props) {
             onNavigate={onNavigate}
           />
         </div>
-        <button onClick={props.mode===Constants.RECURRING ? onSubmitEditRecurr : onSubmitEditNonRecurr} style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Submit</button>
-        <button onClick={() => {props.sendMode(Constants.VIEW)}} style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Cancel Edit</button>
+        <button onClick={props.mode===Constants.RECURRING ? onSubmitEditRecurr : onSubmitEditNonRecurr} 
+          style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Submit</button>
+        <button onClick={() => {props.sendMode(Constants.VIEW)}} 
+          style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Cancel Edit</button>
         <br />
         <br />
         <br />

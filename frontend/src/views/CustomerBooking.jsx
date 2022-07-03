@@ -12,7 +12,6 @@ function CustomerBooking() {
   
   const getBookingInfo = (data) => {
     console.log('got booking info...', data); // for now just a date
-    // globalBookingInfo = data;
     setBookingInfo(data);
     setIsConfirmingBooking(true);     
   }

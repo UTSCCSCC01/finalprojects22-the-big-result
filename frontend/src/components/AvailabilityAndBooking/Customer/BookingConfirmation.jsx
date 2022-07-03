@@ -23,14 +23,16 @@ function BookingConfirmation(props) {
         serviceName: props.bookingInfo.serviceName,
         instructions: props.bookingInfo.instructions
       }
-     }).then(() => {}
+     }).then((res) => {
+      window.location = "/c/booking";
+     }
      ).catch((err) => {
         console.log(err);
       });
   }
 
   const onMakeChanges = () => {
-    window.location = "/c/calendar/view";
+    window.location = "/c/booking";
   }
 
   // TODO: get the professional name instead of id
@@ -57,11 +59,9 @@ function BookingConfirmation(props) {
         <br />
         <br />
         <br />
-        <div className="btn-group">
-          <button type="submit" onClick={onConfirmation}>Confirm Details</button>
-          <button onClick={onMakeChanges}>Make Changes</button>
-        </div>
       </form>
+      <button onClick={onConfirmation} style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Confirm Details</button>
+      <button onClick={onMakeChanges} style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Make Changes</button>
     </div>
   );
 }

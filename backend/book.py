@@ -61,5 +61,5 @@ def get_bookings():
                 "start": start_time.isoformat(),
                 "end": end_time.isoformat()
             })
-
+    print(formatted_schedule)
     return jsonify(formatted_schedule)

@@ -28,8 +28,9 @@ function AvailabilityCalendar(props) {
     } // make sure valid prof id
    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
-       let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
-       setViewAvailabilities(resFormatted); 
+       let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY);
+       let resFormatted2 = EvFn.removePastEvents(resFormatted);  
+       setViewAvailabilities(resFormatted2); 
      }).catch((err) => console.log(err));
  }, []);
 
@@ -51,7 +52,7 @@ function AvailabilityCalendar(props) {
   }
 
   const onNavigate =(date, view) => {
-    console.log('navigating to...', date, view, EvFn.getSunday(date));
+    console.log('navigating to...', date, view, new Date(EvFn.getSunday(date) - 7));
     axios({
       method: "GET", url: `http://localhost:5000/getAvailability`,
       headers: { 
@@ -61,8 +62,9 @@ function AvailabilityCalendar(props) {
       } 
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
-        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
-        setViewAvailabilities(resFormatted); 
+        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY);
+        let resFormatted2 = EvFn.removePastEvents(resFormatted); 
+        setViewAvailabilities(resFormatted2); 
       }).catch((err) => console.log(err));
     setViewDate(new Date(EvFn.getSunday(date) - 7)); 
   }
