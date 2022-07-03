@@ -75,6 +75,7 @@ def get_service_provider_list():
         else:
             svc = ""
         results_formatted.append({ 
+            "id": i.id,
             "name": i.firstName + " " + i.lastName,
             "service": svc,
             "price": i.averageCost,

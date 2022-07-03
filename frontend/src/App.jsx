@@ -30,7 +30,7 @@ function App() {
           <Route path="/successLogin" element={<SuccessLogin />} />
           <Route path="/services" element={<ServiceList />} />
           <Route path="/serviceProviders" element={<ProvidersPage />} />
-          <Route path="/profile" element={<Profile firstName="provider" lastName="one"/>} />
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/signup" element={<SignUp />} />
           {/* <Route path="/customerUpcomingBookings" element={<BookingsPage type="Upcoming" />} />
           <Route path="/customerPastBookings" element={<BookingsPage type="Past" />} /> */}

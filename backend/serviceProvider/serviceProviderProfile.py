@@ -6,16 +6,9 @@ serviceProviderBlueprint = Blueprint("serviceProvider", __name__)
 
 @serviceProviderBlueprint.route("/serviceProvider")
 def getServiceProviderProfile():
-    
-    # names = request.args.get('name').split(" ")
-    # firstName = names[0]
-    # lastName = names[1]
-    firstName = request.args.get("firstName")
-    lastName = request.args.get("lastName")
 
     dao = ProfessionalsDAO()
-    # professional = dao.getAllProfessionals()[0]
-    professional = dao.getProfessionalOnName(firstName, lastName)
+    professional = dao.getProfessionalOnId(request.args.get("id"))
 
     return {
             "name": professional.firstName + " " + professional.lastName,
