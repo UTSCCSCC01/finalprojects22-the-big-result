@@ -25,7 +25,7 @@ function ProfCalendarEdit(props) {
 
 
   useEffect(() => {
-    if (props.mode==Constants.RECURRING) {
+    if (props.mode===Constants.RECURRING) {
       setMode(Constants.RECURRING);
       axios({
         method: "GET", url: `http://localhost:5000/getRecurrAvailability`,
@@ -39,7 +39,7 @@ function ProfCalendarEdit(props) {
         setEventsToRecurr(resFormatted);
         }).catch((err) => console.log(err));
     }
-    else if (props.mode==Constants.NONRECURR) {
+    else if (props.mode===Constants.NONRECURR) {
       setMode(Constants.NONRECURR);
       axios({
         method: "GET", url: `http://localhost:5000/getAvailability`,
@@ -70,7 +70,7 @@ function ProfCalendarEdit(props) {
   // TODO for later -> prevent from making availability events on top of current bookings
   const handleSelect = ({ start, end }) => {
     console.log("creating event ...");
-    if (mode == Constants.RECURRING) {
+    if (mode === Constants.RECURRING) {
       setEventsToRecurr([ ...eventsToRecurr,
         { start: start, 
           end:end, 
@@ -78,7 +78,7 @@ function ProfCalendarEdit(props) {
           color: Constants.RECURR_AVAIL_COLOR,
           id:eventsToRecurr.length},
       ]);
-    } else if (mode == Constants.NONRECURR) {
+    } else if (mode === Constants.NONRECURR) {
       setViewAvailabilities([ ...viewAvailabilities,
         { start: start, 
           end: end, 
@@ -93,27 +93,27 @@ function ProfCalendarEdit(props) {
   // TODO for later -> make a generic function and pass in states and setStates as parameters?
   const handleSelectEvent = (event) => {
     console.log("clicking on event...");
-    if (event.title==Constants.BOOKING) return;
-    if (mode==Constants.RECURRING) {
+    if (event.title===Constants.BOOKING) return;
+    if (mode===Constants.RECURRING) {
       const w = window.confirm("Would you like to remove this event?")
       if (w) {
         let eventsAfterDeletion = [];
         eventsToRecurr.forEach(function(e) {
           // need to re-add to the events to fix the ids
           console.log(e.id, event)
-          if (e.id != event.id) 
+          if (e.id !== event.id) 
           eventsAfterDeletion.push({...e, id: eventsAfterDeletion.length });
         });
         setEventsToRecurr(eventsAfterDeletion);
       }
-    } else if (mode==Constants.NONRECURR) { 
+    } else if (mode===Constants.NONRECURR) { 
       const w = window.confirm("Would you like to remove this event?")
       if (w) {
         let eventsAfterDeletion = [];
         viewAvailabilities.forEach(function(e) {
           // need to re-add to the events to fix the ids
           console.log(e.id, event)
-          if (e.id != event.id) 
+          if (e.id !== event.id) 
           eventsAfterDeletion.push({...e, id: eventsAfterDeletion.length });
         });
         setViewAvailabilities(eventsAfterDeletion);
@@ -123,16 +123,16 @@ function ProfCalendarEdit(props) {
 
   const onEventResize = (data) => {
     console.log("event resizing...");
-    if (data.event.title==Constants.BOOKING) return;
-    if (mode==Constants.RECURRING) {
+    if (data.event.title===Constants.BOOKING) return;
+    if (mode===Constants.RECURRING) {
       setEventsToRecurr(eventsToRecurr.map((e) => {
-        if (e.id == data.event.id) 
+        if (e.id === data.event.id) 
           return { ...e, start: data.start, end: data.end }
         return e
       }))
-    } else if (mode==Constants.NONRECURR) {
+    } else if (mode===Constants.NONRECURR) {
       setViewAvailabilities(viewAvailabilities.map((e) => {
-        if (e.id == data.event.id) 
+        if (e.id === data.event.id) 
           return { ...e, start: data.start, end: data.end,
             color: Constants.NON_RECURR_AVAIL_COLOR, title: Constants.NONRECURR
            }
@@ -143,16 +143,16 @@ function ProfCalendarEdit(props) {
 
   const onEventDrop = (data) => {
     console.log("event dropped..."); 
-    if (data.event.title==Constants.BOOKING) return;
-    if (mode == Constants.RECURRING) {
+    if (data.event.title===Constants.BOOKING) return;
+    if (mode === Constants.RECURRING) {
       setEventsToRecurr(eventsToRecurr.map((e) => {
-        if (e["id"] == data.event.id) 
+        if (e["id"] === data.event.id) 
           return { ...e, start: data.start, end: data.end }
         return e
       }))
-    } else if (mode==Constants.NONRECURR) {
+    } else if (mode===Constants.NONRECURR) {
       setViewAvailabilities(viewAvailabilities.map((e) => {
-        if (e["id"] == data.event.id) 
+        if (e["id"] === data.event.id) 
           return { ...e, start: data.start, end: data.end, 
             color: Constants.NON_RECURR_AVAIL_COLOR, title: Constants.NONRECURR 
           }
@@ -170,7 +170,7 @@ function ProfCalendarEdit(props) {
       data: { events: eventsToRecurrFormatted, professionalId: "36" 
     }
     }).then(() => {
-      window.location = "/p/calendar/view";
+      window.location = "/p/availability";
     }).catch((err) => console.log(err) );
   }
 
@@ -185,7 +185,7 @@ function ProfCalendarEdit(props) {
         start: EvFn.getDateFromDateTime(viewDate)
       }
      }).then(() => {
-        window.location = "/p/calendar/view";
+        window.location = "/p/availability";
       }).catch((err) => console.log(err) );
   }
 
@@ -222,16 +222,16 @@ function ProfCalendarEdit(props) {
     <div>
       <div className="calendar">
       <h2>Edit mode.</h2>
-        <p>editing {props.mode==Constants.RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
-        {props.mode==Constants.NONRECURR &&  <p>nonrecurring events are only edited every week after submit. your edits are lost if not submitting weekly.</p>}
-        <div className={props.mode==Constants.RECURRING ? "prof-calender recurr" : "prof-calender non-recurr"}>
+        <p>editing {props.mode===Constants.RECURRING ? 'recurring' : 'nonrecurring'} dates</p>
+        {props.mode===Constants.NONRECURR &&  <p>nonrecurring events are only edited every week after submit. your edits are lost if not submitting weekly.</p>}
+        <div className={props.mode===Constants.RECURRING ? "prof-calender recurr" : "prof-calender non-recurr"}>
           <DragAndDropCalendar
             views={["week", "day"]} 
             selectable
             localizer={localizer}
             defaultDate={new Date()} 
             defaultView="week"
-            events={props.mode==Constants.RECURRING ? eventsToRecurr : EvFn.concatEvents(viewAvailabilities, bookings)}
+            events={props.mode===Constants.RECURRING ? eventsToRecurr : EvFn.concatEvents(viewAvailabilities, bookings)}
             style={{ height: "100vh" }}
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelect}
@@ -242,8 +242,10 @@ function ProfCalendarEdit(props) {
             onNavigate={onNavigate}
           />
         </div>
-        <button onClick={props.mode==Constants.RECURRING ? onSubmitEditRecurr : onSubmitEditNonRecurr}>Submit</button>
-        <button onClick={() => window.location = "/p/calendar/view"}>Cancel Edit</button>
+        <button onClick={props.mode===Constants.RECURRING ? onSubmitEditRecurr : onSubmitEditNonRecurr} 
+          style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Submit</button>
+        <button onClick={() => {props.sendMode(Constants.VIEW)}} 
+          style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Cancel Edit</button>
         <br />
         <br />
         <br />

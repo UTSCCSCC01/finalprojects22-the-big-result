@@ -14,7 +14,7 @@ moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
 
 
-function ProfCalendarView() {
+function ViewAvailability(props) {
   const [viewAvailabilities, setViewAvailabilities] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
@@ -37,17 +37,18 @@ function ProfCalendarView() {
        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
        setViewAvailabilities(resFormatted); 
      }).catch((err) => console.log(err));
-     
+   
    axios({
      method: "GET", url: `http://localhost:5000/getBookings`,
      headers: { 
       professionalId: "36", 
-     start: EvFn.getDateFromDateTime(viewDate) 
+      start: EvFn.getDateFromDateTime(viewDate) 
     }
    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
        const resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.BOOKING);
        setBookings(resFormatted);
+       console.log(resFormatted);
      }).catch((err) => console.log(err));
  }, []);
 
@@ -90,8 +91,8 @@ function ProfCalendarView() {
       <div className="calendar">
         <h2>View mode.</h2>
         <p>Edit your availability:</p>
-        <button className="tab" onClick={() => {window.location = "/p/calendar/edit/recurr"}}>Recurring.</button>
-        <button className="tab" onClick={() => {window.location = "/p/calendar/edit/non-recurr"}}>Non-recurring</button>
+        <button className="tab" onClick={() => { props.sendMode(Constants.RECURRING) }} style={{'padding':'10px 100px', 'margin': '10px 25px'}} >Recurring</button>
+        <button className="tab" onClick={() => { props.sendMode(Constants.NONRECURR) }} style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Non-recurring</button>
         <div className="prof-calender">
           <Calendar
             views={["week", "day"]}
@@ -109,4 +110,4 @@ function ProfCalendarView() {
   );
 }
 
-export default ProfCalendarView;
+export default ViewAvailability;

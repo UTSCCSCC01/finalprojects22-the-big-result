@@ -3,7 +3,6 @@ import math
 from flask import Blueprint
 
 from models import DayOfWeek, IsAvailable, AvailabilitiesNonRec
-# from events import recurringAvailabilities, allAvailabilities
 from flask import Blueprint, request, jsonify
 from datetime import date, time, timedelta, datetime
 from book import get_week_by_professional
@@ -18,16 +17,9 @@ nonRecDao_Object = AvailabilitiesNonRecDAO()
 @calender_blueprint.route('/getAvailability', methods=["GET"])
 def get_availability():
     # Get relevant data
-    
     professional_id = int(request.headers.get("professionalId", None))
-    print('professional_id', professional_id)
-    
     start_date = date.fromisoformat(request.headers.get("start", None))
-    print('start_date FOR AVAILABILITY', start_date)
-
     is_customer = request.headers.get("type", None) == "customer"
-    print('is_customer', is_customer)
-
     weekly_schedule = [[0 for _ in range(24 * 2 + 1)] for _ in range(7)]
     bookings = get_week_by_professional(professional_id, start_date)
 
@@ -99,7 +91,6 @@ def get_availability():
                 start_time = None
                 blocks_connected = 0
 
-    print('AVILABAILITY', formatted_schedule)
     return jsonify(formatted_schedule)
 
 
@@ -131,7 +122,6 @@ def set_recurring_availability():
             end = time.fromisoformat(availability["end"])
             recDAO_Object.addAvailability(professional_id, DayOfWeek(i), start, end)
 
-    print(availabilities)
     return {"success": "yes"}
 
 

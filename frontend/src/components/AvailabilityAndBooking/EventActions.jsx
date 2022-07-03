@@ -93,15 +93,28 @@ export const formatWeekEventsForGET = (res, curSunday, dataType) => {
             color: Constants.BOOKING_COLOR
           })
         } else if (dataType==Constants.AVAILABILITY) {
-          dataFormatted.push({
-            start: start, end: end, 
-            id: dataFormatted.length, 
-            title: Constants.AVAILABILITY, 
-            color: Constants.AVAIL_COLOR
-          })
+          // only push if not past date
+           
+            dataFormatted.push({
+              start: start, end: end, 
+              id: dataFormatted.length, 
+              title: Constants.AVAILABILITY, 
+              color: Constants.AVAIL_COLOR
+            })
+          
+          
         }
       });
   }
+  return dataFormatted;
+}
+
+export const removePastEvents = (res) => {
+  let dataFormatted = [];
+  res.forEach((e) => {
+    if (e.start >= new Date())
+      dataFormatted.push(e)
+  })
   return dataFormatted;
 }
 
