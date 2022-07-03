@@ -28,7 +28,7 @@ function App() {
           <Route path="/successLogin" element={<SuccessLogin />} />
           <Route path="/services" element={<ServiceList />} />
           <Route path="/serviceProviders" element={<ProvidersPage />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/p/availability" element={<ProfessionalAvailability />} /> 
           <Route path="/c/booking" element={<CustomerBooking />} /> 

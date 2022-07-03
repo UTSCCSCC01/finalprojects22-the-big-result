@@ -130,6 +130,7 @@ function ProviderPage(props) {
       <div className="providers">
         {providerList.map((provider) => (
           <Provider
+            id={provider.id}
             name={provider.name}
             service={provider.service}
             description={provider.description}
