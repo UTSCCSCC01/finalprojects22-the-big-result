@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Logout from "../Logout/Logout";
 
-function SuccessLogin(props) {
+function MyProfile(props) {
   const [profileData, setProfileData] = useState([]);
 
   useEffect(() => {
@@ -43,4 +43,4 @@ function SuccessLogin(props) {
   );
 }
 
-export default SuccessLogin;
+export default MyProfile;
