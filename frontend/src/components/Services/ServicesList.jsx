@@ -5,7 +5,7 @@ import ServiceCard from "./ServiceCard.jsx";
 function ServiceList(props) {
   const [arrServices, setArrServices] = useState([]);
   const [activeSvcId, setActiveSvcId] = useState("");
-  
+
   useEffect(() => {
     axios({
       method: "GET",
@@ -21,6 +21,7 @@ function ServiceList(props) {
     return arrServices.map((item) => {
       return (
         <div
+          key={item.id}
           className="card-container"
           onClick={() => {
             props.serviceFilter(item.service);

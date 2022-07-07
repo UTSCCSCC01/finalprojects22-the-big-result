@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "../Form.css";
+import { Link } from "react-router-dom";
 
 function SignUpCustomer() {
   const [signupForm, setSignupForm] = useState({
@@ -86,7 +87,7 @@ function SignUpCustomer() {
       {failedSignup && <p className="error">User already exists.</p>}
       <button type="submit">Sign Up!</button>
       <p>
-        Already have an account? <a href="/login">Log In</a>
+        Already have an account? <Link to="/login">Log In</Link>
       </p>
     </form>
   );

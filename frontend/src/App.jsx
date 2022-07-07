@@ -1,24 +1,34 @@
-import React from "react";
+import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import Footer from "./components/Footer/Footer";
 import Login from "./components/Login/Login";
 import MyProfile from "./components/MyProfile/MyProfile";
-import ProvidersPage from "./views/ProvidersPage";
-import SignUp from "./views/SignUp";
-import Profile from "./components/Profile/Profile";
-import CustUpBookingsPage from "./views/CustUpBookingsPage";
-import CustPastBookingsPage from "./views/CustPastBookingsPage";
-import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
-import ProfessionalPastBookingsPage from "./views/ProfessionalPastBookingsPage";
 import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
-import LandingPage from "./views/LandingPage";
+import Profile from "./components/Profile/Profile";
+import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import ServiceList from "./components/Services/ServicesList";
 import CustomerBooking from "./views/CustomerBooking";
+import CustPastBookingsPage from "./views/CustPastBookingsPage";
+import CustUpBookingsPage from "./views/CustUpBookingsPage";
+import LandingPage from "./views/LandingPage";
 import ProfessionalAvailability from "./views/ProfessionalAvailability";
-import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
+import ProfessionalPastBookingsPage from "./views/ProfessionalPastBookingsPage";
+import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
+import ProvidersPage from "./views/ProvidersPage";
+import SignUp from "./views/SignUp";
 
 function App() {
+  //TODO: 
+  const access_token = "test123"
+
+  const authAxios = axios.create({
+    baseURL: "http://localhost:5000",
+    headers: {
+      Authorization: `Bearer ${access_token}`
+    }
+  })
+
   return (
     <BrowserRouter>
       <>

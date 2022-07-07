@@ -16,7 +16,7 @@ body {
 
 .page {
   padding: 50px 0;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 200px);
 }
 
 /*Buttons*/
@@ -93,4 +93,5 @@ button:hover {
 
 .landing-page .providers-page {
   background-color: white;
+  min-height: fit-content;
 }

@@ -1,42 +1,50 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Logout from "../Logout/Logout";
+import { AuthContext } from "../../context/AuthProvider";
+import { useNavigate, Link } from "react-router-dom";
 
 function MyProfile(props) {
+  const navigate = useNavigate();
+
   const [profileData, setProfileData] = useState([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: "http://localhost:5000/successlogin",
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-    })
-      .then((response) => {
-        const res = response.data;
-        res.access_token && props.setToken(res.access_token);
-        setProfileData({
-          profile_name: res.first_name,
-          about_me: res.last_name,
-          user_type: res.user_type,
-        });
+    if (!user) navigate("/login");
+    else {
+      console.log(user);
+      axios({
+        method: "GET",
+        url: "http://localhost:5000/users/me",
+        headers: { Authorization: `Bearer ${user.access_token}` },
       })
-      .catch((error) => {
-        console.log(error);
-        // token expired: profile cannot be accessed so reroute to login page
-        window.location = "/login";
-      });
+        .then((response) => {
+          const res = response.data;
+          res.access_token && props.setToken(res.access_token);
+          setProfileData({
+            first: res.first_name,
+            last: res.last_name,
+            user_type: res.type,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          // token expired: profile cannot be accessed so reroute to login page
+        });
+    }
   }, []);
 
   return (
     <div className="page">
-      {localStorage.getItem("token") && profileData && (
+      {user && profileData && (
         <div>
-          <p>First name: {profileData.profile_name}</p>
-          <p>Last name: {profileData.about_me}</p>
+          <p>First name: {profileData.first}</p>
+          <p>Last name: {profileData.last}</p>
           <p>Type: {profileData.user_type}</p>
           <Logout />
           <br />
-          <a href="/services">See All Services!</a>
+          <Link to="/services">See All Services!</Link>
         </div>
       )}
     </div>

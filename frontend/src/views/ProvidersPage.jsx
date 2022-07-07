@@ -13,9 +13,9 @@ import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
 
 import "../components/Filters.css";
-import Footer from "../components/Footer/Footer";
 
 function ProviderPage(props) {
+  //TODO: Get min and max prices for priceRange
   const [priceRange, setPriceRange] = useState([]);
   const [providerList, setProviderList] = useState([]);
   const [filters, setFilters] = useState({
@@ -127,20 +127,26 @@ function ProviderPage(props) {
     <div className="providers-page page" id="providers">
       <ServiceList serviceFilter={updateServiceFilter} />
       {filtersComponent()}
-      <div className="providers">
-        {providerList.map((provider) => (
-          <Provider
-            id={provider.id}
-            name={provider.name}
-            service={provider.service}
-            description={provider.description}
-            price={provider.price}
-            rating={provider.rating}
-            location={provider.location}
-            profilePicURL={provider.profilePicURL}
-          />
-        ))}
-      </div>
+
+      {providerList ? (
+        <div className="providers">
+          {providerList.map((provider) => (
+            <Provider
+              key={provider.id}
+              id={provider.id}
+              name={provider.name}
+              service={provider.service}
+              description={provider.description}
+              price={provider.price}
+              rating={provider.rating}
+              location={provider.location}
+              profilePicURL={provider.profilePicURL}
+            />
+          ))}
+        </div>
+      ) : (
+        <h2>Sorry! No providers match those filters</h2>
+      )}
     </div>
   );
 }

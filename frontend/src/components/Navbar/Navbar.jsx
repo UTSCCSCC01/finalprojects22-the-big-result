@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { AppBar, createTheme, ThemeProvider, Toolbar } from "@mui/material";
 import axios from "axios";
-import { AppBar, Toolbar, ThemeProvider, createTheme } from "@mui/material";
+import { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
 
 import Logout from "../Logout/Logout";
 import "./Navbar.css";
@@ -16,39 +18,31 @@ const darkTheme = createTheme({
 
 function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const { user } = useContext(AuthContext);
 
   //TODO: Fix this in next sprint, it should be calling verify-loggedin,
   //but the jwt decoding and such isn't working as expected
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/successlogin`,
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-    })
-      .then((res) => {
-        setLoggedIn(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoggedIn(false);
-      });
-  }, []);
+    //Just uses context to check if current user exists
+    if (user) setLoggedIn(true);
+    else setLoggedIn(false);
+  }, [user]);
 
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="static">
         <Toolbar id="navbar">
           <div className="navbar-left">
-            <a href="/">
+            <Link to="/">
               <h2>Amorr</h2>
-            </a>
+            </Link>
           </div>
           <div className="navbar-right">
-            <a href="/serviceProviders">Service Providers</a>
+            <Link to="/serviceProviders">Service Providers</Link>
             {loggedIn && (
               <>
-                <a href="/successlogin">My Profile</a>
-                <a href="/bookings">My Bookings</a>
+                <Link to="/myProfile">My Profile</Link>
+                <Link to="/bookings">My Bookings</Link>
               </>
             )}
             {loggedIn ? (
@@ -56,10 +50,10 @@ function Navbar() {
             ) : (
               <>
                 <button className="signup-btn">
-                  <a href="/signup">Sign Up</a>
+                  <Link to="/signup">Sign Up</Link>
                 </button>
                 <button className="login-btn">
-                  <a href="/login">Login</a>
+                  <Link to="/login">Login</Link>
                 </button>
               </>
             )}

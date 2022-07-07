@@ -3,6 +3,7 @@ import Select from "react-select";
 import axios from "axios";
 import "../Form.css";
 import "./SignUpProvider.css";
+import { Link } from "react-router-dom";
 
 function SignUpProvider() {
   const [servicesList, setServicesList] = useState([]);
@@ -138,7 +139,7 @@ function SignUpProvider() {
       {failedSignup && <p className="error">User already exists.</p>}
       <button type="submit">Sign Up!</button>
       <p>
-        Already have an account? <a href="/login">Log In</a>
+        Already have an account? <Link to="/login">Log In</Link>
       </p>
     </form>
   );
