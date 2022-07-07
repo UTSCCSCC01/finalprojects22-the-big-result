@@ -16,6 +16,7 @@ import LandingPage from "./views/LandingPage";
 import ServiceList from './components/Services/ServicesList'
 import CustomerBooking from './views/CustomerBooking';
 import ProfessionalAvailability from './views/ProfessionalAvailability'
+import ProfileSettingsPage from "./views/ProfileSettingsPage";
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
           <Route path="/customerPastBookings" element={<CustPastBookingsPage/>} />
           <Route path="/professionalUpcomingBookings" element={<ProfessionalUpBookingsPage/>}/>
           <Route path="/professionalPastBookings" element={<ProfessionalPastBookingsPage/>}/>
+          <Route path="/profileSettings" element={<ProfileSettingsPage/>}/>
+
         </Routes>
         <Footer />
       </>

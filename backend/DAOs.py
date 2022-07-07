@@ -1,11 +1,20 @@
 from typing import List
 
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
-    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status, Settings
+    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status, Settings, User
 
 from datetime import time, date, datetime, timezone
 from sqlalchemy import select, update, delete, values
 from sqlalchemy import func
+
+
+class UserDAO:
+
+    def getAllUsers(self) -> List[User]:
+        return User.query.all()
+
+    def getUserById(self, id: int) -> User:
+        return User.query.filter_by(id=id).first()
 
 
 

@@ -11,6 +11,7 @@ from DAOs import runDAOQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
+from profile.userSettingsProfile import profileBluePrint
 
 from sampleFeature.mySampleFeature import sampleBlueprint
 from signup import signup_blueprint
@@ -42,6 +43,7 @@ def createApp():
     app.register_blueprint(list_bookings_blueprint)
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
+    app.register_blueprint(profileBluePrint, url_prefix='/profile')
 
     CORS(app)
     # JWTManager(app)
@@ -88,5 +90,5 @@ def databaseTestingStuff():
 
 if __name__ == "__main__":
     # runDBQueries()
-    runDAOQueries()
-    # app.run(debug=True)
+    # runDAOQueries()
+    app.run(debug=True)
