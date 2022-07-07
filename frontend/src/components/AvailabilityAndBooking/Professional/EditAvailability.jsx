@@ -7,8 +7,8 @@ import "../Calender.css";
 
 import * as EvFn from "../EventActions";
 import * as Constants from "../Constants";
+import * as APICalls from "../../../APICalls"
 
-import axios from "axios";
 import moment from "moment";
 
 moment.locale("en-GB");
@@ -22,23 +22,15 @@ function ProfCalendarEdit(props) {
   const [mode, setMode] = useState(Constants.VIEW); // default is VIEW mode
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
 
-  //Generic axios function
-  function sendRequest(method, url, headers) {
-    return axios({
-      method: method,
-      url: url,
-      headers: headers,
-    });
-  }
+  
 
   useEffect(() => {
     if (props.mode === Constants.RECURRING) {
       setMode(Constants.RECURRING);
-      sendRequest("GET", "http://localhost:5000/getRecurrAvailability", {
+      APICalls.getRecurrAvailability({
         professionalId: "36",
         start: EvFn.getDateFromDateTime(viewDate),
-      })
-        .then((res) => {
+      }).then((res) => {
           let sundayOfCurrWeek = EvFn.getSunday(new Date());
           let resFormatted = EvFn.formatWeekEventsForGET(
             res,
@@ -46,38 +38,29 @@ function ProfCalendarEdit(props) {
             Constants.AVAILABILITY
           );
           setEventsToRecurr(resFormatted);
-        })
-        .catch((err) => console.log(err));
+        }).catch((err) => console.log(err));
+
     } else if (props.mode === Constants.NONRECURR) {
       setMode(Constants.NONRECURR);
-      axios({
-        method: "GET",
-        url: `http://localhost:5000/getAvailability`,
-        headers: {
-          professionalId: "36",
-          start: EvFn.getDateFromDateTime(viewDate),
-          type: "professional",
-        },
-      })
-        .then((res) => {
-          let sundayOfCurrWeek = EvFn.getSunday(viewDate);
-          let resFormatted = EvFn.formatWeekEventsForGET(
-            res,
-            sundayOfCurrWeek,
-            Constants.AVAILABILITY
-          );
-          setViewAvailabilities(resFormatted);
-        })
-        .catch((err) => console.log(err));
-      axios({
-        method: "GET",
-        url: `http://localhost:5000/getBookings`,
-        headers: {
-          professionalId: "36",
-          start: EvFn.getDateFromDateTime(viewDate),
-        },
-      })
-        .then((res) => {
+
+      APICalls.getAvailability({ 
+        professionalId: "36", 
+        start: EvFn.getDateFromDateTime(viewDate),
+        type: "professional",
+      }).then((res) => {
+        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
+        let resFormatted = EvFn.formatWeekEventsForGET(
+          res,
+          sundayOfCurrWeek,
+          Constants.AVAILABILITY
+        );
+        setViewAvailabilities(resFormatted);
+      }).catch((err) => console.log(err));
+
+      APICalls.getBookings({
+        professionalId: "36",
+        start: EvFn.getDateFromDateTime(viewDate),
+      }).then((res) => {
           let sundayOfCurrWeek = EvFn.getSunday(viewDate);
           const resFormatted = EvFn.formatWeekEventsForGET(
             res,
@@ -85,8 +68,7 @@ function ProfCalendarEdit(props) {
             Constants.BOOKING
           );
           setBookings(resFormatted);
-        })
-        .catch((err) => console.log(err));
+        }).catch((err) => console.log(err));
     }
   }, []);
 
@@ -209,48 +191,36 @@ function ProfCalendarEdit(props) {
     console.log("submitting recurr availability edit...");
     const eventsToRecurrFormatted =
       EvFn.formatWeekEventsForPOST(eventsToRecurr);
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/setRecurrAvailability",
-      data: { events: eventsToRecurrFormatted, professionalId: "36" },
-    })
-      .then(() => {
-        window.location = "/p/availability";
-      })
-      .catch((err) => console.log(err));
+    
+    APICalls.setRecurrAvailability({ 
+      events: eventsToRecurrFormatted, 
+      professionalId: "36" 
+    }).then(() => {
+      window.location = "/p/availability";
+    }).catch((err) => console.log(err));
   };
 
   const onSubmitEditNonRecurr = () => {
     console.log("submitting non-recurr edit...");
     const allAvailabilitiesFormatted =
       EvFn.formatWeekEventsForPOST(viewAvailabilities);
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/setNonRecurrAvailability",
-      data: {
-        events: allAvailabilitiesFormatted,
-        professionalId: "36",
-        start: EvFn.getDateFromDateTime(viewDate),
-      },
-    })
-      .then(() => {
+    
+    APICalls.setNonRecurrAvailability({
+      events: allAvailabilitiesFormatted,
+      professionalId: "36",
+      start: EvFn.getDateFromDateTime(viewDate),
+    }).then(() => {
         window.location = "/p/availability";
-      })
-      .catch((err) => console.log(err));
+      }).catch((err) => console.log(err));
   };
 
   const onNavigate = (date, view) => {
     console.log("navigating to...", date, view, EvFn.getSunday(date));
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/getAvailability`,
-      headers: {
-        professionalId: "36",
-        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
-        type: "professional",
-      },
-    })
-      .then((res) => {
+    APICalls.getAvailability({
+      professionalId: "36",
+      start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
+      type: "professional",
+    }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         let resFormatted = EvFn.formatWeekEventsForGET(
           res,
@@ -258,18 +228,12 @@ function ProfCalendarEdit(props) {
           Constants.AVAILABILITY
         );
         setViewAvailabilities(resFormatted);
-      })
-      .catch((err) => console.log(err));
-
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/getBookings`,
-      headers: {
-        professionalId: "36",
-        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
-      },
-    })
-      .then((res) => {
+      }).catch((err) => console.log(err));
+    
+    APICalls.getBookings({
+      professionalId: "36",
+      start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
+    }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         const resFormatted = EvFn.formatWeekEventsForGET(
           res,
@@ -277,8 +241,7 @@ function ProfCalendarEdit(props) {
           Constants.BOOKING
         );
         setBookings(resFormatted);
-      })
-      .catch((err) => console.log(err));
+      }).catch((err) => console.log(err));
     setViewDate(new Date(EvFn.getSunday(date) - 7));
   };
 

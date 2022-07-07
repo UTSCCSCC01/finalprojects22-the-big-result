@@ -6,8 +6,8 @@ import '../Calender.css';
 
 import * as EvFn from "../EventActions";
 import * as Constants from '../Constants'
+import * as APICalls from "../../../APICalls"
 
-import axios from "axios";
 import moment from "moment";
 
 moment.locale('en-GB');
@@ -25,26 +25,20 @@ function ViewAvailability(props) {
   // TODO: for later -> map endpoint to constants and import
 
   useEffect(() => {
-   axios({
-     method: "GET", url: `http://localhost:5000/getAvailability`,
-     headers: { 
+    APICalls.getAvailability({ 
       professionalId: "36", 
       start: EvFn.getDateFromDateTime(viewDate),
       type: 'professional'
-    } 
-   }).then((res) => {
+    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
        setViewAvailabilities(resFormatted); 
      }).catch((err) => console.log(err));
    
-   axios({
-     method: "GET", url: `http://localhost:5000/getBookings`,
-     headers: { 
+    APICalls.getBookings({ 
       professionalId: "36", 
       start: EvFn.getDateFromDateTime(viewDate) 
-    }
-   }).then((res) => {
+    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
        const resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.BOOKING);
        setBookings(resFormatted);
@@ -58,25 +52,19 @@ function ViewAvailability(props) {
      // TODO: use viewDate to send request for getAvailability - needs promises, async, and await 
      // TODO: this is because state is not updated immediately so the start date in the request header
      // TODO: is not correct. As a workaround: new Date(EvFn.getSunday(date) - 7)
-    axios({
-      method: "GET", url: `http://localhost:5000/getAvailability`,
-      headers: { 
-        professionalId: "36", 
-        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
-        type: 'professional'
-      } 
+    APICalls.getAvailability({ 
+      professionalId: "36", 
+      start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
+      type: 'professional'
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY); 
         setViewAvailabilities(resFormatted);
       }).catch((err) => console.log(err));
-      
-    axios({
-      method: "GET", url: `http://localhost:5000/getBookings`,
-      headers: { 
-        professionalId: "36", 
-        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)) 
-      }
+    
+    APICalls.getBookings({ 
+      professionalId: "36", 
+      start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)) 
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         const resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.BOOKING);

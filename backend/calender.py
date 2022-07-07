@@ -23,6 +23,8 @@ def get_availability():
     weekly_schedule = [[0 for _ in range(24 * 2 + 1)] for _ in range(7)]
     bookings = get_week_by_professional(professional_id, start_date)
 
+    print('STASRT DATE', start_date)
+
     # Map out their availabilities and bookings in O(A + B) time
     for i in range(7):
         current_date = start_date + timedelta(days=i)
@@ -91,6 +93,7 @@ def get_availability():
                 start_time = None
                 blocks_connected = 0
 
+    print('RESULT', formatted_schedule)
     return jsonify(formatted_schedule)
 
 

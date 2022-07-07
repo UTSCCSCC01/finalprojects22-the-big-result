@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import * as EvFn from "../EventActions";
-import * as Constants from '../Constants'
-
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import '../Calender.css';
 
-import axios from "axios";
+import * as EvFn from "../EventActions";
+import * as Constants from '../Constants'
+import * as APICalls from "../../../APICalls"
+
 import moment from "moment";
 
 moment.locale('en-GB');
@@ -19,14 +19,11 @@ function AvailabilityCalendar(props) {
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
 
   useEffect(() => { 
-   axios({
-     method: "GET", url: `http://localhost:5000/getAvailability`,
-     headers: { 
+    APICalls.getAvailability({ 
       professionalId: "36", 
       start: EvFn.getDateFromDateTime(viewDate),
       type: 'customer'
-    } // make sure valid prof id
-   }).then((res) => {
+    }).then((res) => {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
        let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY);
        let resFormatted2 = EvFn.removePastEvents(resFormatted);  
@@ -53,13 +50,10 @@ function AvailabilityCalendar(props) {
 
   const onNavigate =(date, view) => {
     console.log('navigating to...', date, view, new Date(EvFn.getSunday(date) - 7));
-    axios({
-      method: "GET", url: `http://localhost:5000/getAvailability`,
-      headers: { 
-        professionalId: "36", 
-        start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
-        type: 'customer'
-      } 
+    APICalls.getAvailability({ 
+      professionalId: "36", 
+      start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
+      type: 'customer'
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         let resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.AVAILABILITY);
