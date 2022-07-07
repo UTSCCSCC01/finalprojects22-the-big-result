@@ -19,10 +19,10 @@ const darkTheme = createTheme({
 function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
   const { user } = useContext(AuthContext);
-
   //TODO: Fix this in next sprint, it should be calling verify-loggedin,
   //but the jwt decoding and such isn't working as expected
   useEffect(() => {
+    console.log(user);
     //Just uses context to check if current user exists
     if (user) setLoggedIn(true);
     else setLoggedIn(false);
@@ -44,6 +44,9 @@ function Navbar() {
                 <Link to="/myProfile">My Profile</Link>
                 <Link to="/bookings">My Bookings</Link>
               </>
+            )}
+            {loggedIn && user.type === "provider" && (
+              <Link to="/p/availability">Add Availability</Link>
             )}
             {loggedIn ? (
               <Logout />

@@ -20,14 +20,14 @@ import SignUp from "./views/SignUp";
 
 function App() {
   //TODO: 
-  const access_token = "test123"
 
-  const authAxios = axios.create({
-    baseURL: "http://localhost:5000",
-    headers: {
-      Authorization: `Bearer ${access_token}`
-    }
-  })
+  // const authAxios = axios.create({
+  //   baseURL: "http://localhost:5000",
+  //   headers: {
+  //     Authorization: `Bearer ${access_token}`
+
+  //   }
+  // })
 
   return (
     <BrowserRouter>

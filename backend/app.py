@@ -49,7 +49,7 @@ def createApp():
     app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=30)
 
     db.init_app(app)
     app.app_context().push()

@@ -25,13 +25,13 @@ custDAO = CustomersDAO()
 profDAO = ProfessionalsDAO()
 
 login_blueprint = Blueprint('login_blueprint', __name__)
-global access_token 
+# global access_token 
 
 #Upon successful login, this returns back a new access token
 @login_blueprint.route('/login/<type>', methods=["POST"])
 def create_token(type):
     #TODO: Fix global access_token stuff
-    global access_token
+    # global access_token
     email = request.json.get("email", None)
     err_res = {"msg": "Wrong email or password"}, 401
     
@@ -86,6 +86,8 @@ def logout():
     res = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(res)
     return res
+
+
 
 #get the current user, return 401 if there is no current user ie not logged in
 @login_blueprint.route("/users/me")

@@ -1,15 +1,17 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
+import { useContext } from "react";
 
 //This method with Navigate and Outlet is the new standard for React Router V6:
 //https://medium.com/@dennisivy/creating-protected-routes-with-react-router-v6-2c4bbaf7bc1c
 const ProtectedRoutes = ({ role }) => {
+  //TODO: Figure out how to check if access token actually valid
+  const { user } = useContext(AuthContext);
 
-  //TODO: Change this to pass in the role needed for that route and actually fetch from backend
-  const auth = { token: true, type: "customer" };
   //if not authenticated
-  if (!auth.token) return <Navigate to="/login" />;
+  if (!user || !user.access_token) return <Navigate to="/login" />;
   //if role for specified route doesn't match authenticated user type
-  else if (role && role !== auth.type)
+  else if (role && role !== user.type)
     return (
       <div className="page">
         <h1>403 Forbidden</h1>

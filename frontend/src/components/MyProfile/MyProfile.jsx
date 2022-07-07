@@ -13,7 +13,6 @@ function MyProfile(props) {
   useEffect(() => {
     if (!user) navigate("/login");
     else {
-      console.log(user);
       axios({
         method: "GET",
         url: "http://localhost:5000/users/me",
