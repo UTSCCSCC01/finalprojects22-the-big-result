@@ -42,3 +42,10 @@
 .description-container {
   text-align: left;
 }
+
+
+.settings-info{
+  display:flex;
+  justify-content: center;
+  align-content: center;
+}

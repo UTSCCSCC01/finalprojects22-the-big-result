@@ -3,7 +3,7 @@ import React from "react";
 
 function ProfileSettingsPage() {
   return (
-    <div className="profile-settings">
+    <div className="profile-settings page">
         <p>Hi!</p>
         <ProfileSettings/>
     </div>
