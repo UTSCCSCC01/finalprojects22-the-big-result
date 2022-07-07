@@ -1,7 +1,7 @@
 from typing import List
 
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
-    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status
+    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status, Settings
 
 from datetime import time, date, datetime, timezone
 from sqlalchemy import select, update, delete, values
@@ -252,6 +252,15 @@ class BookingsDAO:
             .filter(Bookings.endServiceDateTime < rangeEnd).all()
 
 
+class SettingsDAO:
+
+    def getAllSettings(self) -> List[Settings]:
+        return Settings.query.all()
+
+    def getSettingsByUserID(self, userID: int) -> Settings:
+        return Settings.query.filter_by(id=userID).first()
+
+
 
 def runDAOQueries():
     custDao = CustomersDAO()
@@ -320,5 +329,11 @@ def runDAOQueries():
     # print(serviceDao.getProfessionalsForService("agaga"))
 
     # print(bookingsDao.getBookingsFromCustID(34)[0].review)
+
+    settingsDao = SettingsDAO()
+
+    print(settingsDao.getSettingsByUserID(36).billing)
+
+    print(profDao.getProfessionalOnId(36).settings.billing)
 
     pass
