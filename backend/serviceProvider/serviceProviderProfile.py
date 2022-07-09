@@ -20,13 +20,18 @@ def getServiceProviderProfile():
             "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id))
         }
 
-def getServices(services):
-    result = ""
+# def getServices(services):
+#     result = ""
+#     for service in services:
+#         if result == "":
+#             result = service.serviceName
+#         else:
+#             result = result + "," + service.serviceName
+#     return result
+def getServices(services) -> list:
+    result = []
     for service in services:
-        if result == "":
-            result = service.serviceName
-        else:
-            result = result + "," + service.serviceName
+        result.append(service.serviceName)
     return result
 
 def getReviews(reviews, numRevs = 3) -> list:

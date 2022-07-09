@@ -5,7 +5,7 @@ import Login from "./components/Login/Login";
 import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
 import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
-import Profile from "./components/Profile/Profile";
+import ProfilePage from "./views/ProfilePage";
 import CustUpBookingsPage from "./views/CustUpBookingsPage"
 import CustPastBookingsPage from "./views/CustPastBookingsPage"
 import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
@@ -28,7 +28,7 @@ function App() {
           <Route path="/successLogin" element={<SuccessLogin />} />
           <Route path="/services" element={<ServiceList />} />
           <Route path="/serviceProviders" element={<ProvidersPage />} />
-          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/p/availability" element={<ProfessionalAvailability />} /> 
           <Route path="/c/booking" element={<CustomerBooking />} /> 

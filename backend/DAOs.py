@@ -76,7 +76,7 @@ class ProfessionalsDAO:
         return Professional.query.filter_by(id=id).first().services.all()
 
     def getAllReviewsForProfesional(self, id: int) -> List[Reviews]:
-        return Professional.query.filter_by(id=id).first().reviews.all()
+        return Professional.query.filter_by(id=id).first().reviews
 
     def getFirstNReviewsForProfesional(self, id: int, numReviews=3) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()

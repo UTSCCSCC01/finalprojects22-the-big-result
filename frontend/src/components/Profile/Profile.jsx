@@ -1,28 +1,7 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
-import axios from "axios";
 import "./Profile.css";
 import Review from "../Review/Review";
 
 function Profile(props) {
-  const [profileData, setProfileData] = useState([]);
-  const { id } = useParams();
-
-  useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://127.0.0.1:5000/serviceProvider?id=${id}`,
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-    })
-      .then((response) => {
-        const res = response.data;
-        setProfileData(res);
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   return (
     <div id="profile" className="page">
@@ -31,18 +10,18 @@ function Profile(props) {
           <div className="img-container">
             <img
               className="profile-img"
-              src={profileData.profilePictureLink}
+              src={props.profilePictureLink}
               alt=""
             ></img>
           </div>
 
           <div className="description-container">
             <div className="name-review-container">
-              <h1 className="highlight">{profileData.name}</h1>
-              <h3>Rating: {profileData.rating}</h3>
+              <h1 className="highlight">{props.name}</h1>
+              <h3>Rating: {props.rating}</h3>
             </div>
-            <p>{profileData.description}</p>
-            <p className="svc-tag">{profileData.services}</p>
+            <p>{props.description}</p>
+            <p className="svc-tag">{props.services}</p>
             <button>Book Now!</button>
           </div>
         </div>
@@ -50,9 +29,9 @@ function Profile(props) {
       <br />
       <div className="reviews-container">
         <h1>Reviews</h1>
-        {Object.keys(profileData).length > 0 &&
-          profileData.reviews.length > 0 &&
-          profileData.reviews.map((review) => (
+        { props.length > 0 &&
+          props.reviews.length > 0 &&
+          props.reviews.map((review) => (
             <Review
               imageLink={review.imageLink}
               rating={review.rating}
