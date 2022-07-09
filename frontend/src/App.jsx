@@ -19,15 +19,6 @@ import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 
 function App() {
-  //TODO: 
-
-  // const authAxios = axios.create({
-  //   baseURL: "http://localhost:5000",
-  //   headers: {
-  //     Authorization: `Bearer ${access_token}`
-
-  //   }
-  // })
 
   return (
     <BrowserRouter>

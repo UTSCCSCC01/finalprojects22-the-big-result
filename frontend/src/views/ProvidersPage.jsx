@@ -14,7 +14,7 @@ import ServiceList from "../components/Services/ServicesList";
 
 import "../components/Filters.css";
 
-function ProviderPage(props) {
+function ProviderPage() {
   //TODO: Get min and max prices for priceRange
   const [priceRange, setPriceRange] = useState([]);
   const [providerList, setProviderList] = useState([]);

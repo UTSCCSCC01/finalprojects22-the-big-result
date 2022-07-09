@@ -18,6 +18,7 @@ const ProtectedRoutes = ({ role }) => {
         <h2>You do not have permission to access this resource.</h2>
       </div>
     );
+  //Just return the child as is
   return <Outlet />;
 };
 

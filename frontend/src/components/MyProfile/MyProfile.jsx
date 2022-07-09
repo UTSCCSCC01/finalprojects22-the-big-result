@@ -3,9 +3,11 @@ import axios from "axios";
 import Logout from "../Logout/Logout";
 import { AuthContext } from "../../context/AuthProvider";
 import { useNavigate, Link } from "react-router-dom";
+import { useAxiosAuth } from "../../APICalls";
 
 function MyProfile(props) {
   const navigate = useNavigate();
+  const axiosAuth = useAxiosAuth();
 
   const [profileData, setProfileData] = useState([]);
   const { user } = useContext(AuthContext);
@@ -13,11 +15,8 @@ function MyProfile(props) {
   useEffect(() => {
     if (!user) navigate("/login");
     else {
-      axios({
-        method: "GET",
-        url: "http://localhost:5000/users/me",
-        headers: { Authorization: `Bearer ${user.access_token}` },
-      })
+      axiosAuth
+        .get("/users/me")
         .then((response) => {
           const res = response.data;
           res.access_token && props.setToken(res.access_token);
@@ -32,7 +31,7 @@ function MyProfile(props) {
           // token expired: profile cannot be accessed so reroute to login page
         });
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="page">
@@ -42,8 +41,6 @@ function MyProfile(props) {
           <p>Last name: {profileData.last}</p>
           <p>Type: {profileData.user_type}</p>
           <Logout />
-          <br />
-          <Link to="/services">See All Services!</Link>
         </div>
       )}
     </div>

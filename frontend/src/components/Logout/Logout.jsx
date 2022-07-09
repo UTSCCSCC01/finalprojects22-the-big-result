@@ -8,7 +8,11 @@ function Logout() {
   const { setUser } = useContext(AuthContext);
 
   const logout = () => {
-    axios({ method: "POST", url: "http://localhost:5000/logout" })
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/logout",
+      withCredentials: true,
+    })
       .then(() => {
         //Set global user to null in context
         setUser(null);

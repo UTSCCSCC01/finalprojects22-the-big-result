@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import create_access_token, create_refresh_token, unset_jwt_cookies, \
+from flask_jwt_extended import create_access_token, create_refresh_token, set_refresh_cookies, unset_jwt_cookies, \
                                jwt_required, decode_token, \
                                get_jwt_identity, get_jwt, verify_jwt_in_request, set_access_cookies
 from flask_bcrypt import check_password_hash
@@ -27,38 +27,48 @@ profDAO = ProfessionalsDAO()
 login_blueprint = Blueprint('login_blueprint', __name__)
 # global access_token 
 
-#Upon successful login, this returns back a new access token
-@login_blueprint.route('/login/<type>', methods=["POST"])
+#Upon successful login, this returns back a new access token, and sets a cookie for a refresh token
+@login_blueprint.route('/token/<type>', methods=["POST"])
 def create_token(type):
     #TODO: Fix global access_token stuff
     # global access_token
     email = request.json.get("email", None)
     err_res = {"msg": "Wrong email or password"}, 401
-    
-    # customer
+  
     user_type = 'c' if type == 'customer' else 'p'
     
     if user_type == 'c':
-      customer = custDAO.getCustomerOnUsername(email)
-      if not customer: 
+      person = custDAO.getCustomerOnUsername(email)
+    elif user_type == 'p':
+      person = profDAO.getProfessionalOnUsername(email)
+    if not person: 
         return err_res
-      check_pass = check_password_hash(customer.password, request.json.get("password", None))
-      if check_pass:
-        access_token = create_access_token(identity=str(customer.id) + user_type)
-        # refresh_token = create_refresh_token(identity=customer.id)
-        return jsonify({ "type": "customer", "access_token" : access_token }), 200
-      return err_res
-
-    # provider user_type == 'p'
-    provider = profDAO.getProfessionalOnUsername(email)
-    if not provider: 
-      return err_res
-    check_pass = check_password_hash(provider.password, request.json.get("password", None))
+    check_pass = check_password_hash(person.password, request.json.get("password", None))
     if check_pass:
-      # refresh_token = create_refresh_token(identity=provider.id)
-      access_token = create_access_token(identity=str(provider.id) + user_type)
-      return jsonify({ "type": "provider", "access_token" : access_token }), 200
+      access_token = create_access_token(identity=str(person.id) + user_type)
+      res = jsonify({ "type": type, "access_token" : access_token })
+      #Store the access token in memory in the frontend, so you only return the access token
+      #Then store the refresh token in a cookie, so that once the state of the access token changes in the frontend
+      #We can just get the refresh token (This is the safest way)
+      refresh_token = create_refresh_token(identity=str(person.id) + user_type)
+      set_refresh_cookies(res, refresh_token)
+      # res.set_cookie('refresh_token', refresh_token)
+      return res, 200
     return err_res
+
+    # # provider user_type == 'p'
+    # provider = profDAO.getProfessionalOnUsername(email)
+    # if not provider: 
+    #   return err_res
+    # check_pass = check_password_hash(provider.password, request.json.get("password", None))
+    # if check_pass:
+    #   access_token = create_access_token(identity=str(provider.id) + user_type)
+    #   res = jsonify({ "type": "provider", "access_token" : access_token })
+    #   refresh_token = create_refresh_token(identity=provider.id)
+    #   set_refresh_cookies(res, refresh_token)
+    #   # res.set_cookie('refresh_token', refresh_token)
+    #   return res, 200
+    # return err_res
 
 
 
@@ -80,10 +90,28 @@ def create_token(type):
 #     except (RuntimeError, KeyError) as ex:
 #         return res
 
+#Send the refresh token to this endpoint to get a new access_token
+@login_blueprint.route("/token/refresh", methods=["POST"])
+@cross_origin(origin='http://localhost:3000',headers=['Content-Type','Authorization'])
+#Only allows refresh token to get here
+@jwt_required(refresh=True)
+def refresh():
+  user = get_jwt_identity()
+  access_token = create_access_token(identity=user)
+  print(user, access_token)
+  if user[-1] == "c":
+    user_type="customer"
+  elif user[-1] == "p":
+    user_type="provider"
+  response = jsonify({ "type": user_type, "access_token" : access_token })
+  response.headers.add('Access-Control-Allow-Credentials', 'true')
+  return response, 200
+
 
 @login_blueprint.route("/logout", methods=["POST"])
 def logout():
     res = jsonify({"msg": "logout successful"})
+    #unsets the refresh token in cookies,as well as the csrf token
     unset_jwt_cookies(res)
     return res
 
@@ -91,10 +119,11 @@ def logout():
 
 #get the current user, return 401 if there is no current user ie not logged in
 @login_blueprint.route("/users/me")
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+# @cross_origin(origin='http://localhost:3000',headers=['Content-Type','Authorization'])
 @jwt_required(optional=True)
 def get_current_user():
   id = get_jwt_identity()
+  print(id)
   if not id:
     return jsonify({"error": "No logged in user"}), 401
   err_res = {"first_name": "no match...", "last_name": "no match..."}, 404
@@ -102,10 +131,12 @@ def get_current_user():
   if id[-1] == "c":
     user_type = "customer"
     person = custDAO.getCustomerOnID(id[:len(id)-1])
-  if id[-1] == "p":
+  elif id[-1] == "p":
     user_type = "provider"
     person = profDAO.getProfessionalOnId(id[:len(id)-1])
   if person == None:
     return err_res
   else:
-    return jsonify({"first_name": person.firstName, "last_name": person.lastName, "type": user_type}), 200
+    response = jsonify({"first_name": person.firstName, "last_name": person.lastName, "type": user_type})
+    # response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response, 200

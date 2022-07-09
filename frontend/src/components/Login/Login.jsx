@@ -25,11 +25,13 @@ function Login() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: `http://localhost:5000/login/${type}`,
+      url: `http://localhost:5000/token/${type}`,
       data: {
         email: loginForm.email,
         password: loginForm.password,
       },
+      //Need this to be true in order to set the refresh_token cookie
+      withCredentials: true,
     })
       .then((res) => {
         if (res.status === 200) {
@@ -38,6 +40,7 @@ function Login() {
             type: res.data.type,
             access_token: res.data.access_token,
           });
+          console.log(user);
           // only go to profile tab when login is successful
           navigate("/");
           setFailedLogin(false);
