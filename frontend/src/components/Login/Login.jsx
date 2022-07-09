@@ -23,6 +23,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     axios({
       method: "POST",
       url: `http://localhost:5000/token/${type}`,

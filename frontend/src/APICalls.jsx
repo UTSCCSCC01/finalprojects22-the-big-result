@@ -106,13 +106,22 @@ export const getRequest = (endpoint, headers) =>
 export const postRequest = (endpoint, data) =>
   sendRequest("POST", endpoint, data);
 
-export const getAvailability = (headers) =>
-  getRequest("/getAvailability", headers);
+// get requests
+export const getAvailability = (headers) => getRequest("/getAvailability", headers);
 export const getBookings = (headers) => getRequest("/getBookings", headers);
-export const getRecurrAvailability = (headers) =>
-  getRequest("/getRecurrAvailability", headers);
+export const getRecurrAvailability = (headers) => getRequest("/getRecurrAvailability", headers);
+export const getUsersMe = (headers) => getRequest('/users/me', headers);
+export const getServices = (headers) => getRequest('/getServices', headers);
+export const getServiceProvidersOnQuery = (endpointQuery, headers) => getRequest(endpointQuery, headers);
+export const getServiceProviderOnId = (endpointQuery, headers) => getRequest(endpointQuery, headers);
+export const getCustomerPastBookings = (headers) => getRequest('/customerPastBookings', headers);
+export const getProfessionalUpcomingBookings = (headers) => getRequest('/professionalUpcomingBookings', headers);
+export const getProfessionalPastBookings = (headers) => getRequest('/professionalPastBookings', headers);
+export const getCustomerUpcomingBookings = (headers) => getRequest('/customerUpcomingBookings', headers);
 
-export const setRecurrAvailability = (headers) =>
-  postRequest("/setRecurrAvailability", headers);
-export const setNonRecurrAvailability = (headers) =>
-  postRequest("/setNonRecurrAvailability", headers);
+// post requests
+export const setRecurrAvailability = (data) => postRequest("/setRecurrAvailability", data);
+export const setNonRecurrAvailability = (data) => postRequest("/setNonRecurrAvailability", data);
+export const addBookings = (data) =>  postRequest("/addBookings", data);
+export const signUpProvider = (data) => postRequest("/signup/provider", data);
+export const signUpCustomer = (data) => postRequest("/signup/customer", data);

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Slider,
   Rating,
@@ -11,6 +10,7 @@ import {
 
 import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
+import { getServiceProvidersOnQuery } from "../APICalls"
 
 import "../components/Filters.css";
 
@@ -61,16 +61,18 @@ function ProviderPage() {
   // }, []);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://127.0.0.1:5000/listServiceProviders?service=${filters.service}&rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`,
-    })
+    getServiceProvidersOnQuery(
+      `/listServiceProviders?service=${filters.service}&rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`
+      ) 
+    // axios({
+    //   method: "GET",
+    //   url: `http://127.0.0.1:5000/listServiceProviders?service=${filters.service}&rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`,
+    // })
       .then((response) => {
         const res = response.data;
         setProviderList(res.providers);
       })
       .catch((err) => {
-        console.log("ERR");
         console.log(err.response);
       });
   }, [filters]);

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import "../Form.css";
 import { Link } from "react-router-dom";
+import { signUpCustomer } from "../../APICalls"
 
 function SignUpCustomer() {
   const [signupForm, setSignupForm] = useState({
@@ -14,16 +14,22 @@ function SignUpCustomer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios({
-      method: "POST",
-      url: `http://localhost:5000/signup/customer`,
-      data: {
-        firstName: signupForm.firstName,
-        lastName: signupForm.lastName,
-        email: signupForm.email,
-        password: signupForm.password,
-      },
+    signUpCustomer({
+      firstName: signupForm.firstName,
+      lastName: signupForm.lastName,
+      email: signupForm.email,
+      password: signupForm.password,
     })
+    // axios({
+    //   method: "POST",
+    //   url: `http://localhost:5000/signup/customer`,
+    //   data: {
+    //     firstName: signupForm.firstName,
+    //     lastName: signupForm.lastName,
+    //     email: signupForm.email,
+    //     password: signupForm.password,
+    //   },
+    // })
       .then(() => {
         window.location = "/login";
       })

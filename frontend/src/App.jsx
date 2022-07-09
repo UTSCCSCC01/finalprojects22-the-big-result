@@ -1,4 +1,3 @@
-import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Footer from "./components/Footer/Footer";
@@ -19,7 +18,6 @@ import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 
 function App() {
-
   return (
     <BrowserRouter>
       <>
@@ -29,15 +27,16 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/services" element={<ServiceList />} />
           <Route path="/serviceProviders" element={<ProvidersPage />} />
-          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile/:id" element={<Profile />} /> 
           <Route path="/signup" element={<SignUp />} />
           {/* Protected route, should be accessible by both customers and providers*/}
           <Route element={<ProtectedRoutes />}>
             <Route path="/myProfile" element={<MyProfile />} />
           </Route>
           {/* Protected route, only accessible by customers*/}
+          
           <Route element={<ProtectedRoutes role={"customer"} />}>
-            <Route path="/c/booking" element={<CustomerBooking />} />
+            <Route path="/c/booking/:profId" element={<CustomerBooking />} />
             <Route
               path="/c/upcomingBookings"
               element={<CustUpBookingsPage />}

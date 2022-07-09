@@ -1,27 +1,32 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState, useContext } from "react";
 
 import BookingProfessionalPast from "../components/Bookings/BookingProfessionalPast";
+import { getProfessionalPastBookings, getUsersMe } from '../APICalls'
+import { AuthContext } from "../context/AuthProvider";
 
-function ProfessionalPastBookingsPage(props) {
+function ProfessionalPastBookingsPage() {
   const [bookingsList, setBookingsList] = useState([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: "http://127.0.0.1:5000/professionalPastBookings",
-      headers: {
-        professionalId: 36
-      }
-    })
+    getUsersMe({ 
+      Authorization: `Bearer ${ user.access_token }` 
+    }).then((res) => {
+      console.log(res.data.id, "id of the customer finding upcoming bookings")
+      getProfessionalPastBookings({professionalId: parseInt(res.data.id)})
+      // axios({
+      //   method: "GET",
+      //   url: "http://127.0.0.1:5000/professionalPastBookings",
+      //   headers: {
+      //     professionalId: 36
+      //   }
+      // })
       .then((response) => {
-        const res = response.data;
-        setBookingsList(res.bookings);
+        console.log(response.data);
+        setBookingsList(response.data.bookings);
       })
-      .catch((err) => {
-        console.log("ERR");
-        console.log(err.response);
-      })
+      .catch((err) => console.log(err.response));
+    }).catch((err) => console.log(err.response));
   }, []);
 
   return(

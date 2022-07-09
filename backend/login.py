@@ -137,6 +137,6 @@ def get_current_user():
   if person == None:
     return err_res
   else:
-    response = jsonify({"first_name": person.firstName, "last_name": person.lastName, "type": user_type})
+    response = jsonify({"first_name": person.firstName, "last_name": person.lastName, "type": user_type, "id": person.id})
     # response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response, 200

@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import Logout from "../Logout/Logout";
 import { AuthContext } from "../../context/AuthProvider";
 import { useNavigate, Link } from "react-router-dom";

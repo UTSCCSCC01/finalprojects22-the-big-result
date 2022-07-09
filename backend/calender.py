@@ -17,6 +17,7 @@ nonRecDao_Object = AvailabilitiesNonRecDAO()
 @calender_blueprint.route('/getAvailability', methods=["GET"])
 def get_availability():
     # Get relevant data
+    print('PROF ID', request.headers.get("professionalId", None))
     professional_id = int(request.headers.get("professionalId", None))
     start_date = date.fromisoformat(request.headers.get("start", None))
     is_customer = request.headers.get("type", None) == "customer"

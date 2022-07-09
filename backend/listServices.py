@@ -3,7 +3,7 @@ from DAOs import ServicesDAO
 
 services_blueprint = Blueprint('services_blueprint', __name__)
 
-@services_blueprint.route('/services-list', methods=["GET"])
+@services_blueprint.route('/getServices', methods=["GET"])
 def services():
     services = ServicesDAO().getAllServices();
 

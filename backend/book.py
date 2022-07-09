@@ -1,11 +1,12 @@
 from datetime import date, datetime, timedelta, time
 
 from flask import Blueprint, jsonify, request
-from DAOs import BookingsDAO
+from DAOs import BookingsDAO, ProfessionalsDAO
 from models import Status
 
 book_blueprint = Blueprint('book_blueprint', __name__)
 bookingDAO_Object = BookingsDAO()
+professionalDAO_Object = ProfessionalsDAO()
 
 
 def get_week_by_professional(professional_id: int, start_date: date):
@@ -28,9 +29,19 @@ def add_bookings():
     time_begin = time.fromisoformat(json_object.get("start", None))
     time_end = time.fromisoformat(json_object.get("end", None))
     instructions = json_object.get("instructions")
-    service = json_object.get("serviceName")
-    location = json_object.get("location")
-    price = float(json_object.get("price"))
+    
+    # get service, location, from professional chosen using professional_id
+    chosen_professional = professionalDAO_Object.getProfessionalOnId(professional_id)
+    location = chosen_professional.location
+    service = chosen_professional.services[0].serviceName
+    price = chosen_professional.averageCost
+    # service = json_object.get("serviceName")
+    # location = json_object.get("location")
+    # price = float(json_object.get("price"))
+
+    print(customer_id, professional_id, datetime.combine(day_of_booking, time_begin),
+                                 datetime.combine(day_of_booking, time_end), location, Status.BOOKED, price, service,
+                                 instructions)
 
     bookingDAO_Object.addBooking(customer_id, professional_id, datetime.combine(day_of_booking, time_begin),
                                  datetime.combine(day_of_booking, time_end), location, Status.BOOKED, price, service,
@@ -63,3 +74,20 @@ def get_bookings():
             })
     print(formatted_schedule)
     return jsonify(formatted_schedule)
+
+
+# .. for booking information 
+# @book_blueprint.route("/getProfessional")
+# def get_professional_info():
+#     dao = ProfessionalsDAO()
+#     print(request.args.get("id"))
+#     professional = dao.getProfessionalOnId(request.args.get("id"))
+#     return {
+#             "name": professional.firstName + " " + professional.lastName,
+#             "rating": professional.ratings,
+#             "description": professional.description,
+#             "services": professional.services,
+#             "profilePictureLink": "https://picsum.photos/200",
+#             "calendar": "Some calendar stuff here that we would probably need later on",
+#             "reviews": dao.getAllReviewsForProfesional(professional.id)
+#         }

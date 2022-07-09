@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Link } from "react-router-dom";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -7,7 +8,8 @@ import "../Calender.css";
 
 import * as EvFn from "../EventActions";
 import * as Constants from "../Constants";
-import * as APICalls from "../../../APICalls"
+import { getRecurrAvailability, getAvailability, getBookings, 
+  setRecurrAvailability, setNonRecurrAvailability } from "../../../APICalls"
 
 import moment from "moment";
 
@@ -15,20 +17,19 @@ moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
-function ProfCalendarEdit(props) {
+
+function ProfCalendarEdit({ mode, id, sendMode}) {
   const [eventsToRecurr, setEventsToRecurr] = useState([]); // events recurring weekly
   const [viewAvailabilities, setViewAvailabilities] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [mode, setMode] = useState(Constants.VIEW); // default is VIEW mode
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
 
-  
 
   useEffect(() => {
-    if (props.mode === Constants.RECURRING) {
-      setMode(Constants.RECURRING);
-      APICalls.getRecurrAvailability({
-        professionalId: "36",
+    console.log('id of professional:', id);
+    if (mode === Constants.RECURRING) {
+      getRecurrAvailability({
+        professionalId: id,
         start: EvFn.getDateFromDateTime(viewDate),
       }).then((res) => {
           let sundayOfCurrWeek = EvFn.getSunday(new Date());
@@ -40,11 +41,10 @@ function ProfCalendarEdit(props) {
           setEventsToRecurr(resFormatted);
         }).catch((err) => console.log(err));
 
-    } else if (props.mode === Constants.NONRECURR) {
-      setMode(Constants.NONRECURR);
+    } else if (mode === Constants.NONRECURR) {
 
-      APICalls.getAvailability({ 
-        professionalId: "36", 
+      getAvailability({ 
+        professionalId: id, 
         start: EvFn.getDateFromDateTime(viewDate),
         type: "professional",
       }).then((res) => {
@@ -57,8 +57,8 @@ function ProfCalendarEdit(props) {
         setViewAvailabilities(resFormatted);
       }).catch((err) => console.log(err));
 
-      APICalls.getBookings({
-        professionalId: "36",
+      getBookings({
+        professionalId: id,
         start: EvFn.getDateFromDateTime(viewDate),
       }).then((res) => {
           let sundayOfCurrWeek = EvFn.getSunday(viewDate);
@@ -72,7 +72,7 @@ function ProfCalendarEdit(props) {
     }
   }, []);
 
-  // TODO for later -> prevent from making availability events on top of current bookings
+  // TODO prevent overlapping booking/availability events
   const handleSelect = ({ start, end }) => {
     console.log("creating event ...");
     if (mode === Constants.RECURRING) {
@@ -100,7 +100,7 @@ function ProfCalendarEdit(props) {
     }
   };
 
-  // TODO for later -> make a generic function and pass in states and setStates as parameters?
+  // TODO: make generic function and pass in states and setStates as parameters
   const handleSelectEvent = (event) => {
     console.log("clicking on event...");
     if (event.title === Constants.BOOKING) return;
@@ -110,7 +110,6 @@ function ProfCalendarEdit(props) {
         let eventsAfterDeletion = [];
         eventsToRecurr.forEach(function (e) {
           // need to re-add to the events to fix the ids
-          console.log(e.id, event);
           if (e.id !== event.id)
             eventsAfterDeletion.push({ ...e, id: eventsAfterDeletion.length });
         });
@@ -122,7 +121,6 @@ function ProfCalendarEdit(props) {
         let eventsAfterDeletion = [];
         viewAvailabilities.forEach(function (e) {
           // need to re-add to the events to fix the ids
-          console.log(e.id, event);
           if (e.id !== event.id)
             eventsAfterDeletion.push({ ...e, id: eventsAfterDeletion.length });
         });
@@ -192,9 +190,9 @@ function ProfCalendarEdit(props) {
     const eventsToRecurrFormatted =
       EvFn.formatWeekEventsForPOST(eventsToRecurr);
     
-    APICalls.setRecurrAvailability({ 
+    setRecurrAvailability({ 
       events: eventsToRecurrFormatted, 
-      professionalId: "36" 
+      professionalId: id 
     }).then(() => {
       window.location = "/p/availability";
     }).catch((err) => console.log(err));
@@ -205,9 +203,9 @@ function ProfCalendarEdit(props) {
     const allAvailabilitiesFormatted =
       EvFn.formatWeekEventsForPOST(viewAvailabilities);
     
-    APICalls.setNonRecurrAvailability({
+    setNonRecurrAvailability({
       events: allAvailabilitiesFormatted,
-      professionalId: "36",
+      professionalId: id,
       start: EvFn.getDateFromDateTime(viewDate),
     }).then(() => {
         window.location = "/p/availability";
@@ -215,9 +213,9 @@ function ProfCalendarEdit(props) {
   };
 
   const onNavigate = (date, view) => {
-    console.log("navigating to...", date, view, EvFn.getSunday(date));
-    APICalls.getAvailability({
-      professionalId: "36",
+    console.log("navigating to...", EvFn.getSunday(date));
+    getAvailability({
+      professionalId: id,
       start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
       type: "professional",
     }).then((res) => {
@@ -230,8 +228,8 @@ function ProfCalendarEdit(props) {
         setViewAvailabilities(resFormatted);
       }).catch((err) => console.log(err));
     
-    APICalls.getBookings({
-      professionalId: "36",
+    getBookings({
+      professionalId: id,
       start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
     }).then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
@@ -251,10 +249,10 @@ function ProfCalendarEdit(props) {
         <h2>Edit mode.</h2>
         <p>
           editing{" "}
-          {props.mode === Constants.RECURRING ? "recurring" : "nonrecurring"}{" "}
+          {mode === Constants.RECURRING ? "recurring" : "nonrecurring"}{" "}
           dates
         </p>
-        {props.mode === Constants.NONRECURR && (
+        {mode === Constants.NONRECURR && (
           <p>
             nonrecurring events are only edited every week after submit. your
             edits are lost if not submitting weekly.
@@ -262,7 +260,7 @@ function ProfCalendarEdit(props) {
         )}
         <div
           className={
-            props.mode === Constants.RECURRING
+            mode === Constants.RECURRING
               ? "prof-calender recurr"
               : "prof-calender non-recurr"
           }
@@ -274,7 +272,7 @@ function ProfCalendarEdit(props) {
             defaultDate={new Date()}
             defaultView="week"
             events={
-              props.mode === Constants.RECURRING
+              mode === Constants.RECURRING
                 ? eventsToRecurr
                 : EvFn.concatEvents(viewAvailabilities, bookings)
             }
@@ -288,24 +286,25 @@ function ProfCalendarEdit(props) {
             onNavigate={onNavigate}
           />
         </div>
-        <button
+        {/* TODO: redirects to login page... why? */}
+        <Link to="/p/availability"><button
           onClick={
-            props.mode === Constants.RECURRING
+            mode === Constants.RECURRING
               ? onSubmitEditRecurr
               : onSubmitEditNonRecurr
           }
           style={{ padding: "10px 100px", margin: "10px 25px" }}
         >
           Submit
-        </button>
-        <button
+        </button></Link>
+        <Link to="/p/availability"><button
           onClick={() => {
-            props.sendMode(Constants.VIEW);
+            sendMode(Constants.VIEW);
           }}
           style={{ padding: "10px 100px", margin: "10px 25px" }}
         >
           Cancel Edit
-        </button>
+        </button></Link>
         <br />
         <br />
         <br />

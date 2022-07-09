@@ -1,28 +1,34 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState, useContext } from "react";
 
 import BookingCustomerPast from "../components/Bookings/BookingCustomerPast";
+import { getCustomerPastBookings, getUsersMe } from "../APICalls"
+import { AuthContext } from "../context/AuthProvider";
 
 function CustPastBookingsPage(props) {
-  // type = past
   const [bookingsList, setBookingsList] = useState([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: "http://127.0.0.1:5000/customerPastBookings",
-      headers: {
-        customerId: 34
-      }
-    })
+    // get current user id 
+    getUsersMe({ 
+      Authorization: `Bearer ${ user.access_token }` 
+    }).then((res) => {
+      console.log(res.data.id, "id of the customer finding past bookings")
+      getCustomerPastBookings({customerId: parseInt(res.data.id)})
+      // axios({
+      //   method: "GET",
+      //   url: "http://127.0.0.1:5000/customerPastBookings",
+      //   headers: {
+      //     customerId: 34
+      //   }
+      // })
       .then((response) => {
+        console.log(response.data);
         const res = response.data;
         setBookingsList(res.bookings);
       })
-      .catch((err) => {
-        console.log("ERR");
-        console.log(err.response);
-      });
+      .catch((err) => console.log(err.response));
+    }).catch((err) => console.log(err.response));
   }, []);
 
   return (

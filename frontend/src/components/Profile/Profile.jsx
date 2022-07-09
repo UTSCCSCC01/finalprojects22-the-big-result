@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
-import axios from "axios";
+import { useParams, Link } from "react-router-dom";
 import "./Profile.css";
 import Review from "../Review/Review";
+import { getServiceProviderOnId } from "../../APICalls"
 
-function Profile(props) {
+
+function Profile() {
   const [profileData, setProfileData] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://127.0.0.1:5000/serviceProvider?id=${id}`,
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-    })
+    getServiceProviderOnId(
+      `/serviceProvider?id=${id}`,
+      { Authorization: "Bearer " + localStorage.getItem("token") }
+    )
+    // axios({
+    //   method: "GET",
+    //   url: `http://127.0.0.1:5000/serviceProvider?id=${id}`,
+    //   headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    // })
       .then((response) => {
         const res = response.data;
         setProfileData(res);
@@ -43,7 +48,9 @@ function Profile(props) {
             </div>
             <p>{profileData.description}</p>
             <p className="svc-tag">{profileData.services}</p>
-            <button>Book Now!</button>
+            <Link to={`/c/booking/${id}`}><button>Book Now!</button></Link>
+            {/* <button onClick={window.location="/c/booking"}>Book Now!</button> */}
+            
           </div>
         </div>
       </div>
