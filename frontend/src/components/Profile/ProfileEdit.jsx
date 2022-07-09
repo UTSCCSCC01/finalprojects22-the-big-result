@@ -6,9 +6,9 @@ import Review from "../Review/Review";
 
 function ProfileEdit(props) {
   const [servicesList, setServicesList] = useState([]);
-  // const [editForm, setEditForm] = useState({})
+  const [editForm, setEditForm] = useState({});
 
-  console.log(props)
+  console.log(props);
 
   useEffect(() => {
     axios({
@@ -23,38 +23,33 @@ function ProfileEdit(props) {
         })
       );
       setServicesList(services);
-      // setEditForm({
-      //   profilePictureLink: props.profilePictureLink,
-      //   description: props.description,
-      //   services: [],
-      //   location: ""
-      // });
+      setEditForm({
+        profilePictureLink: props.profilePictureLink,
+        description: props.description,
+        services: props.services,
+        location: "",
+      });
     });
-  }, []);
-
-  const [editForm, setEditForm] = useState(
-    {
-      profilePictureLink: props.profilePictureLink,
-      description: props.description,
-      services: [],
-      location: ""
-    });
+  }, [props]);
 
   const handleSubmit = () => {
-    axios({ 
-      method: "POST", url: "http://127.0.0.1:5000/editProfile",
-      data: { 
+    axios({
+      method: "POST",
+      url: "http://127.0.0.1:5000/editProfile",
+      data: {
         id: props.id,
         profilePictureLink: editForm.profilePictureLink,
         description: editForm.description,
         services: editForm.services,
         // location: editForm/location
-      }
-    }).then((res) => {
+      },
+    })
+      .then((res) => {
         window.location = "/";
-    }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
-    });
+      });
   };
 
   const handleChange = (e) => {
@@ -87,7 +82,7 @@ function ProfileEdit(props) {
               placeholder="Profile Picture Link"
               type="text"
               name="profilePictureLink"
-              value={editForm.profilePictureLink}  
+              value={editForm.profilePictureLink}
             />
           </div>
 
@@ -111,14 +106,14 @@ function ProfileEdit(props) {
               onChange={handleChange}
               type="text"
               name="location"
-              value={editForm.location}  
+              value={editForm.location}
             />
             <p className="svc-tag">{props.services}</p>
-            {servicesList && (
+            {servicesList && editForm.services && (
               <Select
                 placeholder="Services"
                 value={servicesList.filter((option) =>
-                editForm.services.includes(option.value)
+                  editForm.services.includes(option.value)
                 )}
                 onChange={handleSelect}
                 isMulti
@@ -126,7 +121,7 @@ function ProfileEdit(props) {
                 options={servicesList}
               />
             )}
-            <br /> 
+            <br />
             <div className="btn-group">
               <button onClick={handleSubmit}>Edit Profile</button>
               <button>Edit Calendar</button>
@@ -137,7 +132,7 @@ function ProfileEdit(props) {
       <br />
       <div className="reviews-container">
         <h1>Reviews</h1>
-        { props.length > 0 &&
+        {props.length > 0 &&
           props.reviews.length > 0 &&
           props.reviews.map((review) => (
             <Review
