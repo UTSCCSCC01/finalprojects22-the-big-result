@@ -27,11 +27,13 @@ function ProfilePage(props) {
 
   return (
     <ProfileEdit 
+      id={id}
       profilePictureLink={profileData.profilePictureLink}
       name={profileData.name}
       rating={profileData.rating}
       description={profileData.description}
       services={profileData.services}
+      location={profileData.location}
       length={Object.keys(profileData).length}
       reviews={profileData.reviews}
     />

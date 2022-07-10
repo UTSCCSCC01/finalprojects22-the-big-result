@@ -8,8 +8,6 @@ function ProfileEdit(props) {
   const [servicesList, setServicesList] = useState([]);
   const [editForm, setEditForm] = useState({});
 
-  console.log(props);
-
   useEffect(() => {
     axios({
       method: "GET",
@@ -26,26 +24,30 @@ function ProfileEdit(props) {
       setEditForm({
         profilePictureLink: props.profilePictureLink,
         description: props.description,
-        services: props.services,
-        location: "",
+        services: props.services
+        // location: "",
       });
     });
   }, [props]);
 
   const handleSubmit = () => {
     axios({
-      method: "POST",
-      url: "http://127.0.0.1:5000/editProfile",
+      method: "PUT",
+      url: "http://127.0.0.1:5000/serviceProvider",
       data: {
         id: props.id,
         profilePictureLink: editForm.profilePictureLink,
         description: editForm.description,
         services: editForm.services,
-        // location: editForm/location
+        // location: editForm.location
       },
     })
       .then((res) => {
-        window.location = "/";
+        if (res.data.status == 200){
+          // window.location = "/profile/?id="+props.id;
+          // confirmation alert
+        }
+        console.log(res.data.status)
       })
       .catch((err) => {
         console.log(err);
@@ -100,15 +102,17 @@ function ProfileEdit(props) {
               rows="5"
               cols="70"
             />
-            <br /> <br />
-            <input
+            <br />
+            <p>{props.location}</p>
+            {/* <input
               placeholder="Location"
               onChange={handleChange}
               type="text"
               name="location"
               value={editForm.location}
-            />
+            /> */}
             <p className="svc-tag">{props.services}</p>
+            {/* {props.services.map((svc) => <p className="svc-tag">{svc}</p>)} */}
             {servicesList && editForm.services && (
               <Select
                 placeholder="Services"
@@ -122,10 +126,7 @@ function ProfileEdit(props) {
               />
             )}
             <br />
-            <div className="btn-group">
-              <button onClick={handleSubmit}>Edit Profile</button>
-              <button>Edit Calendar</button>
-            </div>
+            <button onClick={handleSubmit}>Edit Profile</button>
           </div>
         </div>
       </div>

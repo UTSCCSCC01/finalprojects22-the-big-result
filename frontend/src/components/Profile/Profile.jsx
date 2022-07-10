@@ -21,6 +21,7 @@ function Profile(props) {
               <h3>Rating: {props.rating}</h3>
             </div>
             <p>{props.description}</p>
+            <p>{props.location}</p>
             <p className="svc-tag">{props.services}</p>
             <button>Book Now!</button>
           </div>

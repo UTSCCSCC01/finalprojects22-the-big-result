@@ -73,7 +73,7 @@ class ProfessionalsDAO:
         return queryRes is not None
 
     def getAllServicesForProfessional(self, id: int) -> List[Services]:
-        return Professional.query.filter_by(id=id).first().services.all()
+        return Professional.query.filter_by(id=id).first().services
 
     def getAllReviewsForProfesional(self, id: int) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews
@@ -96,6 +96,12 @@ class ProfessionalsDAO:
     # This is price inclusive
     def getProfessionalsByAvgPriceRange(self, minPrice: float, maxPrice: float) -> List[Professional]:
         return Professional.query.filter(Professional.averageCost.between(minPrice,maxPrice)).all()
+
+    def updateDescForProfessional(self, id: int, description: str):
+        professional = Professional.query.filter_by(id=id).first()
+        professional.description = description
+        db.session.commit()
+
 
 class AdminDAO:
 
@@ -157,7 +163,21 @@ class ProfessionalServicesDAO:
         return ProfessionalServices.query.filter(ProfessionalServices.serviceName == servicename,
                                                  ProfessionalServices.defaultPrice.between(minPrice,maxPrice)).all()
 
+    def checkServiceProvidedByProfessional(self, id: int, serviceName: str) -> bool:
+        return ProfessionalServices.query.filter(ProfessionalServices.professionalID == id,
+                                                 ProfessionalServices.serviceName == serviceName).all() != []
 
+    def addServiceProvidedByProfessional(self, id: int, serviceName: str, price: float) -> None:
+        new = ProfessionalServices(professionalID=id,
+                                          serviceName=serviceName, defaultPrice=price)
+        db.session.add(new)
+        db.session.commit()
+    
+    def removeServiceProvidedByProfessional(self, id: int, serviceName: str) -> None:
+        service = ProfessionalServices.query.filter(ProfessionalServices.professionalID == id,
+                                                 ProfessionalServices.serviceName == serviceName).first()
+        db.session.delete(service)
+        db.session.commit()
     # def getServiceFromUserID(self, id):
     #     return db.engine.execute(
     #         f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
