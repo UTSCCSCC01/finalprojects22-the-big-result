@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Slider,
   Rating,
@@ -10,17 +11,16 @@ import {
 
 import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
-import { getServiceProvidersOnQuery } from "../APICalls"
+import { getServiceProvidersOnQuery } from "../APICalls";
 
 import "../components/Filters.css";
 
 function ProviderPage() {
-  //TODO: Get min and max prices for priceRange
   const [priceRange, setPriceRange] = useState([]);
   const [providerList, setProviderList] = useState([]);
   const [filters, setFilters] = useState({
     service: "",
-    price: [0, 100],
+    price: priceRange ? [priceRange[0], priceRange[1]] : [],
     rating: 0,
     location: "",
   });
@@ -40,34 +40,34 @@ function ProviderPage() {
     }));
   };
 
-  // useEffect(() => {
-  //   axios({
-  //     method: "GET",
-  //     url: `http://127.0.0.1:5000/priceRange`,
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //       const [minPrice, maxPrice] = response.priceRange;
-  //       setFilters((prevFilters) => ({
-  //         ...prevFilters,
-  //         price: [minPrice, maxPrice],
-  //       }));
-  //       setPriceRange([minPrice, maxPrice]);
-  //     })
-  //     .catch((err) => {
-  //       console.log("ERR");
-  //       console.log(err.response);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `http://127.0.0.1:5000/priceRange`,
+    })
+      .then((response) => {
+        console.log(response);
+        const minPrice = response.data.priceLow;
+        const maxPrice = response.data.priceHigh;
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          price: [minPrice, maxPrice],
+        }));
+        setPriceRange([minPrice, maxPrice]);
+      })
+      .catch((err) => {
+        console.log("ERR");
+        console.log(err.response);
+      });
+  }, []);
 
   useEffect(() => {
-    getServiceProvidersOnQuery(
-      `/listServiceProviders?service=${filters.service}&rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`
-      ) 
-    // axios({
-    //   method: "GET",
-    //   url: `http://127.0.0.1:5000/listServiceProviders?service=${filters.service}&rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`,
-    // })
+    let query = `/listServiceProviders?service=${filters.service}&rating=${filters.rating}&location=${filters.location}`;
+    if (filters.price && filters.price[0])
+      query += `&pricelow=${filters.price[0]}`;
+    if (filters.price && filters.price[1])
+      query += `&pricehigh=${filters.price[1]}`;
+    getServiceProvidersOnQuery(query)
       .then((response) => {
         const res = response.data;
         setProviderList(res.providers);
@@ -84,13 +84,19 @@ function ProviderPage() {
           <div className="price filter-component">
             Price
             <div className="price-slider">
-              <p>{"$" + filters.price[0]}</p>
+              <p>
+                {filters.price && filters.price[0] && "$" + filters.price[0]}
+              </p>
               <Slider
                 name="price"
                 value={filters.price}
                 onChange={handleChange}
+                min={priceRange ? priceRange[0] : 0}
+                max={priceRange ? priceRange[1] : 100}
               />
-              <p>{"$" + filters.price[1]}</p>
+              <p>
+                {filters.price && filters.price[1] && "$" + filters.price[1]}
+              </p>
             </div>
           </div>
           <div className="rating filter-component">
@@ -130,8 +136,9 @@ function ProviderPage() {
       <ServiceList serviceFilter={updateServiceFilter} />
       {filtersComponent()}
 
-      {providerList ? (
+      {providerList.length > 0 ? (
         <div className="providers">
+          {console.log(providerList)}
           {providerList.map((provider) => (
             <Provider
               key={provider.id}

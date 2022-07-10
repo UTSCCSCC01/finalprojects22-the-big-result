@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "../Form.css";
-import { Link } from "react-router-dom";
-import { signUpCustomer } from "../../APICalls"
+import { Link, useNavigate } from "react-router-dom";
+import { signUpCustomer } from "../../APICalls";
 
 function SignUpCustomer() {
+  const navigate = useNavigate();
   const [signupForm, setSignupForm] = useState({
     firstName: "",
     lastName: "",
@@ -20,18 +21,8 @@ function SignUpCustomer() {
       email: signupForm.email,
       password: signupForm.password,
     })
-    // axios({
-    //   method: "POST",
-    //   url: `http://localhost:5000/signup/customer`,
-    //   data: {
-    //     firstName: signupForm.firstName,
-    //     lastName: signupForm.lastName,
-    //     email: signupForm.email,
-    //     password: signupForm.password,
-    //   },
-    // })
       .then(() => {
-        window.location = "/login";
+        navigate("/login");
       })
       .catch((err) => {
         setFailedSignup(true);

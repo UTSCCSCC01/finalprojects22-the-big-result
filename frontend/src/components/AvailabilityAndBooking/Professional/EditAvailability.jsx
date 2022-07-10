@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -19,6 +19,8 @@ const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 
 function ProfCalendarEdit({ mode, id, sendMode}) {
+  const navigate = useNavigate();
+
   const [eventsToRecurr, setEventsToRecurr] = useState([]); // events recurring weekly
   const [viewAvailabilities, setViewAvailabilities] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -194,7 +196,7 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
       events: eventsToRecurrFormatted, 
       professionalId: id 
     }).then(() => {
-      window.location = "/p/availability";
+      navigate("/p/availability");
     }).catch((err) => console.log(err));
   };
 
@@ -208,7 +210,7 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
       professionalId: id,
       start: EvFn.getDateFromDateTime(viewDate),
     }).then(() => {
-        window.location = "/p/availability";
+        navigate("/p/availability");
       }).catch((err) => console.log(err));
   };
 

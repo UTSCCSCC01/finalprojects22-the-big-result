@@ -2,21 +2,16 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import "../Form.css";
 import "./SignUpProvider.css";
-import { Link } from "react-router-dom";
-import { getServices, signUpProvider } from "../../APICalls"
-
+import { Link, useNavigate } from "react-router-dom";
+import { getServices, signUpProvider } from "../../APICalls";
 
 function SignUpProvider() {
+  const navigate = useNavigate();
   const [servicesList, setServicesList] = useState([]);
   const [failedSignup, setFailedSignup] = useState(false);
 
   useEffect(() => {
-    getServices()
-    // axios({
-    //   method: "GET",
-    //   url: `http://localhost:5000/getServices`,
-    // })
-    .then((res) => {
+    getServices().then((res) => {
       let services = [];
       res.data.services.forEach((element) =>
         services.push({
@@ -47,20 +42,8 @@ function SignUpProvider() {
       servicesProvided: signupForm.servicesProvided,
       location: signupForm.location,
     })
-    // axios({
-    //   method: "POST",
-    //   url: `http://localhost:5000/signup/provider`,
-    //   data: {
-    //     firstName: signupForm.firstName,
-    //     lastName: signupForm.lastName,
-    //     email: signupForm.email,
-    //     password: signupForm.password,
-    //     servicesProvided: signupForm.servicesProvided,
-    //     location: signupForm.location,
-    //   },
-    // })
       .then(() => {
-        window.location = "/login";
+        navigate("/login");
       })
       .catch((err) => {
         console.log(err);
