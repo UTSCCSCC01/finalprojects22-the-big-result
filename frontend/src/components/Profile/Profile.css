@@ -14,6 +14,12 @@
   border-radius: 5px;
 }
 
+
+.svc-tags{
+  display:flex;
+  column-gap: 0.5rem;
+}
+
 .profile-inner-container {
   display: flex;
   flex-direction: row;
@@ -43,3 +49,12 @@
   text-align: left;
 }
 
+
+.css-ypiqx9-MuiDialogContent-root{
+  overflow-y: initial !important;
+}
+
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+  overflow-y: scroll !important;
+}

@@ -6,6 +6,14 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import "./Profile.css";
 import Review from "../Review/Review";
+import ServiceInfo from "./ServiceInfo";
+
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const style = {
   position: 'absolute',
@@ -22,6 +30,7 @@ const style = {
 function ProfileEdit(props) {
   const [servicesList, setServicesList] = useState([]);
   const [editForm, setEditForm] = useState({});
+  // const [obj, setObj] = useState({});
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -29,6 +38,21 @@ function ProfileEdit(props) {
     setOpen(false);
     window.location = "/profile/"+props.id;
   }
+
+  const [formOpen, setFormOpen] = useState(false);
+  const handleFormOpen = () => {
+    setFormOpen(true);
+  };
+
+  const [servicesDesc, setServicesDesc] = useState([]) 
+
+  const addToServicesDesc = (newDesc) => {
+    return setServicesDesc([...servicesDesc, newDesc])
+  }
+
+  const handleFormClose = () => {
+    setFormOpen(false);
+  };
 
   useEffect(() => {
     axios({
@@ -54,25 +78,26 @@ function ProfileEdit(props) {
 
   const handleSubmit = () => {
     axios({
-      method: "PUT",
-      url: "http://127.0.0.1:5000/serviceProvider",
-      data: {
-        id: props.id,
-        profilePictureLink: editForm.profilePictureLink,
-        description: editForm.description,
-        services: editForm.services,
-        // location: editForm.location
-      },
+      // method: "PUT",
+      // url: "http://127.0.0.1:5000/serviceProvider",
+      // data: {
+      //   id: props.id,
+      //   profilePictureLink: editForm.profilePictureLink,
+      //   description: editForm.description,
+      //   services: editForm.services,
+      //   // location: editForm.location
+      // },
     })
-      .then((res) => {
-        if (res.data.status == 200){
-          handleOpen()
-        }
-        console.log(res.data.status)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .then((res) => {
+      if (res.data.status == 200){
+        setFormOpen(false);
+        handleOpen()
+      }
+      console.log(res.data.status)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
 
   const handleChange = (e) => {
@@ -134,9 +159,11 @@ function ProfileEdit(props) {
               name="location"
               value={editForm.location}
             /> */}
-
-            <p className="svc-tag">{props.services}</p>
-            {/* {props.services.map((svc) => <p className="svc-tag">{svc}</p>)} */}
+            {/* {console.log(props.services)} */}
+            {/* <p className="svc-tag">{props.services}</p> */}
+            <div className="svc-tags"> 
+            {props.services && props.services.map((svc) => <p className="svc-tag">{svc}</p>)}
+            </div>
 
             {servicesList && editForm.services && (
               <Select
@@ -153,7 +180,7 @@ function ProfileEdit(props) {
 
             <br />
 
-            <button onClick={handleSubmit}>Edit Profile</button>
+            <button onClick={handleFormOpen}>Edit Profile</button>
           </div>
         </div>
       </div>
@@ -180,18 +207,25 @@ function ProfileEdit(props) {
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
+        aria-labelledby="title"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="title" variant="h6" component="h2">
             Success!
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography id="description" sx={{ mt: 2 }}>
             Your profile has been updated.
           </Typography>
         </Box>
       </Modal>
       
+      <Dialog open={formOpen} onClose={handleFormClose} scroll='paper'>
+        <DialogTitle>Enter Additional Information For Services</DialogTitle>
+          {editForm.services && editForm.services.map((arg) => (<ServiceInfo addToServicesDesc={addToServicesDesc} service={arg}/>))}
+        <DialogActions>
+          <Button onClick={handleSubmit}>Submit</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
