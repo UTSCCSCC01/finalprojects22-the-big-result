@@ -1,54 +1,68 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 import "./Profile.css";
 import Review from "../Review/Review";
 import ServiceInfo from "./ServiceInfo";
 
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useNavigate } from "react-router-dom";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
 
 function ProfileEdit(props) {
+  const navigate = useNavigate();
   const [servicesList, setServicesList] = useState([]);
   const [editForm, setEditForm] = useState({});
-  // const [obj, setObj] = useState({});
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    window.location = "/profile/"+props.id;
-  }
-
-  const [formOpen, setFormOpen] = useState(false);
-  const handleFormOpen = () => {
-    setFormOpen(true);
+    navigate("/profile/" + props.id);
   };
 
-  const [servicesDesc, setServicesDesc] = useState([]) 
+  const [formOpen, setFormOpen] = useState(false);
+  const [servicesDesc, setServicesDesc] = useState([]);
 
+  const handleFormOpen = () => {
+    setFormOpen(true);
+    //Set the initial values for the services selected
+    let servicesOffered = [];
+    editForm.services.forEach((svc) => {
+      servicesOffered.push({ service: svc, desc: "", price: 0 });
+    });
+    setServicesDesc(servicesOffered);
+  };
+
+  //Onchange to any of the new forms, update the servicesOffered descriptions and prices as required
   const addToServicesDesc = (newDesc) => {
-    return setServicesDesc([...servicesDesc, newDesc])
-  }
+    let newServicesDesc = [];
+    servicesDesc.forEach((desc) => {
+      if (desc.service !== newDesc.service) {
+        newServicesDesc.push(desc);
+      } else newServicesDesc.push(newDesc);
+    });
+    setServicesDesc(newServicesDesc);
+  };
 
   const handleFormClose = () => {
     setFormOpen(false);
@@ -70,7 +84,7 @@ function ProfileEdit(props) {
       setEditForm({
         profilePictureLink: props.profilePictureLink,
         description: props.description,
-        services: props.services
+        services: props.services,
         // location: "",
       });
     });
@@ -88,16 +102,16 @@ function ProfileEdit(props) {
       //   // location: editForm.location
       // },
     })
-    .then((res) => {
-      if (res.data.status == 200){
-        setFormOpen(false);
-        handleOpen()
-      }
-      console.log(res.data.status)
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => {
+        if (res.data.status === 200) {
+          setFormOpen(false);
+          handleOpen();
+        }
+        console.log(res.data.status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleChange = (e) => {
@@ -161,8 +175,9 @@ function ProfileEdit(props) {
             /> */}
             {/* {console.log(props.services)} */}
             {/* <p className="svc-tag">{props.services}</p> */}
-            <div className="svc-tags"> 
-            {props.services && props.services.map((svc) => <p className="svc-tag">{svc}</p>)}
+            <div className="svc-tags">
+              {props.services &&
+                props.services.map((svc) => <p className="svc-tag">{svc}</p>)}
             </div>
 
             {servicesList && editForm.services && (
@@ -184,7 +199,7 @@ function ProfileEdit(props) {
           </div>
         </div>
       </div>
-      
+
       <br />
 
       <div className="reviews-container">
@@ -204,11 +219,7 @@ function ProfileEdit(props) {
         <button>See All Reviews </button>
       </div>
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="title"
-      >
+      <Modal open={open} onClose={handleClose} aria-labelledby="title">
         <Box sx={style}>
           <Typography id="title" variant="h6" component="h2">
             Success!
@@ -218,10 +229,13 @@ function ProfileEdit(props) {
           </Typography>
         </Box>
       </Modal>
-      
-      <Dialog open={formOpen} onClose={handleFormClose} scroll='paper'>
+
+      <Dialog open={formOpen} onClose={handleFormClose} scroll="paper">
         <DialogTitle>Enter Additional Information For Services</DialogTitle>
-          {editForm.services && editForm.services.map((arg) => (<ServiceInfo addToServicesDesc={addToServicesDesc} service={arg}/>))}
+        {editForm.services &&
+          editForm.services.map((arg) => (
+            <ServiceInfo addToServicesDesc={addToServicesDesc} service={arg} />
+          ))}
         <DialogActions>
           <Button onClick={handleSubmit}>Submit</Button>
         </DialogActions>
