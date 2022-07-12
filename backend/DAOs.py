@@ -76,7 +76,7 @@ class ProfessionalsDAO:
         return Professional.query.filter_by(id=id).first().services.all()
 
     def getAllReviewsForProfesional(self, id: int) -> List[Reviews]:
-        return Professional.query.filter_by(id=id).first().reviews.all()
+        return Professional.query.filter_by(id=id).first().reviews
 
     def getFirstNReviewsForProfesional(self, id: int, numReviews=3) -> List[Reviews]:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
@@ -251,6 +251,14 @@ class BookingsDAO:
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.beginServiceDateTime) \
             .filter(Bookings.endServiceDateTime < rangeEnd).all()
 
+class ReviewsDAO:
+
+    def addReview(self, bookingID: int, profID: int, custID: int, description: str, rating: int) -> None:
+        newReview = Reviews(bookingID=bookingID, professionalID=profID, customerID=custID,
+                            description=description, ratings=rating)
+        db.session.add(newReview)
+        db.session.commit()
+        
 
 
 def runDAOQueries():
