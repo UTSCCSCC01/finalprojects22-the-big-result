@@ -230,6 +230,11 @@ class BookingsDAO:
     def getBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
         return Bookings.query.filter_by(customerID=custID, status=status).all()
 
+    def resolveBooking(self, id: int):
+        booking = Bookings.query.filter_by(id=id).first()
+        booking.status = Status.RESOLVED
+        db.session.commit()
+
 
     def addBooking(self,custID:int, profID: int,beginServDateTime: datetime, endServDateTime: datetime,
                    location: str, status: Status, price: float, serviceName: str ,
