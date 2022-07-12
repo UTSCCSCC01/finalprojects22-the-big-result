@@ -12,19 +12,15 @@ calender_blueprint = Blueprint('calender_blueprint', __name__)
 recDAO_Object = AvailabilitiesRecDAO()
 nonRecDao_Object = AvailabilitiesNonRecDAO()
 
-
 # all availabilities - recurring and non-recurring merged
 @calender_blueprint.route('/getAvailability', methods=["GET"])
 def get_availability():
     # Get relevant data
-    print('PROF ID', request.headers.get("professionalId", None))
     professional_id = int(request.headers.get("professionalId", None))
     start_date = date.fromisoformat(request.headers.get("start", None))
     is_customer = request.headers.get("type", None) == "customer"
     weekly_schedule = [[0 for _ in range(24 * 2 + 1)] for _ in range(7)]
     bookings = get_week_by_professional(professional_id, start_date)
-
-    print('STASRT DATE', start_date)
 
     # Map out their availabilities and bookings in O(A + B) time
     for i in range(7):
@@ -94,7 +90,6 @@ def get_availability():
                 start_time = None
                 blocks_connected = 0
 
-    print('RESULT', formatted_schedule)
     return jsonify(formatted_schedule)
 
 

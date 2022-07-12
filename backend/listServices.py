@@ -1,5 +1,5 @@
 from flask import Blueprint
-from DAOs import ServicesDAO
+from DAOs import ServicesDAO, ProfessionalServicesDAO
 
 services_blueprint = Blueprint('services_blueprint', __name__)
 
@@ -9,10 +9,11 @@ def services():
 
     temp = []
     for i in range(len(services)):
-        temp.append({
-            "id": i,
-            "service": services[i].serviceName
-        })
+
+      temp.append({
+          "id": i,
+          "service": services[i].serviceName
+      })
     
     list_services = {
         "services": temp

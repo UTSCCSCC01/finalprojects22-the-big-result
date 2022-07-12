@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import "../../Form.css";
 import { Link } from "react-router-dom";
 import { addBookings, getUsersMe } from "../../../APICalls"
@@ -8,27 +8,24 @@ function BookingConfirmation(props) {
   const [instructions, setInstructions] = useState('');
   const { user } = useContext(AuthContext);
 
+  console.log('in confirmation, all booking info: ', props.bookingInfo);
+
   const onConfirmation = () => {
-    // get user id here
     getUsersMe({ 
       Authorization: `Bearer ${ user.access_token }` 
     }).then((res) => {
       console.log('id of customer:', res.data.id);
-      addBookings({ 
-        professionalId: props.bookingInfo.professionalId, 
-        start: props.bookingInfo.start,
-        end: props.bookingInfo.end,
-        date: props.bookingInfo.date,
-        customerId: parseInt(res.data.id),
+      addBookings({...props.bookingInfo, 
         instructions: instructions 
      }).catch((err) => console.log(err));
     }).catch((err) => console.log(err));
-    
   }
 
+
+  // TODO (A): price, and provider name get from backend... should I pass between pages?
   return (
     <div className="page">
-      <h2>Service: {props.bookingInfo.serviceName}</h2>
+      <h2>Service: {props.bookingInfo.service}</h2>
       <h2>Provider Name: {props.bookingInfo.professionalId}</h2>
       <p>Date: {props.bookingInfo.date}</p>
       <p>From: {props.bookingInfo.start} to {props.bookingInfo.end}</p>

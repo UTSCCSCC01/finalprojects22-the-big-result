@@ -1,15 +1,34 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import "./Profile.css";
 import Review from "../Review/Review";
-import { useNavigate } from "react-router-dom";
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 function ProfileEdit(props) {
   const [servicesList, setServicesList] = useState([]);
   const [editForm, setEditForm] = useState({});
 
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    window.location = "/profile/"+props.id;
+  }
 
   useEffect(() => {
     axios({
@@ -27,26 +46,29 @@ function ProfileEdit(props) {
       setEditForm({
         profilePictureLink: props.profilePictureLink,
         description: props.description,
-        services: props.services,
-        location: "",
+        services: props.services
+        // location: "",
       });
     });
   }, [props]);
 
   const handleSubmit = () => {
     axios({
-      method: "POST",
-      url: "http://127.0.0.1:5000/editProfile",
+      method: "PUT",
+      url: "http://127.0.0.1:5000/serviceProvider",
       data: {
         id: props.id,
         profilePictureLink: editForm.profilePictureLink,
         description: editForm.description,
         services: editForm.services,
-        // location: editForm/location
+        // location: editForm.location
       },
     })
       .then((res) => {
-        navigate("/");
+        if (res.data.status == 200){
+          handleOpen()
+        }
+        console.log(res.data.status)
       })
       .catch((err) => {
         console.log(err);
@@ -101,15 +123,21 @@ function ProfileEdit(props) {
               rows="5"
               cols="70"
             />
-            <br /> <br />
-            <input
+
+            <br />
+
+            <p>{props.location}</p>
+            {/* <input
               placeholder="Location"
               onChange={handleChange}
               type="text"
               name="location"
               value={editForm.location}
-            />
+            /> */}
+
             <p className="svc-tag">{props.services}</p>
+            {/* {props.services.map((svc) => <p className="svc-tag">{svc}</p>)} */}
+
             {servicesList && editForm.services && (
               <Select
                 placeholder="Services"
@@ -122,15 +150,16 @@ function ProfileEdit(props) {
                 options={servicesList}
               />
             )}
+
             <br />
-            <div className="btn-group">
-              <button onClick={handleSubmit}>Edit Profile</button>
-              <button>Edit Calendar</button>
-            </div>
+
+            <button onClick={handleSubmit}>Edit Profile</button>
           </div>
         </div>
       </div>
+      
       <br />
+
       <div className="reviews-container">
         <h1>Reviews</h1>
         {props.length > 0 &&
@@ -147,6 +176,22 @@ function ProfileEdit(props) {
         <br />
         <button>See All Reviews </button>
       </div>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Success!
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Your profile has been updated.
+          </Typography>
+        </Box>
+      </Modal>
+      
     </div>
   );
 }

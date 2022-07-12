@@ -1,33 +1,72 @@
 from flask import request
 from flask import Blueprint, jsonify
-from DAOs import ProfessionalsDAO, CustomersDAO
+from DAOs import ProfessionalsDAO, CustomersDAO, ProfessionalServicesDAO
 
 serviceProviderBlueprint = Blueprint("serviceProvider", __name__)
 
-@serviceProviderBlueprint.route("/serviceProvider")
+@serviceProviderBlueprint.route("/serviceProvider", methods=["GET"])
 def getServiceProviderProfile():
 
     dao = ProfessionalsDAO()
-    print(request.args.get("id"))
-    professional = dao.getProfessionalOnId(request.args.get("id"))
+    profId = request.args.get("id")
+    print(profId)
+    professional = dao.getProfessionalOnId(profId)
+    servicelst = getServices(professional.services)
 
-    return {
+    res = {
             "name": professional.firstName + " " + professional.lastName,
             "rating": professional.ratings,
             "description": professional.description,
-            "services": getServices(professional.services),
+            "services": servicelst,
             "profilePictureLink": "https://picsum.photos/200",
-            "calendar": "Some calendar stuff here that we would probably need later on",
-            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id))
+            "location": professional.location,
+            "calendar": "Some calendar stuff here that we would probably need later on", # TODO (A): remove this?
+            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id)),
+            "serviceDescriptions": getDescriptions(int(profId), servicelst)
         }
+    print(res)
+    return jsonify(res)
 
-def getServices(services):
-    result = ""
+@serviceProviderBlueprint.route("/serviceProvider", methods=["PUT"])
+def updateServiceProviderProfile():
+
+    json_object = request.json
+    id = json_object.get("id")
+    profilePictureLink = json_object.get("profilePictureLink")
+    description = json_object.get("description")
+    services = json_object.get("services")
+    # location = json_object.get("location")
+
+    print(id, description, services)
+
+    dao = ProfessionalsDAO()
+    dao.updateDescForProfessional(id, description)
+    cur_services = getServices(dao.getAllServicesForProfessional(id))
+
+    delete_services = [service for service in cur_services if service not in services]
+    add_services = [service for service in services if service not in cur_services]
+
+    dao_service = ProfessionalServicesDAO()
+    for service in add_services:
+        dao_service.addServiceProvidedByProfessional(id, service, 60, '') # NOTE: for now just add empty description?
+
+    for service in delete_services:
+        dao_service.removeServiceProvidedByProfessional(id, service)
+
+    return {"status": 200}
+
+# def getServices(services):
+#     result = ""
+#     for service in services:
+#         if result == "":
+#             result = service.serviceName
+#         else:
+#             result = result + "," + service.serviceName
+#     return result
+def getServices(services) -> list:
+    result = []
     for service in services:
-        if result == "":
-            result = service.serviceName
-        else:
-            result = result + "," + service.serviceName
+        result.append(service.serviceName)
     return result
 
 def getReviews(reviews, numRevs = 3) -> list:
@@ -44,3 +83,10 @@ def getReviews(reviews, numRevs = 3) -> list:
             "reviewDescription": reviews[i].description
         })
     return reviewList
+
+def getDescriptions(id, services) -> list:
+  profDao = ProfessionalServicesDAO()
+  descriptions = {}
+  for service in services:
+    descriptions[service] = profDao.getDescriptionOfServicesByProfessional(id, service)
+  return descriptions

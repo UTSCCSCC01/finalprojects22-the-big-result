@@ -33,6 +33,10 @@ export const getDateFromDateTime = (date) => {
         date.getDate().toString().padStart(2, '0');
 }
 
+export const dateToDateTime = (date) => {
+  return getDateFromDateTime(date) + " " + getTimeFromDateTime(date);
+}
+
 export const eventStyleGetter = (event, start, end, isSelected) => {
   var backgroundColor = '#' + event.color;
   var style = {
@@ -86,12 +90,23 @@ export const formatWeekEventsForGET = (res, curSunday, dataType) => {
         let end = new Date(resDate); 
         
         if (dataType==Constants.BOOKING) {
-          dataFormatted.push({
-            start: start, end: end, 
-            id: dataFormatted.length, 
-            title: Constants.BOOKING, 
-            color: Constants.BOOKING_COLOR
-          })
+          // if past the current date just have as resolved
+          if (new Date() > start) {
+            dataFormatted.push({
+              start: start, end: end, 
+              id: dataFormatted.length, 
+              title: Constants.RESOLVED_BOOKING, 
+              color: Constants.RESOLVED_BOOKING_COLOR
+            })
+          } else {
+            dataFormatted.push({
+              start: start, end: end, 
+              id: dataFormatted.length, 
+              title: Constants.BOOKING, 
+              color: Constants.BOOKING_COLOR
+            })
+          }
+          
         } else if (dataType==Constants.AVAILABILITY) {
           // only push if not past date
            
