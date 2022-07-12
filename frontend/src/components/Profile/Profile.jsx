@@ -1,7 +1,26 @@
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import "./Profile.css";
 import Review from "../Review/Review";
+import { getServiceProviderOnId } from "../../APICalls";
 
-function Profile(props) {
+function Profile() {
+  const [profileData, setProfileData] = useState([]);
+  const { id } = useParams();
+
+  useEffect(() => {
+    getServiceProviderOnId(`/serviceProvider?id=${id}`, {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    })
+      .then((response) => {
+        const res = response.data;
+        setProfileData(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div id="profile" className="page">
@@ -20,10 +39,11 @@ function Profile(props) {
               <h1 className="highlight">{props.name}</h1>
               <h3>Rating: {props.rating}</h3>
             </div>
-            <p>{props.description}</p>
-            <p>{props.location}</p>
-            <p className="svc-tag">{props.services}</p>
-            <button>Book Now!</button>
+            <p>{profileData.description}</p>
+            <p className="svc-tag">{profileData.services}</p>
+            <Link to={`/c/booking/${id}`}>
+              <button>Book Now!</button>
+            </Link>
           </div>
         </div>
       </div>

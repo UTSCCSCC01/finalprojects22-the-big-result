@@ -9,6 +9,7 @@ serviceProviderBlueprint = Blueprint("serviceProvider", __name__)
 def getServiceProviderProfile():
 
     dao = ProfessionalsDAO()
+    print(request.args.get("id"))
     professional = dao.getProfessionalOnId(request.args.get("id"))
 
     return {

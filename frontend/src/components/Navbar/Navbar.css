@@ -24,3 +24,8 @@
 #navbar .signup-btn a {
   color: #5646ab;
 }
+
+#provider-menu a {
+  color: white;
+  text-decoration: none;
+}

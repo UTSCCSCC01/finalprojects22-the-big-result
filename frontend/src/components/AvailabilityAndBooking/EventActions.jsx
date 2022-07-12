@@ -21,7 +21,7 @@ export const recurrEvents = (eventsToRecur, numWeeks) => {
   return recurredEvents;
 }
 
-export const getTimeFromDate = (date) => {
+export const getTimeFromDateTime = (date) => {
   return date.getHours().toString().padStart(2, '0') + ":" +
         date.getMinutes().toString().padStart(2, '0') + ":" +
         date.getSeconds().toString().padStart(2, '0');
@@ -124,8 +124,8 @@ export const formatWeekEventsForPOST = (recurrAvailabilities) => {
   recurrAvailabilities.forEach(function(e) {
     let dayOfWeekI = e.start.getDay().toString();
     dataFormatted[dayOfWeekI].push({ 
-          start: getTimeFromDate(e.start), 
-          end: getTimeFromDate(e.end) 
+          start: getTimeFromDateTime(e.start), 
+          end: getTimeFromDateTime(e.end) 
       })
     })
     return dataFormatted;
@@ -143,8 +143,8 @@ export const formatSETNonRecurrAvailabilitiesData = (nonRecurrEvents) => {
   nonRecurrEvents.forEach(function(e) {
     let day = getDateFromDateTime(e.start);
     dataFormatted[day].push({ 
-          start: getTimeFromDate(e.start), 
-          end: getTimeFromDate(e.end) 
+          start: getTimeFromDateTime(e.start), 
+          end: getTimeFromDateTime(e.end) 
       })
     })
     
