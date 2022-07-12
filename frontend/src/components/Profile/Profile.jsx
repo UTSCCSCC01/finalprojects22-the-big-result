@@ -1,26 +1,11 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+// import { useEffect, useState } from "react";
+// import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Profile.css";
 import Review from "../Review/Review";
-import { getServiceProviderOnId } from "../../APICalls";
+// import { getServiceProviderOnId } from "../../APICalls";
 
-function Profile() {
-  const [profileData, setProfileData] = useState([]);
-  const { id } = useParams();
-
-  useEffect(() => {
-    getServiceProviderOnId(`/serviceProvider?id=${id}`, {
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    })
-      .then((response) => {
-        const res = response.data;
-        setProfileData(res);
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+function Profile(props) {
 
   return (
     <div id="profile" className="page">
@@ -39,9 +24,9 @@ function Profile() {
               <h1 className="highlight">{props.name}</h1>
               <h3>Rating: {props.rating}</h3>
             </div>
-            <p>{profileData.description}</p>
-            <p className="svc-tag">{profileData.services}</p>
-            <Link to={`/c/booking/${id}`}>
+            <p>{props.description}</p>
+            <p className="svc-tag">{props.services}</p>
+            <Link to={`/c/booking/${props.id}`}>
               <button>Book Now!</button>
             </Link>
           </div>
@@ -50,7 +35,7 @@ function Profile() {
       <br />
       <div className="reviews-container">
         <h1>Reviews</h1>
-        { props.length > 0 &&
+        {props.length > 0 &&
           props.reviews.length > 0 &&
           props.reviews.map((review) => (
             <Review
