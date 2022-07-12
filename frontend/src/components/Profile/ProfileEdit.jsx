@@ -11,8 +11,6 @@ import ServiceInfo from "./ServiceInfo";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 
@@ -31,13 +29,15 @@ const style = {
 function ProfileEdit(props) {
   const navigate = useNavigate();
   const [servicesList, setServicesList] = useState([]);
+  const [origServices, setOrigServices] = useState([]);
   const [editForm, setEditForm] = useState({});
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    navigate("/profile/" + props.id);
+    // navigate("/profile/" + props.id);
+    window.location = "/profile/"+props.id;
   };
 
   const [formOpen, setFormOpen] = useState(false);
@@ -87,31 +87,33 @@ function ProfileEdit(props) {
         services: props.services,
         // location: "",
       });
+      setOrigServices(props.services);
     });
   }, [props]);
 
   const handleSubmit = () => {
     axios({
-      // method: "PUT",
-      // url: "http://127.0.0.1:5000/serviceProvider",
-      // data: {
-      //   id: props.id,
-      //   profilePictureLink: editForm.profilePictureLink,
-      //   description: editForm.description,
-      //   services: editForm.services,
-      //   // location: editForm.location
-      // },
+      method: "PUT",
+      url: "http://127.0.0.1:5000/serviceProvider",
+      data: {
+        id: props.id,
+        profilePictureLink: editForm.profilePictureLink,
+        description: editForm.description,
+        services: editForm.services,
+        servicesDesc: servicesDesc
+        // location: editForm.location
+      }
     })
-      .then((res) => {
-        if (res.data.status === 200) {
-          setFormOpen(false);
-          handleOpen();
-        }
-        console.log(res.data.status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .then((res) => {
+      if (res.data.status === 200) {
+        setFormOpen(false);
+        handleOpen();
+      }
+      console.log(res.data.status);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
 
   const handleChange = (e) => {
@@ -128,6 +130,16 @@ function ProfileEdit(props) {
       services: Array.isArray(e) ? e.map((option) => option.value) : [],
     }));
   };
+
+  const getServices = () => {
+    let finalServices = [];
+    editForm.services.forEach((element) => {
+      if (!origServices.includes(element)) {
+        finalServices.push(element)
+      }
+    });
+    return finalServices;
+  }
 
   return (
     <div id="profile" className="page">
@@ -232,8 +244,8 @@ function ProfileEdit(props) {
 
       <Dialog open={formOpen} onClose={handleFormClose} scroll="paper">
         <DialogTitle>Enter Additional Information For Services</DialogTitle>
-        {editForm.services &&
-          editForm.services.map((arg) => (
+        {editForm.services && origServices &&
+          getServices().map((arg) => (
             <ServiceInfo addToServicesDesc={addToServicesDesc} service={arg} />
           ))}
         <DialogActions>
