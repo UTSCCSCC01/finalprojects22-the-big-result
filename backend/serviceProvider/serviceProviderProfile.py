@@ -20,7 +20,8 @@ def getServiceProviderProfile():
             "profilePictureLink": "https://picsum.photos/200",
             "location": professional.location,
             "calendar": "Some calendar stuff here that we would probably need later on",
-            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id))
+            # "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id))
+            "reviews": getReviews(dao.getFirstNReviewsForProfesional(professional.id))
         }
 
 @serviceProviderBlueprint.route("/serviceProvider", methods=["PUT"])

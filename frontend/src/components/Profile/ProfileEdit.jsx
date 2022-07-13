@@ -20,10 +20,8 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
 };
 
 function ProfileEdit(props) {
@@ -37,7 +35,7 @@ function ProfileEdit(props) {
   const handleClose = () => {
     setOpen(false);
     // navigate("/profile/" + props.id);
-    window.location = "/profile/"+props.id;
+    window.location = "/profile/" + props.id;
   };
 
   const [formOpen, setFormOpen] = useState(false);
@@ -71,7 +69,7 @@ function ProfileEdit(props) {
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://127.0.0.1:5000/services-list`,
+      url: `http://127.0.0.1:5000/getServices`,
     }).then((res) => {
       let services = [];
       res.data.services.forEach((element) =>
@@ -100,20 +98,20 @@ function ProfileEdit(props) {
         profilePictureLink: editForm.profilePictureLink,
         description: editForm.description,
         services: editForm.services,
-        servicesDesc: servicesDesc
+        servicesDesc: servicesDesc,
         // location: editForm.location
-      }
+      },
     })
-    .then((res) => {
-      if (res.data.status === 200) {
-        setFormOpen(false);
-        handleOpen();
-      }
-      console.log(res.data.status);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => {
+        if (res.data.status === 200) {
+          setFormOpen(false);
+          handleOpen();
+        }
+        console.log(res.data.status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleChange = (e) => {
@@ -135,11 +133,11 @@ function ProfileEdit(props) {
     let finalServices = [];
     editForm.services.forEach((element) => {
       if (!origServices.includes(element)) {
-        finalServices.push(element)
+        finalServices.push(element);
       }
     });
     return finalServices;
-  }
+  };
 
   return (
     <div id="profile" className="page">
@@ -244,7 +242,8 @@ function ProfileEdit(props) {
 
       <Dialog open={formOpen} onClose={handleFormClose} scroll="paper">
         <DialogTitle>Enter Additional Information For Services</DialogTitle>
-        {editForm.services && origServices &&
+        {editForm.services &&
+          origServices &&
           getServices().map((arg) => (
             <ServiceInfo addToServicesDesc={addToServicesDesc} service={arg} />
           ))}
