@@ -4,12 +4,18 @@ import "../Form.css";
 import "./SignUpProvider.css";
 import { Link, useNavigate } from "react-router-dom";
 import { getServices, signUpProvider } from "../../APICalls";
+import ServiceInfo from "../Profile/ServiceInfo";
 import {
   MenuItem,
   InputLabel,
   FormControl,
   Select as MUISelect,
 } from "@mui/material";
+
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
 
 function SignUpProvider() {
   const navigate = useNavigate();
@@ -36,6 +42,7 @@ function SignUpProvider() {
     password: "",
     servicesProvided: [],
     location: "",
+    description: "",
   });
 
   const handleSubmit = (e) => {
@@ -47,6 +54,8 @@ function SignUpProvider() {
       password: signupForm.password,
       servicesProvided: signupForm.servicesProvided,
       location: signupForm.location,
+      description: signupForm.description,
+      servicesDesc: servicesDesc,
     })
       .then(() => {
         navigate("/login");
@@ -63,6 +72,8 @@ function SignUpProvider() {
       password: "",
       servicesProvided: [],
       location: "",
+      description: "",
+      servicesDesc: [],
     });
   };
 
@@ -79,6 +90,34 @@ function SignUpProvider() {
       ...prevSignup,
       servicesProvided: Array.isArray(e) ? e.map((option) => option.value) : [],
     }));
+  };
+
+  const [formOpen, setFormOpen] = useState(false);
+  const [servicesDesc, setServicesDesc] = useState([]);
+
+  const handleFormOpen = () => {
+    setFormOpen(true);
+    //Set the initial values for the services selected
+    let servicesOffered = [];
+    signupForm.servicesProvided.forEach((svc) => {
+      servicesOffered.push({ service: svc, desc: "", price: 0 });
+    });
+    setServicesDesc(servicesOffered);
+  };
+
+  //Onchange to any of the new forms, update the servicesOffered descriptions and prices as required
+  const addToServicesDesc = (newDesc) => {
+    let newServicesDesc = [];
+    servicesDesc.forEach((desc) => {
+      if (desc.service !== newDesc.service) {
+        newServicesDesc.push(desc);
+      } else newServicesDesc.push(newDesc);
+    });
+    setServicesDesc(newServicesDesc);
+  };
+
+  const handleFormClose = () => {
+    setFormOpen(false);
   };
 
   return (
@@ -140,7 +179,7 @@ function SignUpProvider() {
           </MenuItem>
         </MUISelect>
       </FormControl>
-
+      <br />
       {servicesList && (
         <Select
           placeholder="Services Offered"
@@ -153,11 +192,30 @@ function SignUpProvider() {
           options={servicesList}
         />
       )}
+      <textarea
+        placeholder="Description"
+        onChange={handleChange}
+        name="description"
+        value={signupForm.description}
+        rows="5"
+        cols="50"
+      />
+      <br />
       {failedSignup && <p className="error">User already exists.</p>}
-      <button type="submit">Sign Up!</button>
+      <button onClick={handleFormOpen}>Sign Up!</button>
       <p>
         Already have an account? <Link to="/login">Log In</Link>
       </p>
+      <Dialog open={formOpen} onClose={handleFormClose} scroll="paper">
+        <DialogTitle>Enter Additional Information For Services</DialogTitle>
+        {signupForm.servicesProvided &&
+          signupForm.servicesProvided.map((arg) => (
+            <ServiceInfo addToServicesDesc={addToServicesDesc} service={arg} />
+          ))}
+        <DialogActions>
+          <Button onClick={handleSubmit}>Submit</Button>
+        </DialogActions>
+      </Dialog>
     </form>
   );
 }
