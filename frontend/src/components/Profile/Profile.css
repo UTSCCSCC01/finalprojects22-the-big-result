@@ -42,3 +42,22 @@
 .description-container {
   text-align: left;
 }
+
+.service-to-book:hover {
+  cursor: pointer;
+}
+
+.service-active {
+  background: #b5addb;
+  -webkit-transition: all .2s ease-in;
+}
+
+.service-selection {
+  padding-bottom: 30px;
+}
+
+.service-options {
+  text-align: center;
+  display:inline-block;
+  /* TODO (A): figure out how to align service toggles horizontally */
+}

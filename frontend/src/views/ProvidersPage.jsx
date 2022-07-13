@@ -11,16 +11,16 @@ import {
 
 import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
+import { getServiceProvidersOnQuery } from "../APICalls";
 
 import "../components/Filters.css";
-import Footer from "../components/Footer/Footer";
 
-function ProviderPage(props) {
+function ProviderPage() {
   const [priceRange, setPriceRange] = useState([]);
   const [providerList, setProviderList] = useState([]);
   const [filters, setFilters] = useState({
     service: "",
-    price: [0, 100],
+    price: priceRange ? [priceRange[0], priceRange[1]] : [],
     rating: 0,
     location: "",
   });
@@ -40,37 +40,39 @@ function ProviderPage(props) {
     }));
   };
 
-  // useEffect(() => {
-  //   axios({
-  //     method: "GET",
-  //     url: `http://127.0.0.1:5000/priceRange`,
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //       const [minPrice, maxPrice] = response.priceRange;
-  //       setFilters((prevFilters) => ({
-  //         ...prevFilters,
-  //         price: [minPrice, maxPrice],
-  //       }));
-  //       setPriceRange([minPrice, maxPrice]);
-  //     })
-  //     .catch((err) => {
-  //       console.log("ERR");
-  //       console.log(err.response);
-  //     });
-  // }, []);
-
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://127.0.0.1:5000/listServiceProviders?service=${filters.service}&rating=${filters.rating}&pricelow=${filters.price[0]}&pricehigh=${filters.price[1]}&location=${filters.location}`,
+      url: `http://127.0.0.1:5000/priceRange`,
     })
+      .then((response) => {
+        console.log(response);
+        const minPrice = response.data.priceLow;
+        const maxPrice = response.data.priceHigh;
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          price: [minPrice, maxPrice],
+        }));
+        setPriceRange([minPrice, maxPrice]);
+      })
+      .catch((err) => {
+        console.log("ERR");
+        console.log(err.response);
+      });
+  }, []);
+
+  useEffect(() => {
+    let query = `/listServiceProviders?service=${filters.service}&rating=${filters.rating}&location=${filters.location}`;
+    if (filters.price && filters.price[0])
+      query += `&pricelow=${filters.price[0]}`;
+    if (filters.price && filters.price[1])
+      query += `&pricehigh=${filters.price[1]}`;
+    getServiceProvidersOnQuery(query)
       .then((response) => {
         const res = response.data;
         setProviderList(res.providers);
       })
       .catch((err) => {
-        console.log("ERR");
         console.log(err.response);
       });
   }, [filters]);
@@ -82,13 +84,19 @@ function ProviderPage(props) {
           <div className="price filter-component">
             Price
             <div className="price-slider">
-              <p>{"$" + filters.price[0]}</p>
+              <p>
+                {filters.price && filters.price[0] && "$" + filters.price[0]}
+              </p>
               <Slider
                 name="price"
                 value={filters.price}
                 onChange={handleChange}
+                min={priceRange ? priceRange[0] : 0}
+                max={priceRange ? priceRange[1] : 100}
               />
-              <p>{"$" + filters.price[1]}</p>
+              <p>
+                {filters.price && filters.price[1] && "$" + filters.price[1]}
+              </p>
             </div>
           </div>
           <div className="rating filter-component">
@@ -127,20 +135,27 @@ function ProviderPage(props) {
     <div className="providers-page page" id="providers">
       <ServiceList serviceFilter={updateServiceFilter} />
       {filtersComponent()}
-      <div className="providers">
-        {providerList.map((provider) => (
-          <Provider
-            id={provider.id}
-            name={provider.name}
-            service={provider.service}
-            description={provider.description}
-            price={provider.price}
-            rating={provider.rating}
-            location={provider.location}
-            profilePicURL={provider.profilePicURL}
-          />
-        ))}
-      </div>
+
+      {providerList.length > 0 ? (
+        <div className="providers">
+          {console.log(providerList)}
+          {providerList.map((provider) => (
+            <Provider
+              key={provider.id}
+              id={provider.id}
+              name={provider.name}
+              service={provider.service}
+              description={provider.description}
+              price={provider.price}
+              rating={provider.rating}
+              location={provider.location}
+              profilePicURL={provider.profilePicURL}
+            />
+          ))}
+        </div>
+      ) : (
+        <h2>Sorry! No providers match those filters</h2>
+      )}
     </div>
   );
 }

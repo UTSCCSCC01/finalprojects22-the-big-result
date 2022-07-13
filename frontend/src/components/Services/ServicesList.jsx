@@ -1,16 +1,17 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import ServiceCard from "./ServiceCard.jsx";
+import { getServices } from "../../APICalls"
 
 function ServiceList(props) {
   const [arrServices, setArrServices] = useState([]);
   const [activeSvcId, setActiveSvcId] = useState("");
-  
+
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/services-list`,
-    })
+    getServices()
+    // axios({
+    //   method: "GET",
+    //   url: `http://localhost:5000/getServices`,
+    // })
       .then((res) => {
         setArrServices(res.data.services);
       })
@@ -21,6 +22,7 @@ function ServiceList(props) {
     return arrServices.map((item) => {
       return (
         <div
+          key={item.id}
           className="card-container"
           onClick={() => {
             props.serviceFilter(item.service);

@@ -88,6 +88,7 @@ class ProfessionalServices(db.Model):
     professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"), primary_key=True)
     serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"), primary_key=True)
     defaultPrice: float = db.Column(db.Float, default=0)
+    serviceDescription: str = db.Column(db.String(200), default='')
 
     __table_args__ = {'extend_existing': True}
 
