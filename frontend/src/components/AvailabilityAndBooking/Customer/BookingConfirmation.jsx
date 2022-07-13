@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import "../../Form.css";
 import { Link } from "react-router-dom";
 import { addBookings, getUsersMe } from "../../../APICalls"
@@ -7,8 +7,6 @@ import { AuthContext } from "../../../context/AuthProvider";
 function BookingConfirmation(props) {
   const [instructions, setInstructions] = useState('');
   const { user } = useContext(AuthContext);
-
-  console.log('in confirmation, all booking info: ', props.bookingInfo);
 
   const onConfirmation = () => {
     getUsersMe({ 
@@ -21,8 +19,6 @@ function BookingConfirmation(props) {
     }).catch((err) => console.log(err));
   }
 
-
-  // TODO (A): price, and provider name get from backend... should I pass between pages?
   return (
     <div className="page">
       <h2>Service: {props.bookingInfo.service}</h2>
@@ -42,7 +38,7 @@ function BookingConfirmation(props) {
         </select>
         <textarea placeholder="Enter your instruction here." value={instructions} onChange={(e) => setInstructions(e.target.value)}></textarea>
       </form>
-      {/* TODO: styling  */}
+      {/* TODO: styling put in CSS  */}
       <button onClick={onConfirmation} style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/c/upcomingBookings`}>Confirm Details</Link></button>
       <button style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/`}>Cancel</Link></button>
     </div>
