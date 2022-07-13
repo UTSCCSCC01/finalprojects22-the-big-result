@@ -1,13 +1,15 @@
 import "./Provider.css";
 import "../Card.css";
+import { Link, useNavigate } from "react-router-dom";
 
 function Provider(props) {
+  const navigate = useNavigate();
   return (
-    <div
-      onClick={() => (window.location = `/profile/${props.id}`)}
-      className="provider-card card"
-    >
-      <div className="metadata">
+    <div className="provider-card card">
+      <div
+        onClick={() => navigate(`/profile/${props.id}`)}
+        className="metadata"
+      >
         <img src={props.profilePicURL} alt={props.name} />
         <div className="metadata-text">
           <h2 className="highlight">{props.name}</h2>
@@ -29,7 +31,9 @@ function Provider(props) {
           <p>Sample long review to test how it looks after wrapping around</p>
         </div>
         <div className="btn-group">
-          <button>Book Now!</button>
+          <Link to={`/c/booking/${props.id}`}>
+            <button>Book Now!</button>
+          </Link>
           <button className="transparent-btn">View Profile</button>
         </div>
       </div>

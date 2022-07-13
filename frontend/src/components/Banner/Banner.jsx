@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import "./Banner.css";
 import banner from "../../media/banner-img.svg";
 

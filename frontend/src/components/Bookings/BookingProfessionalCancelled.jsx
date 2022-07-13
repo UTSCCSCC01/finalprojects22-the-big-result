@@ -1,9 +1,9 @@
 import "../Card.css";
 import "./Bookings.css";
 
-function BookingProfessionalUpcoming(props) {
+function BookingProfessionalCancelled(props) {
   return(
-    <div className="booking-card card">
+    <div className="cancelled-card card">
       <div className="metadata">
         <img src={props.picURL} alt={props.service} />
         <div className="metadata-text">
@@ -15,13 +15,8 @@ function BookingProfessionalUpcoming(props) {
           <p>Price: ${props.price}</p>
         </div>
       </div>
-      <div className="desc">
-        <div className="btn-group">
-          <button>Cancel</button>
-        </div>
-      </div>
     </div>
-  );
+  )
 }
 
-export default BookingProfessionalUpcoming;
+export default BookingProfessionalCancelled;

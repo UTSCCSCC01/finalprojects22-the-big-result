@@ -4,15 +4,16 @@ import "../Card.css";
 function BookingCustomerPast(props) {
     return (
       <div className="booking-card card">
-        <div class="metadata">
+        <div className="metadata">
           <img src={props.picURL} alt={props.provider} />
           <div className="metadata-text">
             <h2 className="highlight">{props.service}</h2>
             <h3>Provider: {props.provider}</h3>
             <p>Date: {props.date}</p>
             <p>Time: {props.startTime} to {props.endTime}</p>
-            <p>Price: ${props.cost}
-            </p>
+            <p>Price: ${props.cost}</p>
+            <p>Location: {props.location}</p>
+            
             {/* <p>{props.description}</p>   */}
           </div>
         </div>

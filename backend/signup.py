@@ -30,7 +30,7 @@ def signup(type):
         if(providerDao.emailExists(email)):
             return "Email already exists", 409
         try:
-            providerDao.addProfessional(firstName, lastName, email, email, password, str(servicesProvided))
+            providerDao.addProfessional(firstName, lastName, email, email, password, str(servicesProvided), averageCost=float(0))
             return {"type": type, "firstName": firstName, "lastName": lastName, "email": email, 
             "username": email, "servicesProvided": servicesProvided}
         except Exception as e:
