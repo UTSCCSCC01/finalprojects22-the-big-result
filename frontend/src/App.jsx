@@ -43,6 +43,10 @@ function App() {
             {/*    <Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
             {/*</Route>*/}
 
+          {/* Protected route, should be accessible by both customers and providers*/}
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/myProfile" element={<MyProfile />} />
+          </Route>
           {/* Protected route, only accessible by customers*/}
           
           <Route element={<ProtectedRoutes role={"customer"} />}>
