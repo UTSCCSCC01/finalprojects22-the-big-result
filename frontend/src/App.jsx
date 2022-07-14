@@ -16,6 +16,7 @@ import LandingPage from "./views/LandingPage";
 import ProfessionalAvailability from "./views/ProfessionalAvailability";
 import ProvidersPage from "./views/ProvidersPage";
 import MyProfile from "./components/MyProfile/MyProfile";
+import AllReviews from "./views/AllReviews.jsx";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/services" element={<ServiceList />} />
           <Route path="/serviceProviders" element={<ProvidersPage />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/getAllReviews/:id" element={<AllReviews />} />
           <Route path="/signup" element={<SignUp />} />
           {/* Protected route, should be accessible by both customers and providers*/}
           <Route element={<ProtectedRoutes />}>

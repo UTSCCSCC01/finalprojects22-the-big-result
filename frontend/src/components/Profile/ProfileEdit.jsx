@@ -7,6 +7,7 @@ import Modal from "@mui/material/Modal";
 import "./Profile.css";
 import Review from "../Review/Review";
 import ServiceInfo from "./ServiceInfo";
+import { useParams, Link } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -28,6 +29,7 @@ const style = {
 
 function ProfileEdit(props) {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [servicesList, setServicesList] = useState([]);
   const [origServices, setOrigServices] = useState([]);
   const [editForm, setEditForm] = useState({});
@@ -230,7 +232,9 @@ function ProfileEdit(props) {
             />
           ))}
         <br />
-        <button>See All Reviews </button>
+        <Link to={`/getAllReviews/${id}`}>
+          <button >See All Reviews </button>
+        </Link>
       </div>
 
       <Modal open={open} onClose={handleClose} aria-labelledby="title">
