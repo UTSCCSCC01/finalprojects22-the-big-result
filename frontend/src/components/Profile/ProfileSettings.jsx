@@ -1,6 +1,8 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import "./Profile.css"
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
 
 
 function stateHasProfileInfo(state){
@@ -25,37 +27,42 @@ function ProfileSettings(props){
       });
     }, []);
 
-    const [type, setType] = useState("")
+    const [type, setType] = useState("profile");
+
+  const handleButtonClick = (event, type) =>{
+      setType(type);
+  };
 
     return (
         <div className="profile-settings">
-            {/*<p>{"Hi again!"}</p>*/}
+            <div className="button-selection">
+                <ToggleButtonGroup
+                    color="primary"
+                    value={type}
+                    exclusive
+                    onChange={handleButtonClick}
+                >
+                    <ToggleButton value="profile">Profile</ToggleButton>
+                    <ToggleButton value="billing-info">Billing</ToggleButton>
+
+                </ToggleButtonGroup>
+            </div>
             <p>{stateHasProfileInfo(profileData)?
                 <div className="settings-info">
-                    {/*<div className="billing-info">*/}
-                    {/*    <p>Card Holder Name: {profileData.billingInfo.cardHolderName}</p>*/}
-                    {/*    <p>Card number: {profileData.billingInfo.cardNumber}</p>*/}
-                    {/*    <p>Card Type: {profileData.billingInfo.cardType}</p>*/}
-                    {/*    <p>Date of expiration: {profileData.billingInfo.expiryDate}</p>*/}
-                    {/*</div>*/}
-                    <div className={"type"}>
-                        <button onClick={() => setType("profile")}>Profile</button>
-                        <button onClick={() => setType("billing-info")}>Billing Info</button>
 
-                    </div>
                     {type === "profile" && <div>
                         <p>Name: {profileData.fullName}</p>
                         <p>Type of user: {profileData.userType}</p>
                         <p>Email: {profileData.email}</p>
                     </div>}
                     {type === "billing-info" && <div className="billing-info">
-                        <p>Card Holder Name: {profileData.billingInfo.cardHolderName}</p>
+                        <p> Card Holder Name: {profileData.billingInfo.cardHolderName}</p>
                         <p>Card number: {profileData.billingInfo.cardNumber}</p>
                         <p>Card Type: {profileData.billingInfo.cardType}</p>
                         <p>Date of expiration: {profileData.billingInfo.expiryDate}</p>
                     </div>}
 
-                </div>: "Doesn't exist :c "}</p>
+                </div>: "Loading ..."}</p>
         </div>
     );
 
