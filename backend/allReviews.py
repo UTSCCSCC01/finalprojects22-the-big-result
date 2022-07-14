@@ -11,7 +11,7 @@ def reviews():
 
     profDAO = ProfessionalsDAO()
     professional = profDAO.getProfessionalOnId(id)
-    reviewList = {"reviews": getReviews(profDAO.getAllReviewsForProfesional(id)), 
+    reviewList = {"reviews": getReviews(profDAO.getAllReviewsForProfesional(id).all()),  # TODO (F) .all() needed?
                     "name": professional.firstName + " " + professional.lastName,}
     print(reviewList)
     return reviewList
