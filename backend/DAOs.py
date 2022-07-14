@@ -86,15 +86,12 @@ class ProfessionalsDAO:
     def getProfessionalsByLocation(self,location:str) -> List[Professional]:
         return Professional.query.filter_by(location=location).all()
 
-    @cache.cached(timeout=30, key_prefix='lowest-avg-price')
     def getLowestAveragePrice(self) -> float:
         return db.session.query(func.min(Professional.averageCost)).scalar()
 
-    @cache.cached(timeout=30, key_prefix='highest-avg-price')
     def getHighestAveragePrice(self) ->float:
         return db.session.query(func.max(Professional.averageCost)).scalar()
 
-    @cache.cached(timeout=50, key_prefix='min-rating-professional')
     def getProfessionalsWithMinRating(self, minRating: float) -> List[Professional]:
         return Professional.query.filter(Professional.ratings >= minRating).all()
 
