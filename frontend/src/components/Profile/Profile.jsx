@@ -9,8 +9,6 @@ function Profile() {
   const [serviceSelected, setServiceSelected] = useState(null);
   const { id } = useParams();
 
-  
-
   useEffect(() => {
     getServiceProviderOnId(`/serviceProvider?id=${id}`, {
       Authorization: "Bearer " + localStorage.getItem("token"),

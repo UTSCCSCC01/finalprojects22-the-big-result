@@ -28,7 +28,7 @@ function Provider(props) {
       </div>
       <div className="desc">
         <div className="review-holder">
-          <p>Sample long review to test how it looks after wrapping around</p>
+          <p>{props.review}</p>
         </div>
         <div className="btn-group">
           <Link to={`/c/booking/${props.id}`}>

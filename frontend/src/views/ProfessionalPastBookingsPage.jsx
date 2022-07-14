@@ -1,18 +1,15 @@
 import { useEffect, useState, useContext } from "react";
 
-import BookingProfessionalUpcoming from "../components/Bookings/BookingProfessionalUpcoming";
-import { getProfessionalUpcomingBookings, useAxiosAuth } from "../APICalls";
+import BookingProfessionalPast from "../components/Bookings/BookingProfessionalPast";
+import { getProfessionalPastBookings, useAxiosAuth } from "../APICalls";
 import { AuthContext } from "../context/AuthProvider";
 
-function ProfessionalUpBookingsPage() {
+function ProfessionalPastBookingsPage() {
   const [bookingsList, setBookingsList] = useState([]);
   const { user } = useContext(AuthContext);
   const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
-    // getUsersMe({
-    //   Authorization: `Bearer ${ user.access_token }`
-    // })
     axiosAuth
       .get("/users/me")
       .then((res) => {
@@ -20,12 +17,10 @@ function ProfessionalUpBookingsPage() {
           res.data.id,
           "id of the customer finding upcoming bookings"
         );
-        getProfessionalUpcomingBookings({
-          professionalId: parseInt(res.data.id),
-        })
+        getProfessionalPastBookings({ professionalId: parseInt(res.data.id) })
           // axios({
           //   method: "GET",
-          //   url: "http://127.0.0.1:5000/professionalUpcomingBookings",
+          //   url: "http://127.0.0.1:5000/professionalPastBookings",
           //   headers: {
           //     professionalId: 36
           //   }
@@ -41,10 +36,10 @@ function ProfessionalUpBookingsPage() {
 
   return (
     <div className="bookings-page page">
-      <h1>Upcoming Bookings</h1>
+      <h1>Past Bookings</h1>
       <div className="bookings">
         {bookingsList.map((booking) => (
-          <BookingProfessionalUpcoming
+          <BookingProfessionalPast
             customer={booking.customer}
             service={booking.service}
             date={booking.date}
@@ -60,4 +55,4 @@ function ProfessionalUpBookingsPage() {
   );
 }
 
-export default ProfessionalUpBookingsPage;
+export default ProfessionalPastBookingsPage;

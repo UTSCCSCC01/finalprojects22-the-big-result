@@ -1,38 +1,36 @@
 import { useEffect, useState, useContext } from "react";
 
-import BookingProfessionalUpcoming from "../components/Bookings/BookingProfessionalUpcoming";
-import { getProfessionalUpcomingBookings, useAxiosAuth } from "../APICalls";
+import BookingCustomerPast from "../components/Bookings/BookingCustomerPast";
+import { getCustomerPastBookings, useAxiosAuth } from "../APICalls";
 import { AuthContext } from "../context/AuthProvider";
 
-function ProfessionalUpBookingsPage() {
+function CustPastBookingsPage(props) {
   const [bookingsList, setBookingsList] = useState([]);
   const { user } = useContext(AuthContext);
   const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
+    // get current user id
     // getUsersMe({
-    //   Authorization: `Bearer ${ user.access_token }`
-    // })
+    //   Authorization: `Bearer ${user.access_token}`,
+    // });
+
     axiosAuth
       .get("/users/me")
       .then((res) => {
-        console.log(
-          res.data.id,
-          "id of the customer finding upcoming bookings"
-        );
-        getProfessionalUpcomingBookings({
-          professionalId: parseInt(res.data.id),
-        })
+        console.log(res.data.id, "id of the customer finding past bookings");
+        getCustomerPastBookings({ customerId: parseInt(res.data.id) })
           // axios({
           //   method: "GET",
-          //   url: "http://127.0.0.1:5000/professionalUpcomingBookings",
+          //   url: "http://127.0.0.1:5000/customerPastBookings",
           //   headers: {
-          //     professionalId: 36
+          //     customerId: 34
           //   }
           // })
           .then((response) => {
             console.log(response.data);
-            setBookingsList(response.data.bookings);
+            const res = response.data;
+            setBookingsList(res.bookings);
           })
           .catch((err) => console.log(err.response));
       })
@@ -41,18 +39,18 @@ function ProfessionalUpBookingsPage() {
 
   return (
     <div className="bookings-page page">
-      <h1>Upcoming Bookings</h1>
+      <h1>Past Bookings</h1>
       <div className="bookings">
         {bookingsList.map((booking) => (
-          <BookingProfessionalUpcoming
-            customer={booking.customer}
+          <BookingCustomerPast
+            provider={booking.provider}
             service={booking.service}
+            review={booking.review}
+            cost={booking.cost}
+            picURL={booking.picURL}
             date={booking.date}
             startTime={booking.startTime}
             endTime={booking.endTime}
-            location={booking.location}
-            price={booking.price}
-            picURL={booking.picURL}
           />
         ))}
       </div>
@@ -60,4 +58,4 @@ function ProfessionalUpBookingsPage() {
   );
 }
 
-export default ProfessionalUpBookingsPage;
+export default CustPastBookingsPage;

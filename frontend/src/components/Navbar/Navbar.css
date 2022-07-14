@@ -21,11 +21,12 @@
   background: white;
 }
 
-#navbar .signup-btn a {
+#navbar .signup-btn {
   color: #5646ab;
 }
 
-#provider-menu a {
+#provider-menu a,
+#customer-menu a {
   color: white;
   text-decoration: none;
 }

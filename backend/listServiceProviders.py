@@ -8,6 +8,7 @@ list_providers_blueprint = Blueprint('list_providers_blueprint', __name__)
 
 profDAO = ProfessionalsDAO()
 serviceDAO = ServicesDAO()
+custDAO = CustomersDAO()
 
 @list_providers_blueprint.route("/priceRange")
 def get_price_range():
@@ -40,6 +41,12 @@ def get_service_provider_list():
             svc = i.services[0].serviceName
         else:
             svc = ""
+        review = profDAO.getFirstNReviewsForProfesional(i.id)
+        if len(review) == 0:
+            description = "No Reviews for now!"
+        else:
+            customer = custDAO.getCustomerOnID(review[0].customerID)
+            description = customer.firstName + " " + customer.lastName + " said: " + review[0].description
         results_formatted.append({ 
             "id": i.id,
             "name": i.firstName + " " + i.lastName,
@@ -47,6 +54,7 @@ def get_service_provider_list():
             "price": i.averageCost,
             "rating": i.ratings,
             "location": i.location,
+            "review": description,
             "profilePicURL": "https://picsum.photos/102"
         })
     some_providers = {
