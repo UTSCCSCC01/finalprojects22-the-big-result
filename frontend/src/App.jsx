@@ -17,6 +17,7 @@ import ProfessionalAvailability from "./views/ProfessionalAvailability";
 import ProvidersPage from "./views/ProvidersPage";
 import MyProfile from "./components/MyProfile/MyProfile";
 import ProfileSettingsPage from "./views/ProfileSettingsPage";
+import AllReviews from "./views/AllReviews.jsx";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/services" element={<ServiceList />} />
           <Route path="/serviceProviders" element={<ProvidersPage />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/getAllReviews/:id" element={<AllReviews />} />
           <Route path="/signup" element={<SignUp />} />
           {/*<Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
 

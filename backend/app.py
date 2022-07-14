@@ -16,6 +16,7 @@ from profile.userSettingsProfile import profileBluePrint
 from signup import signup_blueprint
 from listServices import services_blueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
+from allReviews import reviews_blueprint
 
 from login import login_blueprint
 from datetime import timedelta
@@ -41,6 +42,7 @@ def createApp():
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
     app.register_blueprint(profileBluePrint, url_prefix='/profile')
+    app.register_blueprint(reviews_blueprint)
 
     CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
     # JWTManager(app)

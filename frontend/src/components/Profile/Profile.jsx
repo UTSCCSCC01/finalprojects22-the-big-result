@@ -109,7 +109,10 @@ function Profile() {
             />
           ))}
         <br />
-        <button>See All Reviews </button>
+        <Link to={`/getAllReviews/${id}`}>
+          <button >See All Reviews </button>
+        </Link>
+        
       </div>
     </div>
   );
