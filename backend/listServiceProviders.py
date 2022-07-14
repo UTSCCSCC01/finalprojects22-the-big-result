@@ -112,7 +112,8 @@ def get_service_provider_list():
         if len(review) == 0:
             description = "No Reviews for now!"
         else:
-            customer = custDAO.getCustomerOnID(review[0].customerID)
+            # customer = custDAO.getCustomerOnID(review[0].customerID)
+            customer = review[0].customer
             description = customer.firstName + " " + customer.lastName + " said: " + review[0].description
         results_formatted.append({ 
             "id": i.id,

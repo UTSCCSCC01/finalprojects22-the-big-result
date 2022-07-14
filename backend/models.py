@@ -141,6 +141,8 @@ class Customer(User):
 
     # List of bookings
     bookings = db.relationship('Bookings',back_populates='customer',lazy=True)
+    reviews = db.relationship('Reviews',back_populates='customer',lazy=True)
+
 
     __mapper_args__ = {
         "polymorphic_identity": "Customer",
@@ -176,6 +178,7 @@ class Reviews(db.Model):
 
     booking = db.relationship('Bookings', back_populates='review')
     professional: Professional = db.relationship('Professional',back_populates='reviews')
+    customer: Customer = db.relationship('Customer',back_populates='reviews')
 
 
 class Pictures(db.Model):
