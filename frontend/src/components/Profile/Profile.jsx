@@ -2,14 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "./Profile.css";
 import Review from "../Review/Review";
-// import { getServiceProviderOnId } from "../../APICalls";
+import { getServiceProviderOnId } from "../../APICalls";
 
 function Profile() {
   const [profileData, setProfileData] = useState([]);
   const [serviceSelected, setServiceSelected] = useState(null);
   const { id } = useParams();
-
-  
 
   useEffect(() => {
     getServiceProviderOnId(`/serviceProvider?id=${id}`, {

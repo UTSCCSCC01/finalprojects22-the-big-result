@@ -19,9 +19,11 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
   width: 400,
   border: "2px solid #000",
   boxShadow: 24,
+  p: 4,
 };
 
 function ProfileEdit(props) {

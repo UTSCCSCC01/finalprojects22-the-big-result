@@ -15,8 +15,6 @@ import CustUpBookingsPage from "./views/CustUpBookingsPage";
 import LandingPage from "./views/LandingPage";
 import ProfessionalAvailability from "./views/ProfessionalAvailability";
 import ProvidersPage from "./views/ProvidersPage";
-import SignUp from "./views/SignUp";
-import ProfilePage from "./views/ProfilePage";
 import MyProfile from "./components/MyProfile/MyProfile";
 
 function App() {
