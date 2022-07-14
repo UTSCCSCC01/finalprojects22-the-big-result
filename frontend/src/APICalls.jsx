@@ -98,6 +98,12 @@ export const sendRequest = (method, endpoint, header_or_data) => {
         data: header_or_data,
       });
     // other cases: PUT, DELETE etc.
+    case "PUT":
+      return axios({
+        method: method,
+        url: base + endpoint,
+        data: header_or_data,
+      });
   }
 };
 
@@ -105,6 +111,8 @@ export const getRequest = (endpoint, headers) =>
   sendRequest("GET", endpoint, headers);
 export const postRequest = (endpoint, data) =>
   sendRequest("POST", endpoint, data);
+export const putRequest = (endpoint, data) =>
+  sendRequest("PUT", endpoint, data);
 
 // get requests
 export const getAvailability = (headers) => getRequest("/getAvailability", headers);
@@ -118,6 +126,8 @@ export const getCustomerPastBookings = (headers) => getRequest('/customerPastBoo
 export const getProfessionalUpcomingBookings = (headers) => getRequest('/professionalUpcomingBookings', headers);
 export const getProfessionalPastBookings = (headers) => getRequest('/professionalPastBookings', headers);
 export const getCustomerUpcomingBookings = (headers) => getRequest('/customerUpcomingBookings', headers);
+export const getCustomerCancelledBookings = (headers) => getRequest('/customerCancelledBookings', headers)
+export const getProfessionalCancelledBookings = (headers) => getRequest('/professionalCancelledBookings', headers);
 
 // post requests
 export const setRecurrAvailability = (data) => postRequest("/setRecurrAvailability", data);
@@ -125,3 +135,7 @@ export const setNonRecurrAvailability = (data) => postRequest("/setNonRecurrAvai
 export const addBookings = (data) =>  postRequest("/addBookings", data);
 export const signUpProvider = (data) => postRequest("/signup/provider", data);
 export const signUpCustomer = (data) => postRequest("/signup/customer", data);
+
+// put requests
+export const cancelBooking = (data) => putRequest("/cancelBooking", data);
+export const resolveBooking = (data) => putRequest("/resolveBooking", data); 

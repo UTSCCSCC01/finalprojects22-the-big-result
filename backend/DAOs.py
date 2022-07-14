@@ -167,9 +167,9 @@ class ProfessionalServicesDAO:
         return ProfessionalServices.query.filter(ProfessionalServices.professionalID == id,
                                                  ProfessionalServices.serviceName == serviceName).all() != []
 
-    def addServiceProvidedByProfessional(self, id: int, serviceName: str, price: float) -> None:
+    def addServiceProvidedByProfessional(self, id: int, serviceName: str, price: float, description: str) -> None:
         new = ProfessionalServices(professionalID=id,
-                                          serviceName=serviceName, defaultPrice=price)
+                                          serviceName=serviceName, defaultPrice=price, serviceDescription=description)
         db.session.add(new)
         db.session.commit()
     
@@ -178,6 +178,13 @@ class ProfessionalServicesDAO:
                                                  ProfessionalServices.serviceName == serviceName).first()
         db.session.delete(service)
         db.session.commit()
+    
+    # NOTE (A): confirm...
+    def getDescriptionOfServicesByProfessional(self, id: int, serviceName: str) -> List[str]:
+        service = ProfessionalServices.query.filter(ProfessionalServices.professionalID == id,
+                                                 ProfessionalServices.serviceName == serviceName).first()
+        return service.serviceDescription
+                                                 
     # def getServiceFromUserID(self, id):
     #     return db.engine.execute(
     #         f"SELECT * FROM Professional P INNER JOIN ProfessionalServices PS on P.id = PS.professionalID INNER JOIN Services S on PS.serviceName = S.serviceName WHERE p.id={id}").fetchall()
@@ -237,7 +244,6 @@ class AvailabilitiesNonRecDAO:
 
 class BookingsDAO:
 
-
     def getBookingsFromProfID(self, profID: int) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).all()
 
@@ -261,11 +267,41 @@ class BookingsDAO:
 
         db.session.add(newBooking)
         db.session.commit()
+    
+    
+    def resolveBooking(self, id: int, status: str):
+        booking = Bookings.query.filter_by(id=id).first()
+        booking.status = status
+        db.session.commit()
+
+    # NOTE: assume booking time is fixed to an hour so add availability for an hour
+    def cancelBooking(self, id: int):
+      booking = Bookings.query.filter_by(id=id).first()
+      booking.status = Status.CANCELLED
+      db.session.commit()
+
+      # add cancelled booking as non recurring availability
+      profId = booking.professionalID
+      date = booking.beginServiceDateTime.date()
+      startTime = booking.beginServiceDateTime.time()
+      endTime = booking.endServiceDateTime.time()
+      newAvailability = AvailabilitiesNonRec(professionalID=profId, date=date,startTime=startTime,endTime=endTime, isAvailable=1)
+      db.session.add(newAvailability)
+      db.session.commit()
+
+    def getNonCancelledBookingsFromProfIDinRangeWithStatusIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime):
+      return [booking for booking in db.session.query(Bookings)
+                                       .filter(Bookings.professionalID==profID, Bookings.status!=Status.CANCELLED)
+                                       .filter(rangeStart < Bookings.endServiceDateTime)
+                                       .filter(Bookings.beginServiceDateTime < rangeEnd)]
+
+    def getBookingsFromProfIDinRangeWithStatusIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime, status: Status) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\
+            .filter(Bookings.beginServiceDateTime < rangeEnd).filter(Bookings.status == status).all()
 
     def getBookingsFromProfIDinRangeIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\
             .filter(Bookings.beginServiceDateTime < rangeEnd).all()
-
 
     def getBookingsFromProfIDinRangeExcl(self, profID: int, rangeStart: datetime, rangeEnd: datetime) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.beginServiceDateTime) \
@@ -340,5 +376,8 @@ def runDAOQueries():
     # print(serviceDao.getProfessionalsForService("agaga"))
 
     # print(bookingsDao.getBookingsFromCustID(34)[0].review)
-
+    # print(db.session.query(Bookings).filter(Bookings.professionalID==36, Bookings.status!="CANCELLED"))
+    # print()
+    # for row in db.session.query(Bookings).filter(Bookings.professionalID=="36", Bookings.status!="CANCELLED"):
+    #   print (row.professionalID)
     pass

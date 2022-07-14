@@ -9,26 +9,19 @@ function BookingConfirmation(props) {
   const { user } = useContext(AuthContext);
 
   const onConfirmation = () => {
-    // get user id here
     getUsersMe({ 
       Authorization: `Bearer ${ user.access_token }` 
     }).then((res) => {
       console.log('id of customer:', res.data.id);
-      addBookings({ 
-        professionalId: props.bookingInfo.professionalId, 
-        start: props.bookingInfo.start,
-        end: props.bookingInfo.end,
-        date: props.bookingInfo.date,
-        customerId: parseInt(res.data.id),
+      addBookings({...props.bookingInfo, 
         instructions: instructions 
      }).catch((err) => console.log(err));
     }).catch((err) => console.log(err));
-    
   }
 
   return (
     <div className="page">
-      <h2>Service: {props.bookingInfo.serviceName}</h2>
+      <h2>Service: {props.bookingInfo.service}</h2>
       <h2>Provider Name: {props.bookingInfo.professionalId}</h2>
       <p>Date: {props.bookingInfo.date}</p>
       <p>From: {props.bookingInfo.start} to {props.bookingInfo.end}</p>
@@ -45,7 +38,7 @@ function BookingConfirmation(props) {
         </select>
         <textarea placeholder="Enter your instruction here." value={instructions} onChange={(e) => setInstructions(e.target.value)}></textarea>
       </form>
-      {/* TODO: styling  */}
+      {/* TODO: styling put in CSS  */}
       <button onClick={onConfirmation} style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/c/upcomingBookings`}>Confirm Details</Link></button>
       <button style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/`}>Cancel</Link></button>
     </div>

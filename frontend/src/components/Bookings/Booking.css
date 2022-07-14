@@ -47,3 +47,8 @@
 /* .review-btn {
     display: hidden;
   } */
+
+.cancelled-card {
+  background-color: #ecdce4;
+  margin: 10px;
+}

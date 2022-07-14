@@ -2,20 +2,22 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Footer from "./components/Footer/Footer";
 import Login from "./components/Login/Login";
-import MyProfile from "./components/MyProfile/MyProfile";
+import SignUp from "./views/SignUp";
+import ProfilePage from "./views/ProfilePage";
+import CustPastAndCancelledBookingsPage from "./views/CustPastAndCancelledBookingsPage"
+import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
+import ProfessionalPastAndCancelledBookingsPage from "./views/ProfessionalPastAndCancelledBookingsPage";
 import Navbar from "./components/Navbar/Navbar";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import ServiceList from "./components/Services/ServicesList";
 import CustomerBooking from "./views/CustomerBooking";
-import CustPastBookingsPage from "./views/CustPastBookingsPage";
 import CustUpBookingsPage from "./views/CustUpBookingsPage";
 import LandingPage from "./views/LandingPage";
 import ProfessionalAvailability from "./views/ProfessionalAvailability";
-import ProfessionalPastBookingsPage from "./views/ProfessionalPastBookingsPage";
-import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
 import ProvidersPage from "./views/ProvidersPage";
 import SignUp from "./views/SignUp";
 import ProfilePage from "./views/ProfilePage";
+import MyProfile from "./components/MyProfile/MyProfile";
 
 function App() {
   return (
@@ -41,7 +43,7 @@ function App() {
               path="/c/upcomingBookings"
               element={<CustUpBookingsPage />}
             />
-            <Route path="/c/pastBookings" element={<CustPastBookingsPage />} />
+            <Route path="/c/pastAndCancelledBookings" element={<CustPastAndCancelledBookingsPage />} />
           </Route>
           {/* Protected route, only accessible by providers*/}
           <Route element={<ProtectedRoutes role={"provider"} />}>
@@ -54,8 +56,8 @@ function App() {
               element={<ProfessionalUpBookingsPage />}
             />
             <Route
-              path="/p/pastBookings"
-              element={<ProfessionalPastBookingsPage />}
+              path="/p/pastAndCancelledBookings"
+              element={<ProfessionalPastAndCancelledBookingsPage />}
             />
           </Route>
         </Routes>

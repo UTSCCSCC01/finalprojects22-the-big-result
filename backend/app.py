@@ -63,4 +63,5 @@ def createApp():
 app = createApp()
 
 if __name__ == "__main__":
+    runDAOQueries()
     app.run(debug=True)

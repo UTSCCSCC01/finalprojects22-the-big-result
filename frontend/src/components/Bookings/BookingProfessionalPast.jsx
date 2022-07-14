@@ -3,7 +3,7 @@ import "./Bookings.css";
 
 function BookingProfessionalPast(props) {
   return(
-    <div class="booking-card card">
+    <div className="booking-card card">
       <div className="metadata">
         <img src={props.picURL} alt={props.service} />
         <div className="metadata-text">

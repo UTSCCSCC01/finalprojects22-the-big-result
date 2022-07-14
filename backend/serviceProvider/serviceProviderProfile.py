@@ -9,20 +9,24 @@ serviceProviderBlueprint = Blueprint("serviceProvider", __name__)
 def getServiceProviderProfile():
 
     dao = ProfessionalsDAO()
-    print(request.args.get("id"))
-    professional = dao.getProfessionalOnId(request.args.get("id"))
+    profId = request.args.get("id")
+    print(profId)
+    professional = dao.getProfessionalOnId(profId)
+    servicelst = getServices(professional.services)
 
-    return {
+    res = {
             "name": professional.firstName + " " + professional.lastName,
             "rating": professional.ratings,
             "description": professional.description,
-            "services": getServices(professional.services),
+            "services": servicelst,
             "profilePictureLink": "https://picsum.photos/200",
             "location": professional.location,
-            "calendar": "Some calendar stuff here that we would probably need later on",
-            # "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id))
-            "reviews": getReviews(dao.getFirstNReviewsForProfesional(professional.id))
+            "calendar": "Some calendar stuff here that we would probably need later on", # TODO (A): remove this?
+            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id)),
+            "serviceDescriptions": getDescriptions(int(profId), servicelst)
         }
+    print(res)
+    return jsonify(res)
 
 @serviceProviderBlueprint.route("/serviceProvider", methods=["PUT"])
 def updateServiceProviderProfile():
@@ -53,7 +57,7 @@ def updateServiceProviderProfile():
     dao_service = ProfessionalServicesDAO()
     for service in add_services:
         dao_service.addServiceProvidedByProfessional(id, service.get("service"), 
-                                                    service.get("price"))
+                                                    service.get("price"), service.get("description"))
         
     for service in delete_services:
         dao_service.removeServiceProvidedByProfessional(id, service)
@@ -88,3 +92,10 @@ def getReviews(reviews, numRevs = 3) -> list:
             "reviewDescription": reviews[i].description
         })
     return reviewList
+
+def getDescriptions(id, services) -> list:
+  profDao = ProfessionalServicesDAO()
+  descriptions = {}
+  for service in services:
+    descriptions[service] = profDao.getDescriptionOfServicesByProfessional(id, service)
+  return descriptions
