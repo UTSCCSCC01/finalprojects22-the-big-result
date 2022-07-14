@@ -58,9 +58,10 @@ class ProfessionalsDAO:
         return queryRes is not None
 
     def addProfessional(self, firstname: str, lastname: str, email: str, username: str, password: str, description=None,
-                        rating=0, averageCost=None) -> None:
+                        rating=0, averageCost=0, location="Toronto, Ontario") -> None:
         newProfess = Professional(firstName=firstname, lastName=lastname, email=email, username=username,
-                                  password=password, description=description, ratings=rating, averageCost=averageCost)
+                                  password=password, description=description, ratings=rating,
+                                  averageCost=averageCost, location=location)
         db.session.add(newProfess)
         db.session.commit()
 
