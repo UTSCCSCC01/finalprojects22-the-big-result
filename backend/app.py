@@ -22,6 +22,7 @@ from listServiceProviders import list_providers_blueprint
 from bookings.listBookings import list_bookings_blueprint
 from calender import calender_blueprint # new
 from book import book_blueprint # new
+from reviews.reviews import review_blueprint
 
 
 def getDBURL() -> str:
@@ -39,6 +40,7 @@ def createApp():
     app.register_blueprint(list_bookings_blueprint)
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
+    app.register_blueprint(review_blueprint)
 
     CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
     # JWTManager(app)
