@@ -288,7 +288,6 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
             onNavigate={onNavigate}
           />
         </div>
-        {/* TODO: redirects to login page... why? */}
         <Link to="/p/availability"><button
           onClick={
             mode === Constants.RECURRING

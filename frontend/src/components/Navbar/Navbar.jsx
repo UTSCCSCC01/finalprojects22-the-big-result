@@ -70,7 +70,7 @@ function Navbar() {
                     <Link to="/p/upcomingBookings">Upcoming Bookings</Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to="/p/pastBookings">Past Bookings</Link>
+                    <Link to="/p/pastAndCancelledBookings">Past and Cancelled Bookings</Link>
                   </MenuItem>
                 </Menu>
               </>
@@ -90,7 +90,7 @@ function Navbar() {
                     <Link to="/c/upcomingBookings">Upcoming Bookings</Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to="/c/pastBookings">Past Bookings</Link>
+                    <Link to="/c/pastAndCancelledBookings">Past and Cancelled Bookings</Link>
                   </MenuItem>
                 </Menu>
               </>
@@ -99,12 +99,12 @@ function Navbar() {
               <Logout />
             ) : (
               <>
-                <button className="signup-btn">
-                  <Link to="/signup">Sign Up</Link>
-                </button>
-                <button className="login-btn">
-                  <Link to="/login">Login</Link>
-                </button>
+                <Link to="/signup">
+                  <button className="signup-btn">Sign Up</button>
+                </Link>
+                <Link to="/login">
+                  <button className="login-btn">Login</button>
+                </Link>
               </>
             )}
           </div>

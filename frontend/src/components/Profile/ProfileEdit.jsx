@@ -1,20 +1,77 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 import "./Profile.css";
 import Review from "../Review/Review";
+import ServiceInfo from "./ServiceInfo";
+
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  width: "400px",
+  padding: "20px",
+  border: "2px solid black",
+  p: 4,
+};
+
 function ProfileEdit(props) {
+  const navigate = useNavigate();
   const [servicesList, setServicesList] = useState([]);
+  const [origServices, setOrigServices] = useState([]);
   const [editForm, setEditForm] = useState({});
 
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    // navigate("/profile/" + props.id);
+    // window.location = "/profile/" + props.id;
+  };
+
+  const [formOpen, setFormOpen] = useState(false);
+  const [servicesDesc, setServicesDesc] = useState([]);
+
+  const handleFormOpen = () => {
+    setFormOpen(true);
+    //Set the initial values for the services selected
+    let servicesOffered = [];
+    editForm.services.forEach((svc) => {
+      servicesOffered.push({ service: svc, desc: "", price: 0 });
+    });
+    setServicesDesc(servicesOffered);
+  };
+
+  //Onchange to any of the new forms, update the servicesOffered descriptions and prices as required
+  const addToServicesDesc = (newDesc) => {
+    let newServicesDesc = [];
+    servicesDesc.forEach((desc) => {
+      if (desc.service !== newDesc.service) {
+        newServicesDesc.push(desc);
+      } else newServicesDesc.push(newDesc);
+    });
+    setServicesDesc(newServicesDesc);
+  };
+
+  const handleFormClose = () => {
+    setFormOpen(false);
+  };
 
   useEffect(() => {
     axios({
       method: "GET",
-      url: `http://127.0.0.1:5000/services-list`,
+      url: `http://127.0.0.1:5000/getServices`,
     }).then((res) => {
       let services = [];
       res.data.services.forEach((element) =>
@@ -28,25 +85,31 @@ function ProfileEdit(props) {
         profilePictureLink: props.profilePictureLink,
         description: props.description,
         services: props.services,
-        location: "",
+        // location: "",
       });
+      setOrigServices(props.services);
     });
   }, [props]);
 
   const handleSubmit = () => {
     axios({
-      method: "POST",
-      url: "http://127.0.0.1:5000/editProfile",
+      method: "PUT",
+      url: "http://127.0.0.1:5000/serviceProvider",
       data: {
         id: props.id,
         profilePictureLink: editForm.profilePictureLink,
         description: editForm.description,
         services: editForm.services,
-        // location: editForm/location
+        servicesDesc: servicesDesc,
+        // location: editForm.location
       },
     })
       .then((res) => {
-        navigate("/");
+        if (res.data.status === 200) {
+          setFormOpen(false);
+          handleOpen();
+        }
+        console.log(res.data.status);
       })
       .catch((err) => {
         console.log(err);
@@ -66,6 +129,16 @@ function ProfileEdit(props) {
       ...prev,
       services: Array.isArray(e) ? e.map((option) => option.value) : [],
     }));
+  };
+
+  const getServices = () => {
+    let finalServices = [];
+    editForm.services.forEach((element) => {
+      if (!origServices.includes(element)) {
+        finalServices.push(element);
+      }
+    });
+    return finalServices;
   };
 
   return (
@@ -101,15 +174,26 @@ function ProfileEdit(props) {
               rows="5"
               cols="70"
             />
-            <br /> <br />
-            <input
+
+            <br />
+
+            <p>{props.location}</p>
+            {/* <input
               placeholder="Location"
               onChange={handleChange}
               type="text"
               name="location"
               value={editForm.location}
-            />
-            <p className="svc-tag">{props.services}</p>
+            /> */}
+            {/* {console.log(props.services)} */}
+            {/* <p className="svc-tag">{props.services}</p> */}
+            <div className="svc-tags">
+              {editForm.services &&
+                editForm.services.map((svc) => (
+                  <p className="svc-tag">{svc}</p>
+                ))}
+            </div>
+
             {servicesList && editForm.services && (
               <Select
                 placeholder="Services"
@@ -122,15 +206,16 @@ function ProfileEdit(props) {
                 options={servicesList}
               />
             )}
+
             <br />
-            <div className="btn-group">
-              <button onClick={handleSubmit}>Edit Profile</button>
-              <button>Edit Calendar</button>
-            </div>
+
+            <button onClick={handleFormOpen}>Edit Profile</button>
           </div>
         </div>
       </div>
+
       <br />
+
       <div className="reviews-container">
         <h1>Reviews</h1>
         {props.length > 0 &&
@@ -147,6 +232,29 @@ function ProfileEdit(props) {
         <br />
         <button>See All Reviews </button>
       </div>
+
+      <Modal open={open} onClose={handleClose} aria-labelledby="title">
+        <Box sx={style}>
+          <Typography id="title" variant="h6" component="h2">
+            Success!
+          </Typography>
+          <Typography id="description" sx={{ mt: 2 }}>
+            Your profile has been updated.
+          </Typography>
+        </Box>
+      </Modal>
+
+      <Dialog open={formOpen} onClose={handleFormClose} scroll="paper">
+        <DialogTitle>Enter Additional Information For Services</DialogTitle>
+        {editForm.services &&
+          origServices &&
+          getServices().map((arg) => (
+            <ServiceInfo addToServicesDesc={addToServicesDesc} service={arg} />
+          ))}
+        <DialogActions>
+          <Button onClick={handleSubmit}>Submit</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

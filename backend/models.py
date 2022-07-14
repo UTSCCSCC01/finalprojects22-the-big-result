@@ -2,9 +2,9 @@ import enum
 from typing import List
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, date
+from datetime import datetime, date, time
 from sqlalchemy import Enum, func
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
 
@@ -88,6 +88,7 @@ class ProfessionalServices(db.Model):
     professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"), primary_key=True)
     serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"), primary_key=True)
     defaultPrice: float = db.Column(db.Float, default=0)
+    serviceDescription: str = db.Column(db.String(200), default='')
 
     __table_args__ = {'extend_existing': True}
 
@@ -118,10 +119,16 @@ class Professional(User):
     location: str = db.Column(db.String(500),default= "UTSC")
 
     # List of services
-    services = relationship("Services", secondary=professionalServices, lazy='subquery', back_populates="professionals")
+    services: List = db.relationship("Services", secondary=professionalServices, lazy='subquery', back_populates="professionals")
 
     # List of reviews
-    reviews = relationship('Reviews', backref="professional", lazy='dynamic')
+    reviews: List = db.relationship('Reviews', back_populates="professional", lazy='dynamic')
+
+    availabilitiesRec = db.relationship('AvailabilitiesRec',back_populates='professional')
+    availabilitiesNonRec = db.relationship('AvailabilitiesNonRec',back_populates='professional')
+
+    def getFirstNReviews(self, numReviews=3):
+        return self.reviews.limit(numReviews).all()
 
     __mapper_args__ = {
         "polymorphic_identity": "Professional",
@@ -133,7 +140,7 @@ class Customer(User):
     id: int = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
 
     # List of bookings
-    bookings = relationship('Bookings', backref='customer', lazy=True)
+    bookings = db.relationship('Bookings',back_populates='customer',lazy=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "Customer",
@@ -167,7 +174,8 @@ class Reviews(db.Model):
     description: str = db.Column(db.Text, nullable=False)
     ratings: int = db.Column(db.Integer, db.CheckConstraint("ratings >= 1 AND ratings <= 5"), nullable=False)
 
-    booking = relationship('Bookings', backref= backref("review", uselist=False))
+    booking = db.relationship('Bookings', back_populates='review')
+    professional: Professional = db.relationship('Professional',back_populates='reviews')
 
 
 class Pictures(db.Model):
@@ -199,7 +207,11 @@ class Bookings(db.Model):
     specialInstructions: str = db.Column(db.String(500), nullable=True)
     serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"))
 
-    review: Reviews  # This works because of the backref param in the Reviews ORM class
+    # review: Reviews  # This works because of the backref param in the Reviews ORM class. EDIT: Don't need anymore !!!
+    # Using back_populates instead!!!
+    review: Reviews = db.relationship('Reviews',back_populates='booking', uselist=False)
+
+    customer: Customer = db.relationship('Customer',back_populates='bookings',lazy=True)
 
 
 class Services(db.Model):
@@ -207,7 +219,7 @@ class Services(db.Model):
     serviceName: str = db.Column(db.String(200), primary_key=True, unique=True)
     description: str = db.Column(db.String(500), nullable=False)
 
-    professionals = db.relationship("Professional", secondary=professionalServices, back_populates="services")
+    professionals: List[Professional] = db.relationship("Professional", secondary=professionalServices, back_populates="services")
 
 
 class AvailabilitiesRec(db.Model):
@@ -215,10 +227,10 @@ class AvailabilitiesRec(db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
     professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
     dayOfWeek: int = db.Column(db.Integer)
-    startTime = db.Column(db.Time)
-    endTime = db.Column(db.Time)
+    startTime: time = db.Column(db.Time)
+    endTime: time = db.Column(db.Time)
 
-    professional: Professional = relationship('Professional', backref='availabilitiesRec', lazy=True)
+    professional: Professional = db.relationship('Professional',back_populates='availabilitiesRec')
 
 
 
@@ -227,12 +239,11 @@ class AvailabilitiesNonRec(db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
     professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
     date: date = db.Column(db.Date, nullable=False)
-    startTime = db.Column(db.Time, nullable=False)
-    endTime = db.Column(db.Time, nullable=False)
+    startTime: time = db.Column(db.Time, nullable=False)
+    endTime: time = db.Column(db.Time, nullable=False)
     isAvailable: int = db.Column(db.Integer, nullable=False)
 
-    professional: Professional = relationship('Professional', backref='availabilitiesNonRec', lazy=True)
-
+    professional: Professional = relationship('Professional',back_populates='availabilitiesNonRec')
 
 
 def runDBQueries():
@@ -286,8 +297,29 @@ def runDBQueries():
     # print(availNonRec.isAvailable)
     # print(availNonRec.professional.firstName)
 
+    # print(Professional.query.all()[0].reviews)
+    # print(Professional.query.all()[0].services)
+    #
+    # print(Reviews.query.all()[0].professional)
 
+    # print(Customer.query.first().bookings)
+    # print(Bookings.query.first().customer)
 
+    # print(Bookings.query.first().review)
+    # print(Reviews.query.first().booking)
+
+    # print(AvailabilitiesRec.query.first().professional)
+    # print(Professional.query.first().availabilitiesRec)
+
+    # print(AvailabilitiesNonRec.query.first().professional)
+
+    # start_time: time = Professional.query.first().availabilitiesNonRec[1].startTime
+    # print(type(start_time))
+
+    # print(isinstance(Professional.query.first().services, List))
+
+    prof36: Professional = Professional.query.filter_by(id=36).first()
+    print(prof36.getFirstNReviews(3))
     pass
 
 

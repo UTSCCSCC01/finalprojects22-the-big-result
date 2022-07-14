@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -8,7 +8,6 @@ import '../Calender.css';
 import * as EvFn from "../EventActions";
 import * as Constants from '../Constants'
 import { getAvailability } from "../../../APICalls"
-import { AuthContext } from "../../../context/AuthProvider";
 
 import moment from "moment";
 
@@ -16,12 +15,11 @@ moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
 
 
-function AvailabilityCalendar({ profId, id, sendBookingInfo }) {
+function AvailabilityCalendar({ profId, sendBookingInfo }) {
   const [viewAvailabilities, setViewAvailabilities] = useState([]);
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
-  const { user } = useContext(AuthContext);
-
-  useEffect(() => { 
+  
+  useEffect(() => {
     getAvailability({ 
       professionalId: parseInt(profId), 
       start: EvFn.getDateFromDateTime(viewDate),
@@ -42,7 +40,6 @@ function AvailabilityCalendar({ profId, id, sendBookingInfo }) {
       start: EvFn.getTimeFromDateTime(event.start),
       end: EvFn.getTimeFromDateTime(event.end),
       date: EvFn.getDateFromDateTime(event.start),
-      customerId: id,
       // NOTE: instructions is set in the Confirmation page
       // NOTE: the price, location, serviceName is filled in the backend by using the professionalId passed
     });
