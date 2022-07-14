@@ -36,6 +36,9 @@ function CustomerBooking() {
     }).catch((error) => {
       console.log(error); // token not valid? 
     });
+
+    console.log("current booking info", bookingInfo);
+
   }, []);
 
   const getBookingInfo = (data) => {

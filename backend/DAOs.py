@@ -58,9 +58,10 @@ class ProfessionalsDAO:
         return queryRes is not None
 
     def addProfessional(self, firstname: str, lastname: str, email: str, username: str, password: str, description=None,
-                        rating=0, averageCost=None) -> None:
+                        rating=0, averageCost=0, location="Toronto, Ontario") -> None:
         newProfess = Professional(firstName=firstname, lastName=lastname, email=email, username=username,
-                                  password=password, description=description, ratings=rating, averageCost=averageCost)
+                                  password=password, description=description, ratings=rating,
+                                  averageCost=averageCost, location=location)
         db.session.add(newProfess)
         db.session.commit()
 
@@ -277,6 +278,37 @@ class BookingsDAO:
 
         db.session.add(newBooking)
         db.session.commit()
+    
+    
+    def resolveBooking(self, id: int, status: str):
+        booking = Bookings.query.filter_by(id=id).first()
+        booking.status = status
+        db.session.commit()
+
+    # NOTE: assume booking time is fixed to an hour so add availability for an hour
+    def cancelBooking(self, id: int):
+      booking = Bookings.query.filter_by(id=id).first()
+      booking.status = Status.CANCELLED
+      db.session.commit()
+
+      # add cancelled booking as non recurring availability
+      profId = booking.professionalID
+      date = booking.beginServiceDateTime.date()
+      startTime = booking.beginServiceDateTime.time()
+      endTime = booking.endServiceDateTime.time()
+      newAvailability = AvailabilitiesNonRec(professionalID=profId, date=date,startTime=startTime,endTime=endTime, isAvailable=1)
+      db.session.add(newAvailability)
+      db.session.commit()
+
+    def getNonCancelledBookingsFromProfIDinRangeWithStatusIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime):
+      return [booking for booking in db.session.query(Bookings)
+                                       .filter(Bookings.professionalID==profID, Bookings.status!=Status.CANCELLED)
+                                       .filter(rangeStart < Bookings.endServiceDateTime)
+                                       .filter(Bookings.beginServiceDateTime < rangeEnd)]
+
+    def getBookingsFromProfIDinRangeWithStatusIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime, status: Status) -> List[Bookings]:
+        return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\
+            .filter(Bookings.beginServiceDateTime < rangeEnd).filter(Bookings.status == status).all()
 
     # NOTE: assume booking time is fixed to an hour so add availability for an hour
     def cancelBooking(self, id: int):

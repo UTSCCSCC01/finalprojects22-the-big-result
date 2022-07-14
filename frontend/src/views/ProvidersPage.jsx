@@ -138,7 +138,6 @@ function ProviderPage() {
 
       {providerList.length > 0 ? (
         <div className="providers">
-          {console.log(providerList)}
           {providerList.map((provider) => (
             <Provider
               key={provider.id}
