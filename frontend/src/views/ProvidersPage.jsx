@@ -150,6 +150,7 @@ function ProviderPage() {
               rating={provider.rating}
               location={provider.location}
               profilePicURL={provider.profilePicURL}
+              review = {provider.review}
             />
           ))}
         </div>

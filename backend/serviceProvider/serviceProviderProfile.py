@@ -1,3 +1,4 @@
+import json
 from flask import request
 from flask import Blueprint, jsonify
 from DAOs import ProfessionalsDAO, CustomersDAO, ProfessionalServicesDAO
@@ -21,7 +22,7 @@ def getServiceProviderProfile():
             "profilePictureLink": "https://picsum.photos/200",
             "location": professional.location,
             "calendar": "Some calendar stuff here that we would probably need later on", # TODO (A): remove this?
-            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id)),
+            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id).all()),
             "serviceDescriptions": getDescriptions(int(profId), servicelst)
         }
     print(res)
@@ -36,20 +37,28 @@ def updateServiceProviderProfile():
     description = json_object.get("description")
     services = json_object.get("services")
     # location = json_object.get("location")
+    servicesDesc = json_object.get("servicesDesc")
 
-    print(id, description, services)
+    # print (servicesDesc[0].get("price"))
+    # print (services)
+    # print(id, description, services)
 
     dao = ProfessionalsDAO()
     dao.updateDescForProfessional(id, description)
     cur_services = getServices(dao.getAllServicesForProfessional(id))
 
     delete_services = [service for service in cur_services if service not in services]
-    add_services = [service for service in services if service not in cur_services]
+    # add_services = [service for service in services if service not in cur_services]
+    add_services = []
+    for serviceDesc in servicesDesc:
+        if serviceDesc.get("service") not in cur_services:
+            add_services.append(serviceDesc)
 
     dao_service = ProfessionalServicesDAO()
     for service in add_services:
-        dao_service.addServiceProvidedByProfessional(id, service, 60, '') # NOTE: for now just add empty description?
-
+        dao_service.addServiceProvidedByProfessional(id, service.get("service"), 
+                                                    service.get("price"), service.get("desc"))
+        
     for service in delete_services:
         dao_service.removeServiceProvidedByProfessional(id, service)
 
