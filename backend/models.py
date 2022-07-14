@@ -104,6 +104,8 @@ class User(db.Model):
 
     userType: str = db.Column(db.String(50))
 
+    settings = db.relationship('Settings',back_populates='user', uselist=False)
+
     __mapper_args__ = {
         "polymorphic_identity": "BaseUser",
         "polymorphic_on": userType,
@@ -162,6 +164,8 @@ class Settings(db.Model):
     id: int = db.Column(db.Integer, db.ForeignKey("User.id"), primary_key=True)
     billing: str = db.Column(db.Text, nullable=True)
     profilePicLink: str = db.Column(db.String(300), nullable=True, default="https://picsum.photos/100")
+
+    user: User = db.relationship('User',back_populates='settings')
 
 
 class Reviews(db.Model):
@@ -230,7 +234,7 @@ class AvailabilitiesRec(db.Model):
     startTime: time = db.Column(db.Time)
     endTime: time = db.Column(db.Time)
 
-    professional: Professional = db.relationship('Professional',back_populates='availabilitiesRec')
+    professional: Professional = db.relationship('Professional', back_populates='availabilitiesRec')
 
 
 

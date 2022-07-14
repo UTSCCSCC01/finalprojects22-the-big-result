@@ -58,6 +58,10 @@
   overflow-y: scroll !important;
 }
 
+.service-to-book {
+  margin: 10px;
+}
+
 .service-to-book:hover {
   cursor: pointer;
 }
@@ -73,6 +77,12 @@
 
 .service-options {
   text-align: center;
-  display:inline-block;
+  /* display:inline-block; */
   /* TODO (A): figure out how to align service toggles horizontally */
+}
+
+.flex-container {
+  display: flex;
+  /* justify-content:space-between; */
+  align-items:center;
 }

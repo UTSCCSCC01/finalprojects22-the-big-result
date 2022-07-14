@@ -22,10 +22,10 @@ def getServiceProviderProfile():
             "profilePictureLink": "https://picsum.photos/200",
             "location": professional.location,
             "calendar": "Some calendar stuff here that we would probably need later on", # TODO (A): remove this?
-            "reviews": getReviews(dao.getAllReviewsForProfesional(professional.id).all()),
-            "serviceDescriptions": getDescriptions(int(profId), servicelst)
+            "reviews": getReviews(dao.getFirstNReviewsForProfesional(professional.id)),
+            "serviceDescriptions": getDescriptionsForServices(int(profId), servicelst),
+            "hourlyRates": getDefaultPriceForServices(int(profId), servicelst)
         }
-    print(res)
     return jsonify(res)
 
 @serviceProviderBlueprint.route("/serviceProvider", methods=["PUT"])
@@ -93,9 +93,16 @@ def getReviews(reviews, numRevs = 3) -> list:
         })
     return reviewList
 
-def getDescriptions(id, services) -> list:
+def getDescriptionsForServices(id, services) -> list:
   profDao = ProfessionalServicesDAO()
   descriptions = {}
   for service in services:
     descriptions[service] = profDao.getDescriptionOfServicesByProfessional(id, service)
   return descriptions
+
+def getDefaultPriceForServices(id, services) -> list:
+  profDao = ProfessionalServicesDAO()
+  defaultPrices = {}
+  for service in services:
+    defaultPrices[service] = profDao.getDefaultPriceOfServiceByProfessional(id, service)
+  return defaultPrices

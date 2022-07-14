@@ -10,9 +10,6 @@ function ProfessionalUpBookingsPage() {
   const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
-    // getUsersMe({
-    //   Authorization: `Bearer ${ user.access_token }`
-    // })
     axiosAuth
       .get("/users/me")
       .then((res) => {
@@ -23,13 +20,6 @@ function ProfessionalUpBookingsPage() {
         getProfessionalUpcomingBookings({
           professionalId: parseInt(res.data.id),
         })
-          // axios({
-          //   method: "GET",
-          //   url: "http://127.0.0.1:5000/professionalUpcomingBookings",
-          //   headers: {
-          //     professionalId: 36
-          //   }
-          // })
           .then((response) => {
             console.log(response.data);
             setBookingsList(response.data.bookings);

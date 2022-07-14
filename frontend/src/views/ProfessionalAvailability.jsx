@@ -21,12 +21,13 @@ function ProfessionalAvailability() {
       .get("/users/me")
       .then((res) => {
         setId(res.data.id);
+        console.log('id of professional', res.data.id);
       })
       .catch((error) => {
         console.log(error); // token not valid?
       });
   }, []);
-
+  
   const getMode = (m) => {
     console.log("got mode...", m);
     setMode(m);
@@ -35,21 +36,21 @@ function ProfessionalAvailability() {
   // send mode back and forth between parent and children
   return (
     <div>
-      {mode === Constants.RECURRING && (
+      {mode === Constants.RECURRING && id && (
         <EditAvailability
           id={id}
           sendMode={getMode}
           mode={Constants.RECURRING}
         />
       )}
-      {mode === Constants.NONRECURR && (
+      {mode === Constants.NONRECURR && id && (
         <EditAvailability
           id={id}
           sendMode={getMode}
           mode={Constants.NONRECURR}
         />
       )}
-      {mode === Constants.VIEW && (
+      {mode === Constants.VIEW && id && (
         <ViewAvailability id={id} sendMode={getMode} />
       )}
     </div>

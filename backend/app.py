@@ -11,6 +11,7 @@ from DAOs import runDAOQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
+from profile.userSettingsProfile import profileBluePrint
 
 from signup import signup_blueprint
 from listServices import services_blueprint
@@ -40,6 +41,7 @@ def createApp():
     app.register_blueprint(list_bookings_blueprint)
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
+    app.register_blueprint(profileBluePrint, url_prefix='/profile')
     app.register_blueprint(reviews_blueprint)
 
     CORS(app, origins=['http://localhost:3000'], supports_credentials=True)

@@ -49,6 +49,8 @@ function Navbar() {
             <Link to="/serviceProviders">Service Providers</Link>
             {loggedIn && (
               <>
+                {/*<Link to="/myProfile">My Profile</Link>*/}
+                <Link to="/profileSettings">Settings</Link>
                 <Link to="/myProfile">My Profile</Link>
               </>
             )}
