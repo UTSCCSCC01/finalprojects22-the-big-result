@@ -1,48 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import "../../Form.css";
-
-import axios from "axios";
+import { Link } from "react-router-dom";
+import { addBookings, getUsersMe } from "../../../APICalls"
+import { AuthContext } from "../../../context/AuthProvider";
 
 function BookingConfirmation(props) {
-
-  useEffect(() => { 
-    console.log('got props...', props.bookingInfo);
-  }, []);
+  const [instructions, setInstructions] = useState('');
+  const { user } = useContext(AuthContext);
 
   const onConfirmation = () => {
-    axios({ 
-      method: "POST", url: "http://localhost:5000/addBookings",
-      data: { 
-        professionalId: props.bookingInfo.professionalId, 
-        start: props.bookingInfo.start,
-        end: props.bookingInfo.end,
-        date: props.bookingInfo.date,
-        location: props.bookingInfo.location,
-        price: props.bookingInfo.price,
-        customerId: props.bookingInfo.customerId,
-        serviceName: props.bookingInfo.serviceName,
-        instructions: props.bookingInfo.instructions
-      }
-     }).then((res) => {
-      window.location = "/c/booking";
-     }
-     ).catch((err) => {
-        console.log(err);
-      });
+    getUsersMe({ 
+      Authorization: `Bearer ${ user.access_token }` 
+    }).then((res) => {
+      console.log('id of customer:', res.data.id);
+      addBookings({...props.bookingInfo, 
+        instructions: instructions 
+     }).catch((err) => console.log(err));
+    }).catch((err) => console.log(err));
   }
 
-  const onMakeChanges = () => {
-    window.location = "/c/booking";
-  }
-
-  // TODO: get the professional name instead of id
   return (
     <div className="page">
-      <h2>Service: {props.bookingInfo.serviceName}</h2>
-      <h2>Provider Name: {props.bookingInfo.professionalId}</h2>
+      <h2>Service: {props.bookingInfo.service}</h2>
+      <h2>Provider Name: {props.bookingInfo.providerName}</h2>
       <p>Date: {props.bookingInfo.date}</p>
       <p>From: {props.bookingInfo.start} to {props.bookingInfo.end}</p>
-      <p>Hourly Rate: {props.bookingInfo.price}</p>
+      <p>Hourly Rate: {props.bookingInfo.cost}</p>
       <form>
         <label for="payment-select">Select a payment method</label>
         <br />
@@ -53,15 +36,11 @@ function BookingConfirmation(props) {
           <option value="credit">Credit</option>
           <option value="paypal">Paypal</option>
         </select>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <textarea placeholder="Enter your instruction here." value={instructions} onChange={(e) => setInstructions(e.target.value)}></textarea>
       </form>
-      <button onClick={onConfirmation} style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Confirm Details</button>
-      <button onClick={onMakeChanges} style={{'padding':'10px 100px', 'margin': '10px 25px'}}>Make Changes</button>
+      {/* TODO: styling put in CSS  */}
+      <button onClick={onConfirmation} style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/c/upcomingBookings`}>Confirm Details</Link></button>
+      <button style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/`}>Cancel</Link></button>
     </div>
   );
 }

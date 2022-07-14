@@ -1,8 +1,10 @@
 import { useState } from "react";
-import axios from "axios";
 import "../Form.css";
+import { Link, useNavigate } from "react-router-dom";
+import { signUpCustomer } from "../../APICalls";
 
 function SignUpCustomer() {
+  const navigate = useNavigate();
   const [signupForm, setSignupForm] = useState({
     firstName: "",
     lastName: "",
@@ -13,18 +15,14 @@ function SignUpCustomer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios({
-      method: "POST",
-      url: `http://localhost:5000/signup/customer`,
-      data: {
-        firstName: signupForm.firstName,
-        lastName: signupForm.lastName,
-        email: signupForm.email,
-        password: signupForm.password,
-      },
+    signUpCustomer({
+      firstName: signupForm.firstName,
+      lastName: signupForm.lastName,
+      email: signupForm.email,
+      password: signupForm.password,
     })
       .then(() => {
-        window.location = "/login";
+        navigate("/login");
       })
       .catch((err) => {
         setFailedSignup(true);
@@ -86,7 +84,7 @@ function SignUpCustomer() {
       {failedSignup && <p className="error">User already exists.</p>}
       <button type="submit">Sign Up!</button>
       <p>
-        Already have an account? <a href="/login">Log In</a>
+        Already have an account? <Link to="/login">Log In</Link>
       </p>
     </form>
   );

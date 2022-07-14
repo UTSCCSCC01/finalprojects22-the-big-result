@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { AppBar, Toolbar, ThemeProvider, createTheme } from "@mui/material";
+import { AppBar, createTheme, ThemeProvider, Toolbar } from "@mui/material";
+import { MenuItem, InputLabel, FormControl, Select, Menu } from "@mui/material";
+import { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
 
 import Logout from "../Logout/Logout";
 import "./Navbar.css";
@@ -16,51 +18,94 @@ const darkTheme = createTheme({
 
 function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const { user } = useContext(AuthContext);
 
-  //TODO: Fix this in next sprint, it should be calling verify-loggedin,
-  //but the jwt decoding and such isn't working as expected
+  //All for menu items in navbar, code from https://mui.com/material-ui/react-menu/
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/successlogin`,
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-    })
-      .then((res) => {
-        setLoggedIn(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoggedIn(false);
-      });
-  }, []);
+    //Just uses context to check if current user exists
+    if (user) setLoggedIn(true);
+    else setLoggedIn(false);
+  }, [user]);
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar id="navbar">
           <div className="navbar-left">
-            <a href="/">
+            <Link to="/">
               <h2>Amorr</h2>
-            </a>
+            </Link>
           </div>
           <div className="navbar-right">
-            <a href="/serviceProviders">Service Providers</a>
+            <Link to="/serviceProviders">Service Providers</Link>
             {loggedIn && (
               <>
-                <a href="/successlogin">My Profile</a>
-                <a href="/bookings">My Bookings</a>
+                {/*<Link to="/myProfile">My Profile</Link>*/}
+                <Link to="/profileSettings">Settings</Link>
+              </>
+            )}
+            {loggedIn && user && user.type === "provider" && (
+              <>
+                <button id="provider-menu-btn" onClick={handleClick}>
+                  My Bookings
+                </button>
+                <Menu
+                  id="provider-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem>
+                    <Link to="/p/availability">Add Availability</Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link to="/p/upcomingBookings">Upcoming Bookings</Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link to="/p/pastAndCancelledBookings">Past and Cancelled Bookings</Link>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+            {loggedIn && user && user.type === "customer" && (
+              <>
+                <button id="customer-menu-btn" onClick={handleClick}>
+                  My Bookings
+                </button>
+                <Menu
+                  id="customer-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem>
+                    <Link to="/c/upcomingBookings">Upcoming Bookings</Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link to="/c/pastAndCancelledBookings">Past and Cancelled Bookings</Link>
+                  </MenuItem>
+                </Menu>
               </>
             )}
             {loggedIn ? (
               <Logout />
             ) : (
               <>
-                <button className="signup-btn">
-                  <a href="/signup">Sign Up</a>
-                </button>
-                <button className="login-btn">
-                  <a href="/login">Login</a>
-                </button>
+                <Link to="/signup">
+                  <button className="signup-btn">Sign Up</button>
+                </Link>
+                <Link to="/login">
+                  <button className="login-btn">Login</button>
+                </Link>
               </>
             )}
           </div>

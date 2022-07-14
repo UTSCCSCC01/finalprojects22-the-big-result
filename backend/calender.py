@@ -12,7 +12,6 @@ calender_blueprint = Blueprint('calender_blueprint', __name__)
 recDAO_Object = AvailabilitiesRecDAO()
 nonRecDao_Object = AvailabilitiesNonRecDAO()
 
-
 # all availabilities - recurring and non-recurring merged
 @calender_blueprint.route('/getAvailability', methods=["GET"])
 def get_availability():

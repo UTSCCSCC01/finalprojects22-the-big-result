@@ -88,6 +88,7 @@ class ProfessionalServices(db.Model):
     professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"), primary_key=True)
     serviceName: str = db.Column(db.String(200), db.ForeignKey("Services.serviceName"), primary_key=True)
     defaultPrice: float = db.Column(db.Float, default=0)
+    serviceDescription: str = db.Column(db.String(200), default='')
 
     __table_args__ = {'extend_existing': True}
 
@@ -123,11 +124,13 @@ class Professional(User):
     services: List = db.relationship("Services", secondary=professionalServices, lazy='subquery', back_populates="professionals")
 
     # List of reviews
-    reviews: List = db.relationship('Reviews', back_populates="professional", lazy=True)
+    reviews: List = db.relationship('Reviews', back_populates="professional", lazy='dynamic')
 
     availabilitiesRec = db.relationship('AvailabilitiesRec',back_populates='professional')
     availabilitiesNonRec = db.relationship('AvailabilitiesNonRec',back_populates='professional')
 
+    def getFirstNReviews(self, numReviews=3):
+        return self.reviews.limit(numReviews).all()
 
     __mapper_args__ = {
         "polymorphic_identity": "Professional",
@@ -317,7 +320,10 @@ def runDBQueries():
     # start_time: time = Professional.query.first().availabilitiesNonRec[1].startTime
     # print(type(start_time))
 
-    print(isinstance(Professional.query.first().services, List))
+    # print(isinstance(Professional.query.first().services, List))
+
+    prof36: Professional = Professional.query.filter_by(id=36).first()
+    print(prof36.getFirstNReviews(3))
     pass
 
 

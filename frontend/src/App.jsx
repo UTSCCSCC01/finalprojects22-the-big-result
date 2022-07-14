@@ -1,21 +1,21 @@
-import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Login from "./components/Login/Login";
-import SuccessLogin from "./components/SuccessLogin/SuccessLogin";
-import ProvidersPage from "./views/ProvidersPage";
-import SignUp from "./views/SignUp";
-import Profile from "./components/Profile/Profile";
-import CustUpBookingsPage from "./views/CustUpBookingsPage"
-import CustPastBookingsPage from "./views/CustPastBookingsPage"
-import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
-import ProfessionalPastBookingsPage from "./views/ProfessionalPastBookingsPage";
-import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
+import Login from "./components/Login/Login";
+import SignUp from "./views/SignUp";
+import ProfilePage from "./views/ProfilePage";
+import CustPastAndCancelledBookingsPage from "./views/CustPastAndCancelledBookingsPage"
+import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
+import ProfessionalPastAndCancelledBookingsPage from "./views/ProfessionalPastAndCancelledBookingsPage";
+import Navbar from "./components/Navbar/Navbar";
+import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
+import ServiceList from "./components/Services/ServicesList";
+import CustomerBooking from "./views/CustomerBooking";
+import CustUpBookingsPage from "./views/CustUpBookingsPage";
 import LandingPage from "./views/LandingPage";
-import ServiceList from './components/Services/ServicesList'
-import CustomerBooking from './views/CustomerBooking';
-import ProfessionalAvailability from './views/ProfessionalAvailability'
+import ProfessionalAvailability from "./views/ProfessionalAvailability";
+import ProvidersPage from "./views/ProvidersPage";
+import MyProfile from "./components/MyProfile/MyProfile";
 import ProfileSettingsPage from "./views/ProfileSettingsPage";
 
 function App() {
@@ -26,19 +26,48 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/successLogin" element={<SuccessLogin />} />
           <Route path="/services" element={<ServiceList />} />
           <Route path="/serviceProviders" element={<ProvidersPage />} />
-          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/p/availability" element={<ProfessionalAvailability />} /> 
-          <Route path="/c/booking" element={<CustomerBooking />} /> 
-          <Route path="/customerUpcomingBookings" element={<CustUpBookingsPage/>} />
-          <Route path="/customerPastBookings" element={<CustPastBookingsPage/>} />
-          <Route path="/professionalUpcomingBookings" element={<ProfessionalUpBookingsPage/>}/>
-          <Route path="/professionalPastBookings" element={<ProfessionalPastBookingsPage/>}/>
-          <Route path="/profileSettings" element={<ProfileSettingsPage/>}/>
+          {/*<Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
 
+
+          {/* Protected route, should be accessible by both customers and providers*/}
+          <Route element={<ProtectedRoutes />}>
+            {/*<Route path="/myProfile" element={<MyProfile />} />*/}
+            <Route path="/profileSettings" element={<ProfileSettingsPage />} />
+          </Route>
+
+            {/*<Route element={<ProtectedRoutes />}>*/}
+            {/*    <Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
+            {/*</Route>*/}
+
+          {/* Protected route, only accessible by customers*/}
+          
+          <Route element={<ProtectedRoutes role={"customer"} />}>
+            <Route path="/c/booking/:profId" element={<CustomerBooking />} />
+            <Route
+              path="/c/upcomingBookings"
+              element={<CustUpBookingsPage />}
+            />
+            <Route path="/c/pastAndCancelledBookings" element={<CustPastAndCancelledBookingsPage />} />
+          </Route>
+          {/* Protected route, only accessible by providers*/}
+          <Route element={<ProtectedRoutes role={"provider"} />}>
+            <Route
+              path="/p/availability"
+              element={<ProfessionalAvailability />}
+            />
+            <Route
+              path="/p/upcomingBookings"
+              element={<ProfessionalUpBookingsPage />}
+            />
+            <Route
+              path="/p/pastAndCancelledBookings"
+              element={<ProfessionalPastAndCancelledBookingsPage />}
+            />
+          </Route>
         </Routes>
         <Footer />
       </>

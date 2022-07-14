@@ -3,21 +3,17 @@ import axios from "axios";
 import "./Profile.css"
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
+import {useAxiosAuth} from "../../APICalls";
 
-
-function stateHasProfileInfo(state){
-    return Object.keys(state).length > 0
-}
 
 function ProfileSettings(props){
     const [profileData, setProfileData] = useState({});
+    const axiosAuth = useAxiosAuth();
+
 
     useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://127.0.0.1:5000/profile/?id=${36}`
-    })
-      .then((response) => {
+        axiosAuth.get(`/profile/`)
+            .then((response) => {
         const res = response.data;
         setProfileData(res);
         console.log(res);
@@ -25,12 +21,27 @@ function ProfileSettings(props){
       .catch((err) => {
         console.log(err);
       });
+    // axios({
+    //   method: "GET",
+    //   url: `http://127.0.0.1:5000/profile/?id=${36}`,
+    //
+    // })
+    //   .then((response) => {
+    //     const res = response.data;
+    //     setProfileData(res);
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
     }, []);
 
     const [type, setType] = useState("profile");
 
   const handleButtonClick = (event, type) =>{
-      setType(type);
+      if(type !== null){
+          setType(type);
+      }
   };
 
     return (
@@ -47,7 +58,7 @@ function ProfileSettings(props){
 
                 </ToggleButtonGroup>
             </div>
-            <p>{stateHasProfileInfo(profileData)?
+            <p>{profileData?
                 <div className="settings-info">
 
                     {type === "profile" && <div>
@@ -65,7 +76,6 @@ function ProfileSettings(props){
                 </div>: "Loading ..."}</p>
         </div>
     );
-
 }
 
 export default ProfileSettings

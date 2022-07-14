@@ -1,3 +1,4 @@
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from jsonschema import validate
 
 from flask import Blueprint, request, jsonify
@@ -29,7 +30,7 @@ billingSchema = {
 
 def buildSettingsResponse(user: User, settings: Settings, settingsExist=True) -> dict:
     return {
-        "fullName": user.firstName + user.lastName,
+        "fullName": f"{user.firstName} {user.lastName}",
         "email": user.email,
         "userType": user.userType,
         "billingInfo":  json.loads(settings.billing) if settingsExist else "N/A"
@@ -38,8 +39,11 @@ def buildSettingsResponse(user: User, settings: Settings, settingsExist=True) ->
 
 # BAD CODE!!!
 @profileBluePrint.route('/')
+@jwt_required(optional=False)
 def doStuff():
-    userID: int = request.args.get("userId", default=36, type=int)
+    id = get_jwt_identity()
+    # userID: int = request.args.get("userId", default=36, type=int)
+    userID = int(id[:-1])
 
     userDao = UserDAO()
     settingsDao = SettingsDAO()

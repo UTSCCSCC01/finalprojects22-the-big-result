@@ -1,35 +1,35 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
+import { useEffect, useState, useContext } from "react";
 import BookingCustomerUpcoming from "../components/Bookings/BookingCustomerUpcoming";
 
-function CustUpBookingsPage(props) {
-  const [bookingsList, setBookingsList] = useState([]);
+import { getCustomerUpcomingBookings, useAxiosAuth } from "../APICalls";
+import { AuthContext } from "../context/AuthProvider";
+
+function CustUpBookingsPage() {
+  const [bookings, setBookings] = useState([]);
+  const { user } = useContext(AuthContext);
+  const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: "http://127.0.0.1:5000/customerUpcomingBookings",
-      headers: {
-        customerId: 34
-      }
-    })
-      .then((response) => {
-        const res = response.data;
-        setBookingsList(res.bookings);
+    axiosAuth
+      .get("/users/me")
+      .then((res) => {
+        getCustomerUpcomingBookings({ customerId: parseInt(res.data.id) })
+          .then((response) => {
+            setBookings(response.data.bookings);
+          })
+          .catch((err) => console.log(err.response));
       })
-      .catch((err) => {
-        console.log("ERR");
-        console.log(err.response);
-      });
-  }, []);
+      .catch((err) => console.log(err.response));
+  }, [user]);
 
   return (
     <div className="bookings-page page">
       <h1>Upcoming Bookings</h1>
       <div className="bookings">
-        {bookingsList.map((booking) => (
+        {bookings.map((booking) => (
           <BookingCustomerUpcoming
+            id={booking.id}
+            providerId = {booking.providerId}
             provider={booking.provider}
             service={booking.service}
             description={booking.description}
@@ -38,6 +38,7 @@ function CustUpBookingsPage(props) {
             date={booking.date}
             startTime={booking.startTime}
             endTime={booking.endTime}
+            startDateTime={booking.startDateTime}
           />
         ))}
       </div>

@@ -21,7 +21,7 @@ export const recurrEvents = (eventsToRecur, numWeeks) => {
   return recurredEvents;
 }
 
-export const getTimeFromDate = (date) => {
+export const getTimeFromDateTime = (date) => {
   return date.getHours().toString().padStart(2, '0') + ":" +
         date.getMinutes().toString().padStart(2, '0') + ":" +
         date.getSeconds().toString().padStart(2, '0');
@@ -31,6 +31,10 @@ export const getDateFromDateTime = (date) => {
   return date.getFullYear().toString().padStart(4, '0') + "-" +
         (date.getMonth()+1).toString().padStart(2, '0') + "-" +
         date.getDate().toString().padStart(2, '0');
+}
+
+export const dateToDateTime = (date) => {
+  return getDateFromDateTime(date) + " " + getTimeFromDateTime(date);
 }
 
 export const eventStyleGetter = (event, start, end, isSelected) => {
@@ -86,12 +90,23 @@ export const formatWeekEventsForGET = (res, curSunday, dataType) => {
         let end = new Date(resDate); 
         
         if (dataType==Constants.BOOKING) {
-          dataFormatted.push({
-            start: start, end: end, 
-            id: dataFormatted.length, 
-            title: Constants.BOOKING, 
-            color: Constants.BOOKING_COLOR
-          })
+          // if past the current date just have as resolved
+          if (new Date() > start) {
+            dataFormatted.push({
+              start: start, end: end, 
+              id: dataFormatted.length, 
+              title: Constants.RESOLVED_BOOKING, 
+              color: Constants.RESOLVED_BOOKING_COLOR
+            })
+          } else {
+            dataFormatted.push({
+              start: start, end: end, 
+              id: dataFormatted.length, 
+              title: Constants.BOOKING, 
+              color: Constants.BOOKING_COLOR
+            })
+          }
+          
         } else if (dataType==Constants.AVAILABILITY) {
           // only push if not past date
            
@@ -124,8 +139,8 @@ export const formatWeekEventsForPOST = (recurrAvailabilities) => {
   recurrAvailabilities.forEach(function(e) {
     let dayOfWeekI = e.start.getDay().toString();
     dataFormatted[dayOfWeekI].push({ 
-          start: getTimeFromDate(e.start), 
-          end: getTimeFromDate(e.end) 
+          start: getTimeFromDateTime(e.start), 
+          end: getTimeFromDateTime(e.end) 
       })
     })
     return dataFormatted;
@@ -143,8 +158,8 @@ export const formatSETNonRecurrAvailabilitiesData = (nonRecurrEvents) => {
   nonRecurrEvents.forEach(function(e) {
     let day = getDateFromDateTime(e.start);
     dataFormatted[day].push({ 
-          start: getTimeFromDate(e.start), 
-          end: getTimeFromDate(e.end) 
+          start: getTimeFromDateTime(e.start), 
+          end: getTimeFromDateTime(e.end) 
       })
     })
     
