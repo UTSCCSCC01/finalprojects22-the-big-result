@@ -25,7 +25,8 @@
   color: #5646ab;
 }
 
-#provider-menu a {
+#provider-menu a,
+#customer-menu a {
   color: white;
   text-decoration: none;
 }
