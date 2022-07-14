@@ -16,6 +16,7 @@ import LandingPage from "./views/LandingPage";
 import ProfessionalAvailability from "./views/ProfessionalAvailability";
 import ProvidersPage from "./views/ProvidersPage";
 import MyProfile from "./components/MyProfile/MyProfile";
+import LeaveReview from "./components/LeaveReview/LeaveReview";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
               element={<CustUpBookingsPage />}
             />
             <Route path="/c/pastAndCancelledBookings" element={<CustPastAndCancelledBookingsPage />} />
+            <Route path="/c/leaveReview" element={<LeaveReview />}/>
           </Route>
           {/* Protected route, only accessible by providers*/}
           <Route element={<ProtectedRoutes role={"provider"} />}>

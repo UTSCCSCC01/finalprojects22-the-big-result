@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import "./Booking.css";
 import "../Card.css";
 
@@ -26,7 +28,7 @@ function BookingCustomerPast(props) {
             {props.type == "Past" ? <button>Leave a Review</button> : <button>Cancel</button>} */}
             <button>Book Again</button>
             {/* <button>Leave a Review</button> */}
-            {props.review == "" ? <button>Leave A Review</button> : <button>See My Review</button>}
+            {props.review == "" ? <Link to="/c/leaveReview"><button>Leave A Review</button></Link> : <button>See My Review</button>}
             <button className="transparent-btn">About Professional</button>
           </div>
         </div>
