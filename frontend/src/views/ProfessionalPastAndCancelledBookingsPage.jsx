@@ -1,37 +1,43 @@
 import { useEffect, useState, useContext } from "react";
 
-import BookingProfessionalCancelled from "../components/Bookings/BookingProfessionalCancelled"
+import BookingProfessionalCancelled from "../components/Bookings/BookingProfessionalCancelled";
 import BookingProfessionalPast from "../components/Bookings/BookingProfessionalPast";
-import { getProfessionalCancelledBookings, getProfessionalPastBookings, getUsersMe, } from '../APICalls'
+import {
+  getProfessionalCancelledBookings,
+  getProfessionalPastBookings,
+  useAxiosAuth,
+} from "../APICalls";
 import { AuthContext } from "../context/AuthProvider";
 
 function ProfessionalPastAndCancelledBookingsPage() {
   const [pastBookings, setPastBookings] = useState([]);
   const [cancelledBookings, setCancelledBookings] = useState([]);
   const { user } = useContext(AuthContext);
+  const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
-    getUsersMe({ 
-      Authorization: `Bearer ${ user.access_token }` 
-    }).then((res) => {
-      console.log(res.data.id, "finding professional past bookings")
+    axiosAuth
+      .get("/users/me")
+      .then((res) => {
+        console.log(res.data.id, "finding professional past bookings");
 
-      getProfessionalPastBookings({professionalId: parseInt(res.data.id)})
-      .then((response) => {
-        setPastBookings(response.data.bookings);
+        getProfessionalPastBookings({ professionalId: parseInt(res.data.id) })
+          .then((response) => {
+            setPastBookings(response.data.bookings);
+          })
+          .catch((err) => console.log(err.response));
+
+        console.log(res.data.id, "finding professional cancelled bookings...");
+        getProfessionalCancelledBookings({
+          professionalId: parseInt(res.data.id),
+        }).then((response) => {
+          setCancelledBookings(response.data.bookings);
+        });
       })
       .catch((err) => console.log(err.response));
-
-      console.log(res.data.id, "finding professional cancelled bookings...")
-      getProfessionalCancelledBookings({professionalId: parseInt(res.data.id)})
-      .then((response) => {
-        setCancelledBookings(response.data.bookings);
-      })
-
-    }).catch((err) => console.log(err.response));
   }, []);
 
-  return(
+  return (
     <div className="bookings-page page">
       <h1>Past Bookings</h1>
       <div className="bookings">
@@ -66,7 +72,7 @@ function ProfessionalPastAndCancelledBookingsPage() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export default ProfessionalPastAndCancelledBookingsPage;

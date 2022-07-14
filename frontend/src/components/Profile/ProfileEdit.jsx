@@ -20,9 +20,9 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
-  width: 400,
-  border: "2px solid #000",
-  boxShadow: 24,
+  width: "400px",
+  padding: "20px",
+  border: "2px solid black",
   p: 4,
 };
 
@@ -37,7 +37,7 @@ function ProfileEdit(props) {
   const handleClose = () => {
     setOpen(false);
     // navigate("/profile/" + props.id);
-    window.location = "/profile/" + props.id;
+    // window.location = "/profile/" + props.id;
   };
 
   const [formOpen, setFormOpen] = useState(false);
@@ -188,8 +188,10 @@ function ProfileEdit(props) {
             {/* {console.log(props.services)} */}
             {/* <p className="svc-tag">{props.services}</p> */}
             <div className="svc-tags">
-              {props.services &&
-                props.services.map((svc) => <p className="svc-tag">{svc}</p>)}
+              {editForm.services &&
+                editForm.services.map((svc) => (
+                  <p className="svc-tag">{svc}</p>
+                ))}
             </div>
 
             {servicesList && editForm.services && (

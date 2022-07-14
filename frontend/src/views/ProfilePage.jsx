@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
-import { getUsersMe } from "../APICalls";
+import { useAxiosAuth } from "../APICalls";
 import axios from "axios";
 
 import Profile from "../components/Profile/Profile";
@@ -12,6 +12,7 @@ function ProfilePage(props) {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const [userId, setUserId] = useState("");
+  const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
     axios({
@@ -29,9 +30,11 @@ function ProfilePage(props) {
       });
 
     user &&
-      getUsersMe({
-        Authorization: `Bearer ${user.access_token}`,
-      })
+      // getUsersMe({
+      //   Authorization: `Bearer ${user.access_token}`,
+      // })
+      axiosAuth
+        .get("/users/me")
         .then((res) => {
           setUserId(res.data.id);
         })

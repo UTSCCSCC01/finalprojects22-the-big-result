@@ -36,6 +36,7 @@ def get_customer_past_bookings():
     customer_id = int(request.headers.get("customerId", None))
     output = {'bookings': []}
     bookings = bookingDAO.getBookingsFromStatusForCust(customer_id, "RESOLVED")
+    bookings += past_future_bookings(bookingDAO.getBookingsFromStatusForCust(customer_id, "BOOKED"))[0]
 
     for booking in bookings:
         provider = professionalDAO.getProfessionalOnId(booking.professionalID)

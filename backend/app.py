@@ -52,7 +52,7 @@ def createApp():
     #Need to enable jwt location in both headers and cookies as refresh tokens will be in an httponly cookie
     app.config['JWT_TOKEN_LOCATION'] = ["headers", "cookies"]
     app.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=60)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
