@@ -10,22 +10,25 @@ def reviews():
     id = request.args.get('id')
 
     profDAO = ProfessionalsDAO()
-    # getReviews(profDAO.getAllReviewsForProfesional(id))
-    return {"reviews": getReviews(profDAO.getAllReviewsForProfesional(id))} # First n? All?
+    professional = profDAO.getProfessionalOnId(id)
+    reviewList = {"reviews": getReviews(profDAO.getAllReviewsForProfesional(id)), 
+                    "name": professional.firstName + " " + professional.lastName,}
+    print(reviewList)
+    return reviewList
 
 
-def getReviews(reviews, numRevs = 3) -> list:
+def getReviews(reviews) -> list:
     reviewList = []
     custDAO = CustomersDAO()
 
-    for i in range(min(len(reviews), numRevs)):
+    for i in range(len(reviews)):
         customer = custDAO.getCustomerOnID(reviews[i].customerID)
         reviewList.append({
+            "id": reviews[i].id,
             "service": reviews[i].booking.serviceName,
             "reviewedBy": customer.firstName + " " + customer.lastName,
             "rating": reviews[i].ratings,
             "imageLink": "https://picsum.photos/100",
             "reviewDescription": reviews[i].description
         })
-    print(reviewList)
     return reviewList
