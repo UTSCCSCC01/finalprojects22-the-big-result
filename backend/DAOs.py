@@ -2,11 +2,20 @@ from typing import List
 
 from caching import cache
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
-    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status
+    AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status, Settings, User
 
 from datetime import time, date, datetime, timezone
 from sqlalchemy import select, update, delete, values
 from sqlalchemy import func
+
+
+class UserDAO:
+
+    def getAllUsers(self) -> List[User]:
+        return User.query.all()
+
+    def getUserById(self, id: int) -> User:
+        return User.query.filter_by(id=id).first()
 
 
 
@@ -352,7 +361,13 @@ class BookingsDAO:
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.beginServiceDateTime) \
             .filter(Bookings.endServiceDateTime < rangeEnd).all()
 
+class SettingsDAO:
 
+    def getAllSettings(self) -> List[Settings]:
+        return Settings.query.all()
+
+    def getSettingsByUserID(self, userID: int) -> Settings:
+        return Settings.query.filter_by(id=userID).first()
 
 def runDAOQueries():
     custDao = CustomersDAO()
