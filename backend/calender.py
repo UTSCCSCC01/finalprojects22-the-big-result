@@ -49,7 +49,7 @@ def get_availability():
                 bookings.append(booking)
                 break
 
-            if booking.status != Status.BOOKED:
+            if booking.status != Status.BOOKED and booking.status != Status.RESOLVED:
                 continue
 
             start_time = booking.beginServiceDateTime.time()

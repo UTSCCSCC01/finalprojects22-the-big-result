@@ -92,7 +92,10 @@ def get_bookings():
             if booking.beginServiceDateTime.date() > current_date:
                 weekly_bookings.append(booking)
                 break
-
+            
+            if booking.status == Status.RESCHEDULED or booking.status == Status.CANCELLED:
+              continue
+            
             start_time = booking.beginServiceDateTime.time()
             end_time = booking.endServiceDateTime.time()
             formatted_schedule[str(i)].append({
