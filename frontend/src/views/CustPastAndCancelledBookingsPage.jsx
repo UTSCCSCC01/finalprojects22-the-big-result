@@ -38,6 +38,8 @@ function CustPastAndCancelledBookingsPage() {
       <div className="bookings">
         {pastBookings.map((booking) => (
           <BookingCustomerPast
+            bookingId={booking.id}
+            providerId={booking.providerId}
             provider={booking.provider}
             service={booking.service}
             review={booking.review}
