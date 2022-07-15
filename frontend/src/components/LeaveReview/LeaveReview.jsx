@@ -11,7 +11,7 @@ import "./LeaveReview.css";
 function LeaveReview(props) {
   const { user } = useContext(AuthContext);
   const [id, setId] = useState(null);
-  const [reviewForm, setReviewForm] = useState({rating: 0, description: ""});
+  const [reviewForm, setReviewForm] = useState({rating: 5, description: ""});
   const [reviewDone, setReviewDone] = useState(false);
 
   const location = useLocation();
