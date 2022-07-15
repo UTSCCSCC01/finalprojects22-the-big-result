@@ -1,5 +1,6 @@
 from typing import List
 
+from caching import cache
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
     AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status, Settings, User
 
@@ -144,6 +145,7 @@ class AdminDAO:
 
 class ServicesDAO:
 
+    @cache.cached(timeout=50, key_prefix='all-serivces')
     def getAllServices(self) -> List[Services]:
         return Services.query.all()
 

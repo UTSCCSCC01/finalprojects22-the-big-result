@@ -2,10 +2,12 @@ import json
 from flask import request
 from flask import Blueprint, jsonify
 from DAOs import ProfessionalsDAO, CustomersDAO, ProfessionalServicesDAO
+from caching import cache
 
 serviceProviderBlueprint = Blueprint("serviceProvider", __name__)
 
 @serviceProviderBlueprint.route("/serviceProvider", methods=["GET"])
+@cache.cached(timeout=50)
 def getServiceProviderProfile():
 
     dao = ProfessionalsDAO()
