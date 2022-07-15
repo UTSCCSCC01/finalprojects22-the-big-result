@@ -88,7 +88,7 @@ function Profile() {
               }
             </div>
             
-            <Link to={`/c/booking/${id}/${-1}?service=${serviceSelected}&cost=${selectedServiceCost}&providerName=${profileData.name}`}>
+            <Link to={`/c/booking/${id}?service=${serviceSelected}&cost=${selectedServiceCost}&providerName=${profileData.name}`}>
               <button>Book Now!</button>
             </Link>
           </div>

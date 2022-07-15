@@ -19,7 +19,6 @@ function ProfessionalPastAndCancelledBookingsPage() {
     axiosAuth
       .get("/users/me")
       .then((res) => {
-        console.log(res.data.id, "finding professional past bookings");
 
         getProfessionalPastBookings({ professionalId: parseInt(res.data.id) })
           .then((response) => {

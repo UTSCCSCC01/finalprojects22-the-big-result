@@ -288,7 +288,7 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
             onNavigate={onNavigate}
           />
         </div>
-        <Link to="/p/availability"><button
+        <button
           onClick={
             mode === Constants.RECURRING
               ? onSubmitEditRecurr
@@ -297,15 +297,15 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
           style={{ padding: "10px 100px", margin: "10px 25px" }}
         >
           Submit
-        </button></Link>
-        <Link to="/p/availability"><button
-          onClick={() => {
+        </button>
+        <button
+          onClick={() => {navigate("/p/availability");
             sendMode(Constants.VIEW);
           }}
           style={{ padding: "10px 100px", margin: "10px 25px" }}
         >
           Cancel Edit
-        </button></Link>
+        </button>
         <br />
         <br />
         <br />

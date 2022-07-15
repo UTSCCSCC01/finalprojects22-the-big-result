@@ -7,6 +7,7 @@ import '../Calender.css';
 import * as EvFn from "../EventActions";
 import * as Constants from '../Constants'
 import {getAvailability, getBookings } from "../../../APICalls"
+import { useNavigate } from "react-router-dom";
 
 import moment from "moment";
 
@@ -15,6 +16,8 @@ const localizer = momentLocalizer(moment);
 
 
 function ViewAvailability({ id, sendMode }) {
+  const navigate = useNavigate();
+
   const [viewAvailabilities, setViewAvailabilities] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));

@@ -16,7 +16,12 @@ function CustomerBooking() {
   const { profId, oldBookingId } = useParams();
   // for now 
   const [bookingInfo, setBookingInfo] = useState({});  // booking info passed to confirmation page (booking not yet confirmed)
-  console.log('selected service: ', searchParams.get("service")) 
+  
+  // >>>
+  // check all info passed is passed correctly
+  // http://localhost:3000/c/booking/36?reschedule=1&id=74&cost=55&service=babysitting&providerName=provider%20one
+  console.log('selected service: ', searchParams.get("reschedule"),searchParams.get("id"), searchParams.get("cost"), searchParams.get("service"), searchParams.get("providerName"))
+  // <<<
   
   // get id of customer
   useEffect(() => {
@@ -27,6 +32,12 @@ function CustomerBooking() {
       setId(res.data.id);
 
       setBookingInfo({
+        // >>>
+        // extra parameters you needed for rescheduling:
+        id: searchParams.get("id"), // id of booking to cancel if they reschedule
+        reschedule: searchParams.get("reschedule"), // is 1 if rescheudling
+        // <<<
+        
         service: searchParams.get("service"),
         cost: searchParams.get("cost"),
         providerName: searchParams.get("providerName"),

@@ -43,7 +43,8 @@ function BookingCustomerUpcoming(props) {
       </div>
       <div className="desc">
         <div className="btn-group">
-          <Link to={`/c/booking/${props.providerId}/${props.id}?service=${props.service}`}>
+          {/* pass in the id of the current booking to be rescheduled */}
+          <Link to={`/c/booking/${props.providerId}?reschedule=1&id=${props.id}&cost=${props.cost}&service=${props.service}&providerName=${props.provider}`}>
             <button>Reschedule</button>
           </Link>
           <button onClick={onCancelBooking}>Cancel</button>
