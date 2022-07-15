@@ -15,7 +15,7 @@ moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
 
 
-function AvailabilityCalendar({ profId, sendBookingInfo }) {
+function AvailabilityCalendar({ profId, oldBookingId, sendBookingInfo }) {
   const [viewAvailabilities, setViewAvailabilities] = useState([]);
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
   
@@ -37,6 +37,8 @@ function AvailabilityCalendar({ profId, sendBookingInfo }) {
     // send booking info back to parent
     sendBookingInfo({ 
       professionalId: profId,
+      prevBookingId: oldBookingId,
+
       start: EvFn.getTimeFromDateTime(event.start),
       end: EvFn.getTimeFromDateTime(event.end),
       date: EvFn.getDateFromDateTime(event.start),

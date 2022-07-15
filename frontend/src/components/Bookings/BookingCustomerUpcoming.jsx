@@ -3,7 +3,7 @@ import "../Card.css";
 import { useContext } from "react";
 import { cancelBooking, getUsersMe } from "../../APICalls"
 import { AuthContext } from "../../context/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function BookingCustomerUpcoming(props) {
   const navigate = useNavigate();
@@ -43,7 +43,9 @@ function BookingCustomerUpcoming(props) {
       </div>
       <div className="desc">
         <div className="btn-group">
-          <button>Reschedule</button>
+          <Link to={`/c/booking/${props.providerId}/${props.id}?service=${props.service}`}>
+            <button>Reschedule</button>
+          </Link>
           <button onClick={onCancelBooking}>Cancel</button>
           <button className="transparent-btn">About Professional</button>
         </div>

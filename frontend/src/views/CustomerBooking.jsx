@@ -13,7 +13,7 @@ function CustomerBooking() {
   const [isConfirmingBooking, setIsConfirmingBooking] = useState(false); // default: choosing slot on calendar and not yet confirming
   const [id, setId] = useState(null);
   const { user } = useContext(AuthContext);
-  const { profId } = useParams();
+  const { profId, oldBookingId } = useParams();
   // for now 
   const [bookingInfo, setBookingInfo] = useState({});  // booking info passed to confirmation page (booking not yet confirmed)
   console.log('selected service: ', searchParams.get("service")) 
@@ -30,6 +30,7 @@ function CustomerBooking() {
       setBookingInfo({
         service: searchParams.get("service"),
         professionalId: profId,
+        prevBookingId: oldBookingId,
         customerId: res.data.id
 
       })
@@ -68,6 +69,7 @@ function CustomerBooking() {
           bookingInfo={bookingInfo}/> : 
         <AvailabilityCalendar 
           profId={profId}  // need profId to get availability
+          oldBookingId={oldBookingId}
           sendBookingInfo={getBookingInfo}/>}
     </div>
   );

@@ -28,14 +28,17 @@ def add_bookings():
     json_object = request.json
     customer_id = int(json_object.get("customerId", None))
     professional_id = int(json_object.get("professionalId", None))
+    previous_booking_id = int(json_object.get("prevBookingId", None))
+
     day_of_booking = date.fromisoformat(json_object.get("date", None))
     time_begin = time.fromisoformat(json_object.get("start", None))
     time_end = time.fromisoformat(json_object.get("end", None))
     instructions = json_object.get("instructions")
-    
+
     # get service, location, from professional chosen using professional_id
     chosen_professional = professionalDAO.getProfessionalOnId(professional_id)
     location = chosen_professional.location
+
     service = chosen_professional.services[0].serviceName
     price = chosen_professional.averageCost
     # service = json_object.get("serviceName")
@@ -49,6 +52,9 @@ def add_bookings():
     bookingDAO.addBooking(customer_id, professional_id, datetime.combine(day_of_booking, time_begin),
                                  datetime.combine(day_of_booking, time_end), location, Status.BOOKED, price, service,
                                  instructions)
+
+    if previous_booking_id > -1:
+        bookingDAO.setBookingAsRescheduled(previous_booking_id)
 
     return {"success": "yes"}
 

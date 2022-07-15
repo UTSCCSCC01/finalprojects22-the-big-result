@@ -274,6 +274,11 @@ class BookingsDAO:
         booking.status = status
         db.session.commit()
 
+    def setBookingAsRescheduled(self, id: int):
+        booking = Bookings.query.filter_by(id=id).first()
+        booking.status = Status.RESCHEDULED
+        db.session.commit()
+
     # NOTE: assume booking time is fixed to an hour so add availability for an hour
     def cancelBooking(self, id: int):
       booking = Bookings.query.filter_by(id=id).first()

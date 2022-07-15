@@ -36,7 +36,7 @@ function App() {
           {/* Protected route, only accessible by customers*/}
           
           <Route element={<ProtectedRoutes role={"customer"} />}>
-            <Route path="/c/booking/:profId" element={<CustomerBooking />} />
+            <Route path="/c/booking/:profId/:oldBookingId" element={<CustomerBooking />} />
             <Route
               path="/c/upcomingBookings"
               element={<CustUpBookingsPage />}
