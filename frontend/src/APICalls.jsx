@@ -90,12 +90,14 @@ export const sendRequest = (method, endpoint, header_or_data) => {
         method: method,
         url: base + endpoint,
         headers: header_or_data,
+        withCredentials: true,
       });
     case "POST":
       return axios({
         method: method,
         url: base + endpoint,
         data: header_or_data,
+        withCredentials: true,
       });
     // other cases: PUT, DELETE etc.
     case "PUT":
@@ -115,28 +117,40 @@ export const putRequest = (endpoint, data) =>
   sendRequest("PUT", endpoint, data);
 
 // get requests
-export const getAvailability = (headers) => getRequest("/getAvailability", headers);
+export const getAvailability = (headers) =>
+  getRequest("/getAvailability", headers);
 export const getBookings = (headers) => getRequest("/getBookings", headers);
-export const getRecurrAvailability = (headers) => getRequest("/getRecurrAvailability", headers);
-export const getUsersMe = (headers) => getRequest('/users/me', headers);
-export const getServices = (headers) => getRequest('/getServices', headers);
-export const getServiceProvidersOnQuery = (endpointQuery, headers) => getRequest(endpointQuery, headers);
-export const getServiceProviderOnId = (endpointQuery, headers) => getRequest(endpointQuery, headers);
-export const getCustomerPastBookings = (headers) => getRequest('/customerPastBookings', headers);
-export const getProfessionalUpcomingBookings = (headers) => getRequest('/professionalUpcomingBookings', headers);
-export const getProfessionalPastBookings = (headers) => getRequest('/professionalPastBookings', headers);
-export const getCustomerUpcomingBookings = (headers) => getRequest('/customerUpcomingBookings', headers);
-export const getCustomerCancelledBookings = (headers) => getRequest('/customerCancelledBookings', headers)
-export const getProfessionalCancelledBookings = (headers) => getRequest('/professionalCancelledBookings', headers);
+export const getRecurrAvailability = (headers) =>
+  getRequest("/getRecurrAvailability", headers);
+export const getUsersMe = (headers) => getRequest("/users/me", headers);
+export const getServices = (headers) => getRequest("/getServices", headers);
+export const getServiceProvidersOnQuery = (endpointQuery, headers) =>
+  getRequest(endpointQuery, headers);
+export const getServiceProviderOnId = (endpointQuery, headers) =>
+  getRequest(endpointQuery, headers);
+export const getCustomerPastBookings = (headers) =>
+  getRequest("/customerPastBookings", headers);
+export const getProfessionalUpcomingBookings = (headers) =>
+  getRequest("/professionalUpcomingBookings", headers);
+export const getProfessionalPastBookings = (headers) =>
+  getRequest("/professionalPastBookings", headers);
+export const getCustomerUpcomingBookings = (headers) =>
+  getRequest("/customerUpcomingBookings", headers);
+export const getCustomerCancelledBookings = (headers) =>
+  getRequest("/customerCancelledBookings", headers);
+export const getProfessionalCancelledBookings = (headers) =>
+  getRequest("/professionalCancelledBookings", headers);
 
 // post requests
-export const setRecurrAvailability = (data) => postRequest("/setRecurrAvailability", data);
-export const setNonRecurrAvailability = (data) => postRequest("/setNonRecurrAvailability", data);
-export const addBookings = (data) =>  postRequest("/addBookings", data);
+export const setRecurrAvailability = (data) =>
+  postRequest("/setRecurrAvailability", data);
+export const setNonRecurrAvailability = (data) =>
+  postRequest("/setNonRecurrAvailability", data);
+export const addBookings = (data) => postRequest("/addBookings", data);
 export const signUpProvider = (data) => postRequest("/signup/provider", data);
 export const signUpCustomer = (data) => postRequest("/signup/customer", data);
 export const addReview = (data) => postRequest("/addReview", data);
 
 // put requests
 export const cancelBooking = (data) => putRequest("/cancelBooking", data);
-export const resolveBooking = (data) => putRequest("/resolveBooking", data); 
+export const resolveBooking = (data) => putRequest("/resolveBooking", data);

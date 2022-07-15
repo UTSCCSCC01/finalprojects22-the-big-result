@@ -22,10 +22,10 @@ function BookingConfirmation(props) {
   return (
     <div className="page">
       <h2>Service: {props.bookingInfo.service}</h2>
-      <h2>Provider Name: {props.bookingInfo.professionalId}</h2>
+      <h2>Provider Name: {props.bookingInfo.providerName}</h2>
       <p>Date: {props.bookingInfo.date}</p>
       <p>From: {props.bookingInfo.start} to {props.bookingInfo.end}</p>
-      <p>Hourly Rate: {props.bookingInfo.price}</p>
+      <p>Hourly Rate: {props.bookingInfo.cost}</p>
       <form>
         <label for="payment-select">Select a payment method</label>
         <br />

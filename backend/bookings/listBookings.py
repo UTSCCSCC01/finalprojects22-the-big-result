@@ -6,6 +6,23 @@ from DAOs import BookingsDAO, CustomersDAO, ProfessionalsDAO
 list_bookings_blueprint = Blueprint('list_bookings_blueprint', __name__)
 bookingDAO, customerDAO, professionalDAO = BookingsDAO(), CustomersDAO(), ProfessionalsDAO()
 
+def past_future_bookings(bookings):
+    past = []
+    future = []
+    today = datetime.today()
+    for booking in bookings:
+        date = booking.beginServiceDateTime
+        if(today > date):
+            # date = "FALSE " + date.strftime("%B %d, %Y") 
+            # TODO DELETE
+            past.append(booking)
+            bookingDAO.resolveBooking(booking.id)
+        else:
+            # date = "TRUE " + date.strftime("%B %d, %Y")
+            future.append(booking)
+
+    return (past, future)
+
 # TODO (A): refactor and condense these two functions by making a helper function
 @list_bookings_blueprint.route("/customerUpcomingBookings", methods=["GET"])
 def get_customer_upcoming_bookings():
@@ -36,6 +53,7 @@ def get_customer_past_bookings():
     customer_id = int(request.headers.get("customerId", None))
     output = {'bookings': []}
     bookings = bookingDAO.getBookingsFromStatusForCust(customer_id, "RESOLVED")
+    bookings += past_future_bookings(bookingDAO.getBookingsFromStatusForCust(customer_id, "BOOKED"))[0]
 
     for booking in bookings:
         provider = professionalDAO.getProfessionalOnId(booking.professionalID)
@@ -109,7 +127,6 @@ def get_prof_bookings_by_status(profId, status):
 def get_professional_upcoming_bookings():
     profId = int(request.headers.get("professionalId", None))
     return get_prof_bookings_by_status(profId, "BOOKED")
-  
 
 @list_bookings_blueprint.route("/professionalPastBookings", methods=["GET"])
 def get_professional_past_bookings():

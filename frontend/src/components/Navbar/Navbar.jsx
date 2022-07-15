@@ -49,6 +49,8 @@ function Navbar() {
             <Link to="/serviceProviders">Service Providers</Link>
             {loggedIn && (
               <>
+                {/*<Link to="/myProfile">My Profile</Link>*/}
+                <Link to="/profileSettings">Settings</Link>
                 <Link to="/myProfile">My Profile</Link>
               </>
             )}
@@ -99,12 +101,12 @@ function Navbar() {
               <Logout />
             ) : (
               <>
-                <button className="signup-btn">
-                  <Link to="/signup">Sign Up</Link>
-                </button>
-                <button className="login-btn">
-                  <Link to="/login">Login</Link>
-                </button>
+                <Link to="/signup">
+                  <button className="signup-btn">Sign Up</button>
+                </Link>
+                <Link to="/login">
+                  <button className="login-btn">Login</button>
+                </Link>
               </>
             )}
           </div>

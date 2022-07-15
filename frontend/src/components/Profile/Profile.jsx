@@ -6,10 +6,9 @@ import { getServiceProviderOnId } from "../../APICalls";
 
 function Profile() {
   const [profileData, setProfileData] = useState([]);
-  const [serviceSelected, setServiceSelected] = useState(null);
+  const [serviceSelected, setServiceSelected] = useState('');
+  const [selectedServiceCost, setSelectedServiceCost] = useState(null);
   const { id } = useParams();
-
-  
 
   useEffect(() => {
     getServiceProviderOnId(`/serviceProvider?id=${id}`, {
@@ -18,9 +17,10 @@ function Profile() {
       .then((response) => {
         const res = response.data;
         setProfileData(res);
-        // set default display to first service
+        // set default display to first service - set default cost to first service
         if (res.services.length!==0) {
           setServiceSelected(res.services[0]);
+          setSelectedServiceCost(res.hourlyRates[res.services[0]]);
           document.querySelector('#' + res.services[0]).classList.add("service-active");
         }
         console.log(res);
@@ -39,12 +39,17 @@ function Profile() {
     services.forEach(s => s.classList.remove('service-active'));
     const descriptions = document.querySelectorAll('.service-description');
     descriptions.forEach(d => d.classList.remove('service-active'));
-    document.querySelector('#' + service).classList.add("service-active");
+
+    // dash between seperate words for id
+    document.querySelector('#' + service.split(' ').join('-')).classList.add("service-active");
     console.log('#' + serviceSelected + "-description");
 
     var description = document.querySelector('#' + serviceSelected + "-description");
     if (description) // service is already selected
       description.classList.add("hidden");
+    
+    // change selected service cost
+    setSelectedServiceCost(profileData.hourlyRates[service]);
   }
 
   return (
@@ -67,24 +72,23 @@ function Profile() {
             <p>{profileData.description}</p>
             <p>Choose a service:</p>
             <div className="service-selection">
-              <div className="service-options">
+              <div className="service-options flex-container">
                 {profileData.services && profileData.services.map((service) => 
                   <p className="service-to-book svc-tag" 
-                    id={service} onClick={(e) => onServiceSelect(e, service)}>
+                    id={service.split(' ').join('-')} onClick={(e) => onServiceSelect(e, service)}>
                     {service}
                   </p>
                   )}
               </div>
               {serviceSelected &&
-                <div className="service-description" id={'#' + serviceSelected+"-description"}>
+                <div className="service-description" id={'#' + serviceSelected.split(' ').join('-')+"-description"}>
                   {console.log('here', serviceSelected+"-description")}
                   {profileData.serviceDescriptions[serviceSelected]}
                 </div>
               }
             </div>
             
-
-            <Link to={`/c/booking/${id}?service=${serviceSelected}`}>
+            <Link to={`/c/booking/${id}?service=${serviceSelected}&cost=${selectedServiceCost}&providerName=${profileData.name}`}>
               <button>Book Now!</button>
             </Link>
           </div>
@@ -105,7 +109,10 @@ function Profile() {
             />
           ))}
         <br />
-        <button>See All Reviews </button>
+        <Link to={`/getAllReviews/${id}`}>
+          <button >See All Reviews </button>
+        </Link>
+        
       </div>
     </div>
   );

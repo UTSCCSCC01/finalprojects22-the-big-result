@@ -39,7 +39,6 @@ function ViewAvailability({ id, sendMode }) {
        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
        const resFormatted = EvFn.formatWeekEventsForGET(res, sundayOfCurrWeek, Constants.BOOKING);
        setBookings(resFormatted);
-       console.log(resFormatted);
      }).catch((err) => console.log(err));
  }, [id]);
 

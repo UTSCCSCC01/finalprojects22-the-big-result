@@ -2,6 +2,7 @@ import math
 
 from flask import Blueprint
 
+from caching import cache
 from models import DayOfWeek, IsAvailable, AvailabilitiesNonRec
 from flask import Blueprint, request, jsonify
 from datetime import date, time, timedelta, datetime

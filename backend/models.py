@@ -104,6 +104,8 @@ class User(db.Model):
 
     userType: str = db.Column(db.String(50))
 
+    settings = db.relationship('Settings',back_populates='user', uselist=False)
+
     __mapper_args__ = {
         "polymorphic_identity": "BaseUser",
         "polymorphic_on": userType,
@@ -122,11 +124,13 @@ class Professional(User):
     services: List = db.relationship("Services", secondary=professionalServices, lazy='subquery', back_populates="professionals")
 
     # List of reviews
-    reviews: List = db.relationship('Reviews', back_populates="professional", lazy=True)
+    reviews: List = db.relationship('Reviews', back_populates="professional", lazy='dynamic')
 
     availabilitiesRec = db.relationship('AvailabilitiesRec',back_populates='professional')
     availabilitiesNonRec = db.relationship('AvailabilitiesNonRec',back_populates='professional')
 
+    def getFirstNReviews(self, numReviews=3):
+        return self.reviews.limit(numReviews).all()
 
     __mapper_args__ = {
         "polymorphic_identity": "Professional",
@@ -139,6 +143,8 @@ class Customer(User):
 
     # List of bookings
     bookings = db.relationship('Bookings',back_populates='customer',lazy=True)
+    reviews = db.relationship('Reviews',back_populates='customer',lazy=True)
+
 
     __mapper_args__ = {
         "polymorphic_identity": "Customer",
@@ -161,6 +167,8 @@ class Settings(db.Model):
     billing: str = db.Column(db.Text, nullable=True)
     profilePicLink: str = db.Column(db.String(300), nullable=True, default="https://picsum.photos/100")
 
+    user: User = db.relationship('User',back_populates='settings')
+
 
 class Reviews(db.Model):
     __tablename__ = "Reviews"
@@ -174,6 +182,7 @@ class Reviews(db.Model):
 
     booking = db.relationship('Bookings', back_populates='review')
     professional: Professional = db.relationship('Professional',back_populates='reviews')
+    customer: Customer = db.relationship('Customer',back_populates='reviews')
 
 
 class Pictures(db.Model):
@@ -228,7 +237,7 @@ class AvailabilitiesRec(db.Model):
     startTime: time = db.Column(db.Time)
     endTime: time = db.Column(db.Time)
 
-    professional: Professional = db.relationship('Professional',back_populates='availabilitiesRec')
+    professional: Professional = db.relationship('Professional', back_populates='availabilitiesRec')
 
 
 
@@ -314,7 +323,10 @@ def runDBQueries():
     # start_time: time = Professional.query.first().availabilitiesNonRec[1].startTime
     # print(type(start_time))
 
-    print(isinstance(Professional.query.first().services, List))
+    # print(isinstance(Professional.query.first().services, List))
+
+    prof36: Professional = Professional.query.filter_by(id=36).first()
+    print(prof36.getFirstNReviews(3))
     pass
 
 
