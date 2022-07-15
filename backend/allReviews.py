@@ -3,9 +3,9 @@ from flask import Blueprint
 from flask import request
 from DAOs import ProfessionalsDAO, CustomersDAO, ProfessionalServicesDAO
 
-reviews_blueprint = Blueprint('reviews_blueprint', __name__)
+allReviews_blueprint = Blueprint('allReviews_blueprint', __name__)
 
-@reviews_blueprint.route('/getAllReviews', methods=["GET"])
+@allReviews_blueprint.route('/getAllReviews', methods=["GET"])
 def reviews():
     id = request.args.get('id')
 

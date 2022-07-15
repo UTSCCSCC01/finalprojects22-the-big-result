@@ -149,6 +149,7 @@ export const setNonRecurrAvailability = (data) =>
 export const addBookings = (data) => postRequest("/addBookings", data);
 export const signUpProvider = (data) => postRequest("/signup/provider", data);
 export const signUpCustomer = (data) => postRequest("/signup/customer", data);
+export const addReview = (data) => postRequest("/addReview", data);
 
 // put requests
 export const cancelBooking = (data) => putRequest("/cancelBooking", data);

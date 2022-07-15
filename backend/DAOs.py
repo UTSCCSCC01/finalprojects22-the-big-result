@@ -361,6 +361,14 @@ class BookingsDAO:
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.beginServiceDateTime) \
             .filter(Bookings.endServiceDateTime < rangeEnd).all()
 
+class ReviewsDAO:
+
+    def addReview(self, bookingID: int, profID: int, custID: int, description: str, rating: int) -> None:
+        newReview = Reviews(bookingID=bookingID, professionalID=profID, customerID=custID,
+                            description=description, ratings=rating)
+        db.session.add(newReview)
+        db.session.commit()
+        
 class SettingsDAO:
 
     def getAllSettings(self) -> List[Settings]:
