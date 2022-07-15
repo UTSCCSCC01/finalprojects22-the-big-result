@@ -14,6 +14,11 @@
   border-radius: 5px;
 }
 
+.svc-tags {
+  display: flex;
+  column-gap: 0.5rem;
+}
+
 .profile-inner-container {
   display: flex;
   flex-direction: row;
@@ -21,6 +26,7 @@
 }
 
 .img-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -41,6 +47,19 @@
 
 .description-container {
   text-align: left;
+  flex: 2;
+}
+
+.css-ypiqx9-MuiDialogContent-root {
+  overflow-y: initial !important;
+}
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  overflow-y: scroll !important;
+}
+
+.service-to-book {
+  margin: 10px;
 }
 
 .service-to-book:hover {
@@ -58,6 +77,12 @@
 
 .service-options {
   text-align: center;
-  display:inline-block;
+  /* display:inline-block; */
   /* TODO (A): figure out how to align service toggles horizontally */
+}
+
+.flex-container {
+  display: flex;
+  /* justify-content:space-between; */
+  align-items:center;
 }

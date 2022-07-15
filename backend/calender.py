@@ -3,6 +3,7 @@ import math
 from flask import Blueprint
 
 from models import DayOfWeek, IsAvailable, AvailabilitiesNonRec, Status
+from caching import cache
 from flask import Blueprint, request, jsonify
 from datetime import date, time, timedelta, datetime
 from book import get_week_by_professional

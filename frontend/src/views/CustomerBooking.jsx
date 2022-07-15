@@ -24,17 +24,16 @@ function CustomerBooking() {
       Authorization: `Bearer ${ user.access_token }` 
     }).then((res) => {
       setId(res.data.id);
-      console.log('id of customer and professional id:', res, profId);
       setId(res.data.id);
 
       setBookingInfo({
         service: searchParams.get("service"),
+        cost: searchParams.get("cost"),
+        providerName: searchParams.get("providerName"),
         professionalId: profId,
         prevBookingId: oldBookingId,
         customerId: res.data.id
-
       })
-      
     }).catch((error) => {
       console.log(error); // token not valid? 
     });
@@ -44,20 +43,14 @@ function CustomerBooking() {
   }, []);
 
   const getBookingInfo = (data) => {
-    console.log('got booking info...', data); // for now just a date
-
-    // TODO add rest of booking data you get from availabilityCalender to bookingInfo
-    console.log(bookingInfo, "HERE")
-    
+    console.log('got booking info...', data); // for now just a date    
     // concatenate all the data and bookingInfo 
     let res = {};
     Object.keys(bookingInfo).forEach((b) => res[b]=bookingInfo[b]);
     Object.keys(data).forEach((d) => res[d]=data[d]);
-    console.log('res after concatenating booking info...', res);
     setBookingInfo(res);
 
     setIsConfirmingBooking(true);     
-    console.log("BOOKING INFO", bookingInfo);
   }
 
   // send booking info from AvailabilityCalendar to CustomerBooking parent

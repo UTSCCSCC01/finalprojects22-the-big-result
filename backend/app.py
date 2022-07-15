@@ -6,15 +6,18 @@ from flask_sqlalchemy import SQLAlchemy
 import time
 from dotenv import load_dotenv
 import os
+from caching import cache
 
 from DAOs import runDAOQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
+from profile.userSettingsProfile import profileBluePrint
 
 from signup import signup_blueprint
 from listServices import services_blueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
+from allReviews import reviews_blueprint
 
 from login import login_blueprint
 from datetime import timedelta
@@ -39,6 +42,8 @@ def createApp():
     app.register_blueprint(list_bookings_blueprint)
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
+    app.register_blueprint(profileBluePrint, url_prefix='/profile')
+    app.register_blueprint(reviews_blueprint)
 
     CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
     # JWTManager(app)
@@ -52,16 +57,18 @@ def createApp():
     #Need to enable jwt location in both headers and cookies as refresh tokens will be in an httponly cookie
     app.config['JWT_TOKEN_LOCATION'] = ["headers", "cookies"]
     app.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=60)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
     db.init_app(app)
+    cache.init_app(app)
+
     app.app_context().push()
     return app
 
 app = createApp()
 
 if __name__ == "__main__":
-    runDAOQueries()
+    # runDAOQueries()
     app.run(debug=True)
