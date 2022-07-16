@@ -1,27 +1,29 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "./Login.css";
 import "../Form.css";
+import { AuthContext } from "../../context/AuthProvider";
+//Note redirects don't persisted the setUser in context, hence the need for navigate
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+  //Sets the user globally so that context is updated for all components
+  const { user, setUser } = useContext(AuthContext);
+
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [type, setType] = useState("customer");
   const [failedLogin, setFailedLogin] = useState(false);
 
+  //TODO: Just put this under a protectedRoute with role "not logged in", or something similar?
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/verify-loggedin`,
-    })
-      // .then((res) => {
-      //   console.log(res);
-      //   window.location = "/successlogin";
-      // })
-      .catch((err) => console.log(err));
+    //From useContext, if user already exists, no need to login
+    if (user) navigate("/myProfile");
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     axios({
       method: "POST",
       url: `http://localhost:5000/token/${type}`,
@@ -29,17 +31,26 @@ function Login() {
         email: loginForm.email,
         password: loginForm.password,
       },
+      //Need this to be true in order to set the refresh_token cookie
+      withCredentials: true,
     })
       .then((res) => {
-        localStorage.setItem("token", res.data.access_token);
-        // only go to profile tab when login is successful
-        window.location = "/";
-        setFailedLogin(false);
+        if (res.status === 200) {
+          //TODO: Update everywhere where localStorage is being set, change to httpOnly cookie
+          setUser({
+            type: res.data.type,
+            access_token: res.data.access_token,
+          });
+          console.log(user);
+          // only go to profile tab when login is successful
+          navigate("/");
+          setFailedLogin(false);
+        } else setFailedLogin(true);
       })
       .catch((err) => {
         // diaplay "incorrect login" message
         setFailedLogin(true);
-        console.log(err.response.status);
+        console.log(err);
       });
     // reset form after submission
     setLoginForm({ email: "", password: "" });
@@ -99,7 +110,7 @@ function Login() {
         <p className="error">Username or password is incorrect.</p>
       )}
       <p>
-        Don't have an account? <a href="/signup">Sign Up</a>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>
     </div>
   );

@@ -8,7 +8,7 @@ People want the convenience of having beauty services at their own homes. Some p
 
 ## Installation
 
-This project uses Typescript (NodeJS) and Python3, and so it is assumed that you have already installed both of these languages already. Also ensure that you have NPM and Pip already installed. If not, please do so before installing anything else.
+This project uses Javascript (NodeJS) and Python3, and so it is assumed that you have already installed both of these languages already. Also ensure that you have NPM and Pip already installed. If not, please do so before installing anything else.
 
 We will need to install the frontend, backend, and database drivers. We will also need to set a few environment variables. To begin, clone the repository by running:
 
@@ -50,7 +50,27 @@ Replace `mydatabasepassword` with the actual value of the database password.
 
 #### Database driver installation
 
-We are using ODBC SQL driver 17 for connecting to the remote database via our python app. [Install this database driver here](https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16). This might be subject to change in the future.
+We are using ODBC SQL driver 17 for connecting to the remote database via our python app. [Install this database driver here](https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16). 
+
+## Software frameworks/libraries/tools used
+#### Flask
+We're using Flask is a backend web server framework for python. It provides
+many useful features, like enabling CORS, caching, integration with SQLAlchemy ORM, and allows for modularity 
+with blueprints. [Documentation found here](https://flask.palletsprojects.com/en/2.1.x/)
+
+#### ReactJS
+We're using ReactJS as the frontend framework our web application. As the name suggests, it runs on javascript. It divides everything into components,
+which allows for easy reuse of components on multiple pages. It's currently the world's most popular frontend framework.
+[Documentation found here](https://reactjs.org/docs/getting-started.html)
+
+#### SQLAlchemy
+SQLAlchemy is used as an object-relational mapper, which maps the SQL table(s) into python class objects.
+ It has a variety of helpful features, like automatically getting relationship data and being able to be passed around
+ as an object. We're specifically using flask-sqlalchemy, which helps simplify a few things like query sessions. 
+ Documentation for [Flask-SQLAlchemy can be found here](https://flask-sqlalchemy.palletsprojects.com/en/2.x/). 
+#### Material UI
+Material UI is our CSS library that we're using. Specifically, we're using react-material-ui, which helps
+simplify much of the frontend styling by providing built-in components. [Documentation found here](https://mui.com/getting-started/usage/)
 
 ## Contribution
 

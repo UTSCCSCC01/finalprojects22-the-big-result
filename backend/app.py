@@ -6,16 +6,18 @@ from flask_sqlalchemy import SQLAlchemy
 import time
 from dotenv import load_dotenv
 import os
+# from caching import cache
 
 from DAOs import runDAOQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
+from profile.userSettingsProfile import profileBluePrint
 
-from sampleFeature.mySampleFeature import sampleBlueprint
 from signup import signup_blueprint
 from listServices import services_blueprint
 from serviceProvider.serviceProviderProfile import serviceProviderBlueprint
+from allReviews import allReviews_blueprint
 
 from login import login_blueprint
 from datetime import timedelta
@@ -23,6 +25,7 @@ from listServiceProviders import list_providers_blueprint
 from bookings.listBookings import list_bookings_blueprint
 from calender import calender_blueprint # new
 from book import book_blueprint # new
+from reviews.reviews import review_blueprint
 
 
 def getDBURL() -> str:
@@ -30,10 +33,8 @@ def getDBURL() -> str:
     DB_password = os.environ.get("DATABASE_PASSWORD")
     return f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server"
 
-
 def createApp():
     app = Flask(__name__)
-    app.register_blueprint(sampleBlueprint, url_prefix='/example')
     app.register_blueprint(signup_blueprint)
     app.register_blueprint(services_blueprint)
     app.register_blueprint(serviceProviderBlueprint)
@@ -42,51 +43,34 @@ def createApp():
     app.register_blueprint(list_bookings_blueprint)
     app.register_blueprint(calender_blueprint) # new
     app.register_blueprint(book_blueprint) # new
+    app.register_blueprint(review_blueprint) # deals with creating a review (theb-15)
+    app.register_blueprint(profileBluePrint, url_prefix='/profile')
+    app.register_blueprint(allReviews_blueprint) # deals with getting all reviews (theb-6)
 
-    CORS(app)
+    CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
     # JWTManager(app)
 
     Bcrypt(app)
-    # app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
     JWTManager(app)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = getDBURL()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config["JWT_SECRET_KEY"] = "a-random-password-that-needs-changing"
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=60)
+    #Need to enable jwt location in both headers and cookies as refresh tokens will be in an httponly cookie
+    app.config['JWT_TOKEN_LOCATION'] = ["headers", "cookies"]
+    app.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=60)
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
-    CORS(app)
-    
     db.init_app(app)
+    # cache.init_app(app)
+
     app.app_context().push()
-
     return app
-
 
 app = createApp()
 
-
-@app.route("/")
-def hello_world():
-    return {"hello": '5'}
-
-
-@app.route("/time", methods=['GET'])
-def get_time():
-    return jsonify({'time': time.time()})
-
-
-@app.route("/db", methods=['GET'])
-def getSampleQuery():
-    return sampleQuery()
-
-
-@app.route("/stuff", methods=['GET'])
-def databaseTestingStuff():
-    return str(db.engine.execute("SELECT * from Persons").fetchall())
-
-
 if __name__ == "__main__":
-    # runDBQueries()
     # runDAOQueries()
     app.run(debug=True)

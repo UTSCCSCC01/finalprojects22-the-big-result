@@ -2,7 +2,8 @@ import math
 
 from flask import Blueprint
 
-from models import DayOfWeek, IsAvailable, AvailabilitiesNonRec
+from models import DayOfWeek, IsAvailable, AvailabilitiesNonRec, Status
+# from caching import cache
 from flask import Blueprint, request, jsonify
 from datetime import date, time, timedelta, datetime
 from book import get_week_by_professional
@@ -11,7 +12,6 @@ from DAOs import AvailabilitiesRecDAO, AvailabilitiesNonRecDAO
 calender_blueprint = Blueprint('calender_blueprint', __name__)
 recDAO_Object = AvailabilitiesRecDAO()
 nonRecDao_Object = AvailabilitiesNonRecDAO()
-
 
 # all availabilities - recurring and non-recurring merged
 @calender_blueprint.route('/getAvailability', methods=["GET"])
@@ -48,6 +48,9 @@ def get_availability():
             if booking.beginServiceDateTime.date() > current_date:
                 bookings.append(booking)
                 break
+
+            if booking.status != Status.BOOKED and booking.status != Status.RESOLVED:
+                continue
 
             start_time = booking.beginServiceDateTime.time()
             end_time = booking.endServiceDateTime.time()

@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, request, jsonify
 from flask_bcrypt import generate_password_hash
-from DAOs import CustomersDAO, ProfessionalsDAO
+from DAOs import CustomersDAO, ProfessionalsDAO, ProfessionalServicesDAO
 signup_blueprint = Blueprint('signup_blueprint', __name__)
 
 @signup_blueprint.route('/signup/<type>', methods=["POST"])
@@ -11,7 +11,9 @@ def signup(type):
     firstName = request.json.get("firstName", None)
     lastName = request.json.get("lastName", None)
     location = request.json.get("location", None)
+    description = request.json.get("description", None)
     servicesProvided = request.json.get("servicesProvided", None)
+    servicesDesc = request.json.get("servicesDesc", None)
     if(type == "customer"):        
         custDao = CustomersDAO()
         # Check if email exists
@@ -30,7 +32,14 @@ def signup(type):
         if(providerDao.emailExists(email)):
             return "Email already exists", 409
         try:
-            providerDao.addProfessional(firstName, lastName, email, email, password, str(servicesProvided))
+            if location == "":
+                location = "Toronto, Ontario"
+            providerDao.addProfessional(firstName, lastName, email, email, password, description, location=location)
+            id = providerDao.getProfessionalOnUsername(email).id
+            dao_service = ProfessionalServicesDAO()
+            for service in servicesDesc:
+                dao_service.addServiceProvidedByProfessional(id, service.get("service"), 
+                                                    service.get("price"), service.get("desc"))
             return {"type": type, "firstName": firstName, "lastName": lastName, "email": email, 
             "username": email, "servicesProvided": servicesProvided}
         except Exception as e:

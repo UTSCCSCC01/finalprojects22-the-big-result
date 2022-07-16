@@ -1,12 +1,13 @@
 .review {
   display: flex;
-  flex: 1;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   column-gap: 2rem;
   padding: 10px 20px;
   margin: 10px 0;
+  width: 100%;
+  height: fit-content;
 }
 
 .review-img-container {
