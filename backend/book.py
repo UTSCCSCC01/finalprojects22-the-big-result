@@ -42,7 +42,6 @@ def add_bookings():
 
     # >>>
     # previous_booking_id = int(json_object.get("prevBookingId", None))
-    booking_id = int(json_object.get("id", None)) # double check this is the id of the booking being rescheduled
     isRescheduling = True if "reschedule" in json_object else False
     print(json_object)
     # <<<
@@ -71,6 +70,7 @@ def add_bookings():
 
     # >>>
     if isRescheduling:
+        booking_id = int(json_object.get("id", None)) # double check this is the id of the booking being rescheduled
         bookingDAO.setBookingAsRescheduled(booking_id)
     # <<<
 
@@ -95,7 +95,7 @@ def get_bookings():
             
             if booking.status == Status.RESCHEDULED or booking.status == Status.CANCELLED:
               continue
-            
+
             start_time = booking.beginServiceDateTime.time()
             end_time = booking.endServiceDateTime.time()
             formatted_schedule[str(i)].append({
