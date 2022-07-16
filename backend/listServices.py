@@ -1,12 +1,12 @@
 from flask import Blueprint
 
 from DAOs import ServicesDAO, ProfessionalServicesDAO
-from caching import cache
+# from caching import cache
 
 services_blueprint = Blueprint('services_blueprint', __name__)
 
 @services_blueprint.route('/getServices', methods=["GET"])
-@cache.cached(timeout=50)
+# @cache.cached(timeout=50)
 def services():
     services = ServicesDAO().getAllServices();
 

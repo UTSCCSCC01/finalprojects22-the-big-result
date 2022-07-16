@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 import time
 from dotenv import load_dotenv
 import os
-from caching import cache
+# from caching import cache
 
 from DAOs import runDAOQueries
 from dbConnection import sampleQuery
@@ -64,7 +64,7 @@ def createApp():
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
     db.init_app(app)
-    cache.init_app(app)
+    # cache.init_app(app)
 
     app.app_context().push()
     return app
