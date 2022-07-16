@@ -8,8 +8,13 @@ import "../Calender.css";
 
 import * as EvFn from "../EventActions";
 import * as Constants from "../Constants";
-import { getRecurrAvailability, getAvailability, getBookings, 
-  setRecurrAvailability, setNonRecurrAvailability } from "../../../APICalls"
+import {
+  getRecurrAvailability,
+  getAvailability,
+  getBookings,
+  setRecurrAvailability,
+  setNonRecurrAvailability,
+} from "../../../APICalls";
 
 import moment from "moment";
 
@@ -17,8 +22,7 @@ moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
-
-function ProfCalendarEdit({ mode, id, sendMode}) {
+function ProfCalendarEdit({ mode, id, sendMode }) {
   const navigate = useNavigate();
 
   const [eventsToRecurr, setEventsToRecurr] = useState([]); // events recurring weekly
@@ -26,14 +30,14 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
   const [bookings, setBookings] = useState([]);
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
 
-
   useEffect(() => {
-    console.log('id of professional:', id);
+    console.log("id of professional:", id);
     if (mode === Constants.RECURRING) {
       getRecurrAvailability({
         professionalId: id,
         start: EvFn.getDateFromDateTime(viewDate),
-      }).then((res) => {
+      })
+        .then((res) => {
           let sundayOfCurrWeek = EvFn.getSunday(new Date());
           let resFormatted = EvFn.formatWeekEventsForGET(
             res,
@@ -41,28 +45,30 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
             Constants.AVAILABILITY
           );
           setEventsToRecurr(resFormatted);
-        }).catch((err) => console.log(err));
-
+        })
+        .catch((err) => console.log(err));
     } else if (mode === Constants.NONRECURR) {
-
-      getAvailability({ 
-        professionalId: id, 
+      getAvailability({
+        professionalId: id,
         start: EvFn.getDateFromDateTime(viewDate),
         type: "professional",
-      }).then((res) => {
-        let sundayOfCurrWeek = EvFn.getSunday(viewDate);
-        let resFormatted = EvFn.formatWeekEventsForGET(
-          res,
-          sundayOfCurrWeek,
-          Constants.AVAILABILITY
-        );
-        setViewAvailabilities(resFormatted);
-      }).catch((err) => console.log(err));
+      })
+        .then((res) => {
+          let sundayOfCurrWeek = EvFn.getSunday(viewDate);
+          let resFormatted = EvFn.formatWeekEventsForGET(
+            res,
+            sundayOfCurrWeek,
+            Constants.AVAILABILITY
+          );
+          setViewAvailabilities(resFormatted);
+        })
+        .catch((err) => console.log(err));
 
       getBookings({
         professionalId: id,
         start: EvFn.getDateFromDateTime(viewDate),
-      }).then((res) => {
+      })
+        .then((res) => {
           let sundayOfCurrWeek = EvFn.getSunday(viewDate);
           const resFormatted = EvFn.formatWeekEventsForGET(
             res,
@@ -70,7 +76,8 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
             Constants.BOOKING
           );
           setBookings(resFormatted);
-        }).catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
     }
   }, []);
 
@@ -191,27 +198,33 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
     console.log("submitting recurr availability edit...");
     const eventsToRecurrFormatted =
       EvFn.formatWeekEventsForPOST(eventsToRecurr);
-    
-    setRecurrAvailability({ 
-      events: eventsToRecurrFormatted, 
-      professionalId: id 
-    }).then(() => {
-      navigate("/p/availability");
-    }).catch((err) => console.log(err));
+
+    setRecurrAvailability({
+      events: eventsToRecurrFormatted,
+      professionalId: id,
+    })
+      .then(() => {
+        sendMode(Constants.VIEW);
+        navigate("/p/availability");
+      })
+      .catch((err) => console.log(err));
   };
 
   const onSubmitEditNonRecurr = () => {
     console.log("submitting non-recurr edit...");
     const allAvailabilitiesFormatted =
       EvFn.formatWeekEventsForPOST(viewAvailabilities);
-    
+
     setNonRecurrAvailability({
       events: allAvailabilitiesFormatted,
       professionalId: id,
       start: EvFn.getDateFromDateTime(viewDate),
-    }).then(() => {
+    })
+      .then(() => {
+        sendMode(Constants.VIEW);
         navigate("/p/availability");
-      }).catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const onNavigate = (date, view) => {
@@ -220,7 +233,8 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
       professionalId: id,
       start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
       type: "professional",
-    }).then((res) => {
+    })
+      .then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         let resFormatted = EvFn.formatWeekEventsForGET(
           res,
@@ -228,12 +242,14 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
           Constants.AVAILABILITY
         );
         setViewAvailabilities(resFormatted);
-      }).catch((err) => console.log(err));
-    
+      })
+      .catch((err) => console.log(err));
+
     getBookings({
       professionalId: id,
       start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
-    }).then((res) => {
+    })
+      .then((res) => {
         let sundayOfCurrWeek = EvFn.getSunday(date);
         const resFormatted = EvFn.formatWeekEventsForGET(
           res,
@@ -241,7 +257,8 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
           Constants.BOOKING
         );
         setBookings(resFormatted);
-      }).catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
     setViewDate(new Date(EvFn.getSunday(date) - 7));
   };
 
@@ -250,8 +267,7 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
       <div className="calendar">
         <h2>Edit mode.</h2>
         <p>
-          editing{" "}
-          {mode === Constants.RECURRING ? "recurring" : "nonrecurring"}{" "}
+          editing {mode === Constants.RECURRING ? "recurring" : "nonrecurring"}{" "}
           dates
         </p>
         {mode === Constants.NONRECURR && (
@@ -288,7 +304,7 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
             onNavigate={onNavigate}
           />
         </div>
-        <Link to="/p/availability"><button
+        <button
           onClick={
             mode === Constants.RECURRING
               ? onSubmitEditRecurr
@@ -297,15 +313,16 @@ function ProfCalendarEdit({ mode, id, sendMode}) {
           style={{ padding: "10px 100px", margin: "10px 25px" }}
         >
           Submit
-        </button></Link>
-        <Link to="/p/availability"><button
+        </button>
+        <button
           onClick={() => {
             sendMode(Constants.VIEW);
+            navigate("/p/availability");
           }}
           style={{ padding: "10px 100px", margin: "10px 25px" }}
         >
           Cancel Edit
-        </button></Link>
+        </button>
         <br />
         <br />
         <br />

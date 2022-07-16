@@ -289,11 +289,10 @@ class BookingsDAO:
 
         db.session.add(newBooking)
         db.session.commit()
-    
-    
-    def resolveBooking(self, id: int, status: str):
+
+    def setBookingAsRescheduled(self, id: int):
         booking = Bookings.query.filter_by(id=id).first()
-        booking.status = status
+        booking.status = Status.RESCHEDULED
         db.session.commit()
 
     # NOTE: assume booking time is fixed to an hour so add availability for an hour
@@ -317,9 +316,9 @@ class BookingsDAO:
                                        .filter(rangeStart < Bookings.endServiceDateTime)
                                        .filter(Bookings.beginServiceDateTime < rangeEnd)]
 
-    def getBookingsFromProfIDinRangeWithStatusIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime, status: Status) -> List[Bookings]:
+    def getBookingsFromProfIDinRangeWithStatusIncl2(self, profID: int, rangeStart: datetime, rangeEnd: datetime, status: Status) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\
-            .filter(Bookings.beginServiceDateTime < rangeEnd).filter(Bookings.status == status).all()
+            .filter(Bookings.beginServiceDateTime < rangeEnd).filter(Bookings.status == Status.BOOKED or Bookings.status == Status.RESOLVED).all()
 
     # NOTE: assume booking time is fixed to an hour so add availability for an hour
     def cancelBooking(self, id: int):
@@ -352,6 +351,12 @@ class BookingsDAO:
             .filter(Bookings.beginServiceDateTime < rangeEnd).filter(Bookings.status != status).all()
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\
             .filter(Bookings.beginServiceDateTime < rangeEnd).filter(Bookings.status == status).all()
+    
+    # def getBookingsFromProfIDinRangeWithStatusesIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime, statusLst: List[Status]) -> List[Bookings]:
+    #   print(statusLst)
+    #   return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\
+    #         .filter(Bookings.beginServiceDateTime < rangeEnd).filter(Bookings.status in statusLst).all()
+
 
     def getBookingsFromProfIDinRangeIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).filter(rangeStart < Bookings.endServiceDateTime)\

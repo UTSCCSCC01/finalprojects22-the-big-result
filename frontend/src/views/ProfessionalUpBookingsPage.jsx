@@ -21,7 +21,6 @@ function ProfessionalUpBookingsPage() {
           professionalId: parseInt(res.data.id),
         })
           .then((response) => {
-            console.log(response.data);
             setBookingsList(response.data.bookings);
           })
           .catch((err) => console.log(err.response));

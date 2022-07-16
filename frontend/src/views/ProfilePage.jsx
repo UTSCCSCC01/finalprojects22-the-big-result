@@ -23,7 +23,6 @@ function ProfilePage(props) {
       .then((response) => {
         const res = response.data;
         setProfileData(res);
-        // console.log(res);
       })
       .catch((err) => {
         console.log(err);
