@@ -113,6 +113,11 @@ class ProfessionalsDAO:
         professional.description = description
         db.session.commit()
 
+    def updateProfessionalStatus(self, id:int, status:str):
+        professional = Professional.query.filter_by(id=id).first()
+        professional.status = status
+        db.session.commit()
+
 
 class AdminDAO:
 

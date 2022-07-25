@@ -4,7 +4,7 @@ import Footer from "./components/Footer/Footer";
 import Login from "./components/Login/Login";
 import SignUp from "./views/SignUp";
 import ProfilePage from "./views/ProfilePage";
-import CustPastAndCancelledBookingsPage from "./views/CustPastAndCancelledBookingsPage"
+import CustPastAndCancelledBookingsPage from "./views/CustPastAndCancelledBookingsPage";
 import ProfessionalUpBookingsPage from "./views/ProfessionalUpBookingsPage";
 import ProfessionalPastAndCancelledBookingsPage from "./views/ProfessionalPastAndCancelledBookingsPage";
 import Navbar from "./components/Navbar/Navbar";
@@ -19,6 +19,7 @@ import MyProfile from "./components/MyProfile/MyProfile";
 import LeaveReview from "./components/LeaveReview/LeaveReview";
 import ProfileSettingsPage from "./views/ProfileSettingsPage";
 import AllReviews from "./views/AllReviews.jsx";
+import Deactivated from "./views/Deactivated";
 
 function App() {
   return (
@@ -33,33 +34,28 @@ function App() {
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/getAllReviews/:id" element={<AllReviews />} />
           <Route path="/signup" element={<SignUp />} />
-          {/*<Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
-
-
+          <Route path="/deactivated" element={<Deactivated />} />
           {/* Protected route, should be accessible by both customers and providers*/}
           <Route element={<ProtectedRoutes />}>
-            {/*<Route path="/myProfile" element={<MyProfile />} />*/}
             <Route path="/profileSettings" element={<ProfileSettingsPage />} />
           </Route>
-
-            {/*<Route element={<ProtectedRoutes />}>*/}
-            {/*    <Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
-            {/*</Route>*/}
-
           {/* Protected route, should be accessible by both customers and providers*/}
           <Route element={<ProtectedRoutes />}>
             <Route path="/myProfile" element={<MyProfile />} />
           </Route>
           {/* Protected route, only accessible by customers*/}
-          
+
           <Route element={<ProtectedRoutes role={"customer"} />}>
             <Route path="/c/booking/:profId" element={<CustomerBooking />} />
             <Route
               path="/c/upcomingBookings"
               element={<CustUpBookingsPage />}
             />
-            <Route path="/c/pastAndCancelledBookings" element={<CustPastAndCancelledBookingsPage />} />
-            <Route path="/c/leaveReview" element={<LeaveReview />}/>
+            <Route
+              path="/c/pastAndCancelledBookings"
+              element={<CustPastAndCancelledBookingsPage />}
+            />
+            <Route path="/c/leaveReview" element={<LeaveReview />} />
           </Route>
           {/* Protected route, only accessible by providers*/}
           <Route element={<ProtectedRoutes role={"provider"} />}>
