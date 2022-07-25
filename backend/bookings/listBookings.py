@@ -28,7 +28,7 @@ def past_future_bookings(bookings):
 def get_customer_upcoming_bookings():
     customer_id = int(request.headers.get("customerId", None))
     output = {'bookings': []}
-    bookings = bookingDAO.getBookingsFromStatusForCust(customer_id, "BOOKED")
+    bookings = bookingDAO.getOrderedBookingsFromStatusForCust(customer_id, "BOOKED")
 
     for booking in bookings:
       provider = professionalDAO.getProfessionalOnId(booking.professionalID)
@@ -52,8 +52,8 @@ def get_customer_upcoming_bookings():
 def get_customer_past_bookings():
     customer_id = int(request.headers.get("customerId", None))
     output = {'bookings': []}
-    bookings = bookingDAO.getBookingsFromStatusForCust(customer_id, "RESOLVED")
-    bookings += past_future_bookings(bookingDAO.getBookingsFromStatusForCust(customer_id, "BOOKED"))[0]
+    bookings = bookingDAO.getOrderedBookingsFromStatusForCust(customer_id, "RESOLVED")
+    bookings += past_future_bookings(bookingDAO.getOrderedBookingsFromStatusForCust(customer_id, "BOOKED"))[0]
 
     for booking in bookings:
         provider = professionalDAO.getProfessionalOnId(booking.professionalID)
@@ -76,7 +76,7 @@ def get_customer_past_bookings():
 def get_customer_cancelled_bookings():
     customer_id = int(request.headers.get("customerId", None))
     output = {'bookings': []}
-    bookings = bookingDAO.getBookingsFromStatusForCust(customer_id, "CANCELLED")
+    bookings = bookingDAO.getOrderedBookingsFromStatusForCust(customer_id, "CANCELLED")
 
     for booking in bookings:
         provider = professionalDAO.getProfessionalOnId(booking.professionalID)

@@ -273,6 +273,9 @@ class BookingsDAO:
     def getBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
         return Bookings.query.filter_by(customerID=custID, status=status).all()
 
+    def getOrderedBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
+        return Bookings.query.filter_by(customerID=custID, status=status).order_by(Bookings.beginServiceDateTime).all()
+
     def resolveBooking(self, id: int):
         booking = Bookings.query.filter_by(id=id).first()
         booking.status = Status.RESOLVED
