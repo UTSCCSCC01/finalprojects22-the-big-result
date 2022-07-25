@@ -97,8 +97,8 @@ def get_customer_cancelled_bookings():
 # NOTE (A): did some refactoring here... could be improved and could be done for customer endpoints too 
 def get_prof_bookings_by_status(profId, status):
   output = {'bookings': []}
-  # get list of upcoming bookings
-  bookings = bookingDAO.getBookingsFromStatusForProf(profId, status)
+  # get list of bookings by status
+  bookings = bookingDAO.getOrderedBookingsFromStatusForProf(profId, status)
 
   # put into output
   for booking in bookings:
