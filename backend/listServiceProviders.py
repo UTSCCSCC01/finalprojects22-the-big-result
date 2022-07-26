@@ -65,7 +65,7 @@ def get_service_provider_list():
 
 @list_providers_blueprint.route("/pendingRequests")
 def get_pending_requests():
-    results = profDAO.getAllProfessionals()
+    results = profDAO.getProfessionalsByStatus("PENDING")
     results_formatted = []
     for i in results:
         service = ""
@@ -86,5 +86,5 @@ def get_pending_requests():
 
 @list_providers_blueprint.route("/approveRequest", methods=["PATCH"])
 def post_approve_request():
-    return
-    # profDAO.updateProfessionalStatus(request.args.get("id"), "APPROVED")
+    profDAO.updateProfessionalStatus(request.args.get("id"), request.args.get("status"))
+    return {"status" : "OK"}

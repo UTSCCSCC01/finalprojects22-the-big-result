@@ -6,10 +6,10 @@ import axios from "axios";
 function Request(props) {
   const navigate = useNavigate();
 
-  function approve() {
+  function update(status) {
     axios({
       method: "PATCH",
-      url: `http://127.0.0.1:5000/approveRequest?id=${props.id}`,
+      url: `http://127.0.0.1:5000/approveRequest?id=${props.id}&status=${status}`,
     })
     .then((response) => {
       props.update(props.id);
@@ -37,7 +37,8 @@ function Request(props) {
       </div>
       <div className="desc">
         <div className="btn-group">
-            <button onClick={approve}>Approve</button>
+            <button onClick={() => update("APPROVED")}>Approve</button>
+            <button onClick={() => update("DENIED")}>Deny</button>
             <button className="transparent-btn">View Profile</button>
         </div>
       </div>

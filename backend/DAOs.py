@@ -119,8 +119,8 @@ class ProfessionalsDAO:
         professional.status = status
         db.session.commit()
 
-    def getAllApprovedProfessionals(self):
-        return Professional.query.filter_by(status="APPROVED").all()
+    def getProfessionalsByStatus(self, status: str) -> List[Professional]:
+        return Professional.query.filter_by(status=status).all()
 
 
 class AdminDAO:

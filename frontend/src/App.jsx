@@ -35,7 +35,7 @@ function App() {
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/getAllReviews/:id" element={<AllReviews />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/requests" element={<RequestsPage />} />
+          
           {/*<Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
 
           <Route path="/deactivated" element={<Deactivated />} />
@@ -50,6 +50,7 @@ function App() {
           {/* Protected route, only accessible by customers*/}
 
           <Route element={<ProtectedRoutes role={"customer"} />}>
+            <Route path="/requests" element={<RequestsPage />} />
             <Route path="/c/booking/:profId" element={<CustomerBooking />} />
             <Route
               path="/c/upcomingBookings"
