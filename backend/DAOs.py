@@ -96,7 +96,6 @@ class ProfessionalsDAO:
     def getProfessionalsByLocation(self,location:str) -> List[Professional]:
         return Professional.query.filter_by(location=location, status="APPROVED").all()
 
-    #TODO: These should also check for status approved
     def getLowestAveragePrice(self) -> float:
         return db.session.query(func.min(Professional.averageCost)).filter_by(status="APPROVED").scalar()
 
@@ -269,6 +268,12 @@ class BookingsDAO:
     def getBookingsFromProfID(self, profID: int) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).all()
 
+    def cancelBookingsFromProfId(self, profID:int):
+        bookings = Bookings.query.filter(Bookings.professionalID==profID, ((Bookings.status==Status.BOOKED) | (Bookings.status==Status.RESCHEDULED))).all()
+        for booking in bookings:
+            booking.status = Status.CANCELLED
+        db.session.commit()
+
     def getBookingsFromCustID(self, custID: int) -> List[Bookings]:
         return Bookings.query.filter_by(customerID=custID).all()
 
@@ -300,20 +305,20 @@ class BookingsDAO:
         booking.status = Status.RESCHEDULED
         db.session.commit()
 
-    # NOTE: assume booking time is fixed to an hour so add availability for an hour
-    def cancelBooking(self, id: int):
-      booking = Bookings.query.filter_by(id=id).first()
-      booking.status = Status.CANCELLED
-      db.session.commit()
+    # # NOTE: assume booking time is fixed to an hour so add availability for an hour
+    # def cancelBooking(self, id: int):
+    #   booking = Bookings.query.filter_by(id=id).first()
+    #   booking.status = Status.CANCELLED
+    #   db.session.commit()
 
-      # add cancelled booking as non recurring availability
-      profId = booking.professionalID
-      date = booking.beginServiceDateTime.date()
-      startTime = booking.beginServiceDateTime.time()
-      endTime = booking.endServiceDateTime.time()
-      newAvailability = AvailabilitiesNonRec(professionalID=profId, date=date,startTime=startTime,endTime=endTime, isAvailable=1)
-      db.session.add(newAvailability)
-      db.session.commit()
+    #   # add cancelled booking as non recurring availability
+    #   profId = booking.professionalID
+    #   date = booking.beginServiceDateTime.date()
+    #   startTime = booking.beginServiceDateTime.time()
+    #   endTime = booking.endServiceDateTime.time()
+    #   newAvailability = AvailabilitiesNonRec(professionalID=profId, date=date,startTime=startTime,endTime=endTime, isAvailable=1)
+    #   db.session.add(newAvailability)
+    #   db.session.commit()
 
     def getNonCancelledBookingsFromProfIDinRangeWithStatusIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime):
       return [booking for booking in db.session.query(Bookings)
@@ -391,6 +396,9 @@ def runDAOQueries():
     custDao = CustomersDAO()
 
     profDao = ProfessionalsDAO()
+
+    bookingsDao = BookingsDAO()
+    print(bookingsDao.cancelBookingsFromProfId(40))
 
     # print(profDao.getProfessionalsByLocation("toronto"))
 
