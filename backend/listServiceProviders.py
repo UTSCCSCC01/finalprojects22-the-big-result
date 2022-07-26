@@ -130,3 +130,29 @@ def get_service_provider_list():
     }
 
     return some_providers
+
+@list_providers_blueprint.route("/pendingRequests")
+def get_pending_requests():
+    results = profDAO.getAllProfessionals()
+    results_formatted = []
+    for i in results:
+        service = ""
+        if i.services:
+            service = i.services[0].serviceName
+        results_formatted.append({
+            "id": i.id,
+            "name": i.firstName + " " + i.lastName,
+            "service": service,
+            "description": i.description,
+            "location": i.location,
+            "profilePicURL": "https://picsum.photos/102"
+        })
+    some_providers = {
+        "providers": results_formatted
+    }
+    return some_providers
+
+@list_providers_blueprint.route("/approveRequest", methods=["PATCH"])
+def post_approve_request():
+    return
+    # profDAO.updateProfessionalStatus(request.args.get("id"), "APPROVED")

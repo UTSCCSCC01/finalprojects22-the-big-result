@@ -19,6 +19,7 @@ import MyProfile from "./components/MyProfile/MyProfile";
 import LeaveReview from "./components/LeaveReview/LeaveReview";
 import ProfileSettingsPage from "./views/ProfileSettingsPage";
 import AllReviews from "./views/AllReviews.jsx";
+import RequestsPage from "./views/RequestsPage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/getAllReviews/:id" element={<AllReviews />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/requests" element={<RequestsPage />} />
           {/*<Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
 
 
