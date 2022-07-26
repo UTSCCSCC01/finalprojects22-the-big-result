@@ -30,7 +30,7 @@ login_blueprint = Blueprint('login_blueprint', __name__)
 @login_blueprint.route('/token/<type>', methods=["POST"])
 def create_token(type):
     email = request.json.get("email", None)
-    err_res = {"msg": "Wrong email or password"}, 401
+    err_res = {"error": "Wrong email or password"}, 401
   
     user_type = 'c' if type == 'customer' else 'p'
     
@@ -38,6 +38,10 @@ def create_token(type):
       person = custDAO.getCustomerOnUsername(email)
     elif user_type == 'p':
       person = profDAO.getProfessionalOnUsername(email)
+      #If not approved professional, don't allow them to login
+      if person.status != "APPROVED":
+        err_res = {"error": "Must be approved as a provider to log in"}, 403
+        return err_res
     if not person: 
         return err_res
     check_pass = check_password_hash(person.password, request.json.get("password", None))

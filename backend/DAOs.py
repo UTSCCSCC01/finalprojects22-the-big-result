@@ -67,11 +67,12 @@ class ProfessionalsDAO:
         queryRes = Professional.query.filter_by(username=username, password=password).first()
         return queryRes is not None
 
+    #Added pending status when signing up as professional
     def addProfessional(self, firstname: str, lastname: str, email: str, username: str, password: str, description=None,
                         rating=0, averageCost=0, location="Toronto, Ontario") -> None:
         newProfess = Professional(firstName=firstname, lastName=lastname, email=email, username=username,
                                   password=password, description=description, ratings=rating,
-                                  averageCost=averageCost, location=location)
+                                  averageCost=averageCost, location=location, status="PENDING")
         db.session.add(newProfess)
         db.session.commit()
 
