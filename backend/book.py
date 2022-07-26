@@ -34,17 +34,14 @@ def get_week_by_professional(professional_id: int, start_date: date):
 @book_blueprint.route('/addBookings', methods=["POST"])
 def add_bookings():
     json_object = request.json
-    print()
     customer_id = int(json_object.get("customerId", None))
     service = json_object.get("service", None)
     cost = float(json_object.get("cost", None))
     professional_id = int(json_object.get("professionalId", None))
 
-    # >>>
     # previous_booking_id = int(json_object.get("prevBookingId", None))
     isRescheduling = True if "reschedule" in json_object else False
     print(json_object)
-    # <<<
 
     day_of_booking = date.fromisoformat(json_object.get("date", None))
     time_begin = time.fromisoformat(json_object.get("start", None))
@@ -54,25 +51,14 @@ def add_bookings():
     # get service, location, from professional chosen using professional_id
     chosen_professional = professionalDAO.getProfessionalOnId(professional_id)
     location = chosen_professional.location
-    # service = chosen_professional.services[0].serviceName
-    # price = chosen_professional.averageCost
-    # service = json_object.get("serviceName")
-    # location = json_object.get("location")
-    # price = float(json_object.get("price"))
-
-    print(customer_id, professional_id, datetime.combine(day_of_booking, time_begin),
-                                 datetime.combine(day_of_booking, time_end), location, Status.BOOKED, cost, service,
-                                 instructions)
 
     bookingDAO.addBooking(customer_id, professional_id, datetime.combine(day_of_booking, time_begin),
                                  datetime.combine(day_of_booking, time_end), location, Status.BOOKED, cost, service,
                                  instructions)
 
-    # >>>
     if isRescheduling:
         booking_id = int(json_object.get("id", None)) # double check this is the id of the booking being rescheduled
         bookingDAO.setBookingAsRescheduled(booking_id)
-    # <<<
 
     return {"success": "yes"}
 
