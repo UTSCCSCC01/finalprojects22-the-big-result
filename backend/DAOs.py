@@ -93,20 +93,21 @@ class ProfessionalsDAO:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
     
     def getProfessionalsByLocation(self,location:str) -> List[Professional]:
-        return Professional.query.filter_by(location=location).all()
+        return Professional.query.filter_by(location=location, status="APPROVED").all()
 
+    #TODO: These should also check for status approved
     def getLowestAveragePrice(self) -> float:
-        return db.session.query(func.min(Professional.averageCost)).scalar()
+        return db.session.query(func.min(Professional.averageCost)).filter_by(status="APPROVED").scalar()
 
     def getHighestAveragePrice(self) ->float:
-        return db.session.query(func.max(Professional.averageCost)).scalar()
+        return db.session.query(func.max(Professional.averageCost)).filter_by(status="APPROVED").scalar()
 
     def getProfessionalsWithMinRating(self, minRating: float) -> List[Professional]:
-        return Professional.query.filter(Professional.ratings >= minRating).all()
+        return Professional.query.filter(Professional.ratings >= minRating, Professional.status == "APPROVED").all()
 
     # This is price inclusive
     def getProfessionalsByAvgPriceRange(self, minPrice: float, maxPrice: float) -> List[Professional]:
-        return Professional.query.filter(Professional.averageCost.between(minPrice,maxPrice)).all()
+        return Professional.query.filter(Professional.averageCost.between(minPrice,maxPrice), Professional.status == "APPROVED").all()
 
     def updateDescForProfessional(self, id: int, description: str):
         professional = Professional.query.filter_by(id=id).first()
@@ -117,6 +118,9 @@ class ProfessionalsDAO:
         professional = Professional.query.filter_by(id=id).first()
         professional.status = status
         db.session.commit()
+
+    def getAllApprovedProfessionals(self):
+        return Professional.query.filter_by(status="APPROVED").all()
 
 
 class AdminDAO:
@@ -149,7 +153,6 @@ class AdminDAO:
 
 
 class ServicesDAO:
-
     # @cache.cached(timeout=50, key_prefix='all-serivces')
     def getAllServices(self) -> List[Services]:
         return Services.query.all()
@@ -166,13 +169,9 @@ class ServicesDAO:
         db.session.add(newService)
         db.session.commit()
 
+
     def getProfessionalsForService(self, servicename: str) -> List[Professional]:
-        retQuery = Services.query.filter_by(serviceName=servicename).first()
-        if retQuery is None:
-            return []
-        return retQuery.professionals
-
-
+        return Professional.query.filter_by(status="APPROVED").join(ProfessionalServices).filter_by(serviceName=servicename).all()
 
 class ProfessionalServicesDAO:
 
