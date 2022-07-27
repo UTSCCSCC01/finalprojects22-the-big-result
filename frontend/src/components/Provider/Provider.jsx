@@ -34,7 +34,9 @@ function Provider(props) {
           <Link to={`/c/booking/${props.id}`}>
             <button>Book Now!</button>
           </Link>
-          <button className="transparent-btn">View Profile</button>
+          <Link to={`/profile/${props.id}`}>
+            <button className="transparent-btn">View Profile</button>
+          </Link>
         </div>
       </div>
     </div>
