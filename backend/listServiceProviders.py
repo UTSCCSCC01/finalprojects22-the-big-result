@@ -125,8 +125,11 @@ def get_service_provider_list():
             "review": description,
             "profilePicURL": "https://picsum.photos/102"
         })
+    
+    results_sorted = sorted(results_formatted, key=lambda d: d['name'].lower())
+
     some_providers = {
-        "providers": results_formatted
+        "providers": results_sorted
     }
 
     return some_providers
