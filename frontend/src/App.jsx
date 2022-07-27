@@ -19,6 +19,7 @@ import MyProfile from "./components/MyProfile/MyProfile";
 import LeaveReview from "./components/LeaveReview/LeaveReview";
 import ProfileSettingsPage from "./views/ProfileSettingsPage";
 import AllReviews from "./views/AllReviews.jsx";
+import RequestsPage from "./views/RequestsPage";
 import Deactivated from "./views/Deactivated";
 
 function App() {
@@ -34,6 +35,9 @@ function App() {
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/getAllReviews/:id" element={<AllReviews />} />
           <Route path="/signup" element={<SignUp />} />
+          
+          {/*<Route path="/profileSettings" element={<ProfileSettingsPage />} />*/}
+
           <Route path="/deactivated" element={<Deactivated />} />
           {/* Protected route, should be accessible by both customers and providers*/}
           <Route element={<ProtectedRoutes />}>
@@ -56,6 +60,10 @@ function App() {
               element={<CustPastAndCancelledBookingsPage />}
             />
             <Route path="/c/leaveReview" element={<LeaveReview />} />
+          </Route>
+          {/* Protected route, only accessible by admin*/}
+          <Route element={<ProtectedRoutes role={"admin"} />}>
+            <Route path="/requests" element={<RequestsPage />} />
           </Route>
           {/* Protected route, only accessible by providers*/}
           <Route element={<ProtectedRoutes role={"provider"} />}>

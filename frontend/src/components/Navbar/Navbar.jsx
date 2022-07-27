@@ -54,6 +54,11 @@ function Navbar() {
                 <Link to="/myProfile">My Profile</Link>
               </>
             )}
+            {loggedIn && user && user.type === "admin" && (
+              <>
+                <Link to="/requests">Requests</Link>
+              </>
+            )}
             {loggedIn && user && user.type === "provider" && (
               <>
                 <button id="provider-menu-btn" onClick={handleClick}>
