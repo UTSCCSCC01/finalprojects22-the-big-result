@@ -268,15 +268,9 @@ class BookingsDAO:
         return Bookings.query.filter_by(customerID=custID).all()
 
     def getBookingsFromStatusForProf(self,profID: id, status: Status) -> List[Bookings]:
-        return Bookings.query.filter_by(professionalID=profID, status=status).all()
-
-    def getBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
-        return Bookings.query.filter_by(customerID=custID, status=status).all()
-
-    def getOrderedBookingsFromStatusForProf(self,profID: id, status: Status) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID, status=status).order_by(Bookings.beginServiceDateTime).all()
 
-    def getOrderedBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
+    def getBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
         return Bookings.query.filter_by(customerID=custID, status=status).order_by(Bookings.beginServiceDateTime).all()
 
     def resolveBooking(self, id: int):
