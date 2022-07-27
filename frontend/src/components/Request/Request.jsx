@@ -21,10 +21,7 @@ function Request(props) {
 
   return (
     <div className="provider-card card">
-      <div
-        onClick={() => navigate(`/profile/${props.id}`)}
-        className="metadata"
-      >
+      <div className="metadata">
         <img src={props.profilePicURL} alt={props.name} />
         <div className="metadata-text">
           <h2 className="highlight">{props.name}</h2>
@@ -39,7 +36,10 @@ function Request(props) {
         <div className="btn-group">
             <button onClick={() => update("APPROVED")}>Approve</button>
             <button onClick={() => update("DENIED")}>Deny</button>
-            <button className="transparent-btn">View Profile</button>
+            <button className="transparent-btn"
+              onClick={() => navigate(`/profile/${props.id}`)}> 
+                View Profile
+            </button>
         </div>
       </div>
     </div>

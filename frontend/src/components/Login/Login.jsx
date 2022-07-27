@@ -27,7 +27,7 @@ function Login() {
 
     axios({
       method: "POST",
-      url: `http://localhost:5000/token/${type}`,
+      url: `http://127.0.0.1:5000/token/${type}`,
       data: {
         email: loginForm.email,
         password: loginForm.password,
@@ -75,8 +75,13 @@ function Login() {
     //remove active class from unclicked element
     if (e.target.id === "customer") {
       document.querySelector("#provider").classList.remove("active");
+      document.querySelector("#admin").classList.remove("active");
+    } else if (e.target.id === "admin") {
+      document.querySelector("#customer").classList.remove("active");
+      document.querySelector("#provider").classList.remove("active");
     } else {
       document.querySelector("#customer").classList.remove("active");
+      document.querySelector("#admin").classList.remove("active");
     }
   };
 
@@ -89,6 +94,9 @@ function Login() {
         </button>
         <button className="tab" id="provider" onClick={handleTabs}>
           Service Provider
+        </button>
+        <button className="tab" id="admin" onClick={handleTabs}>
+          Admin
         </button>
       </div>
       <form id="login-form" className="form" onSubmit={handleSubmit}>
