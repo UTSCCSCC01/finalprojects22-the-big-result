@@ -113,7 +113,7 @@ def get_current_user():
     person = profDAO.getProfessionalOnId(id[:len(id)-1])
   elif id[-1] == "a":
     user_type = "admin"
-    person = custDAO.getCustomerOnID(id[:len(id)-1])
+    person = adminDAO.getAdminlOnId(id[:len(id)-1])
   if person == None:
     return err_res
   else:
