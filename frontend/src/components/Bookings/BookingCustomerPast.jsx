@@ -13,7 +13,7 @@ function BookingCustomerPast(props) {
           <h3>Provider: {props.provider}</h3>
           <p>Date: {props.date}</p>
           <p>Time: {props.startTime} to {props.endTime}</p>
-          <p>Price: ${props.cost}</p>
+          <p>Price: ${props.price}</p>
           <p>Location: {props.location}</p>
           
           {/* <p>{props.description}</p>   */}

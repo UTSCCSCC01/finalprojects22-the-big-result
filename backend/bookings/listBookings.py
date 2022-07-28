@@ -38,7 +38,7 @@ def get_customer_upcoming_bookings():
           "provider": provider.firstName + " " + provider.lastName,
           "service": booking.serviceName,
           "description": booking.specialInstructions,
-          "cost": booking.price,
+          "price": booking.price,
           "picURL": "https://picsum.photos/100",
           "date": booking.beginServiceDateTime.strftime("%B %d, %Y"),
           "startTime": booking.beginServiceDateTime.strftime("%I:%M %p"),

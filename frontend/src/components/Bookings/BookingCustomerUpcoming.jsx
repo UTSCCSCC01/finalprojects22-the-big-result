@@ -38,7 +38,7 @@ function BookingCustomerUpcoming(props) {
           <p>
             Time: {props.startTime} to {props.endTime}
           </p>
-          <p>Price: ${props.cost}</p>
+          <p>Price: ${props.price}</p>
         </div>
       </div>
       <div className="desc">
