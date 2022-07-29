@@ -172,6 +172,10 @@ class Settings(db.Model):
 
 class Reviews(db.Model):
     __tablename__ = "Reviews"
+    __table_args__ = {
+        'implicit_returning': False
+    }
+
     id: int = db.Column(db.Integer, primary_key=True)
     bookingID: int = db.Column(db.Integer, db.ForeignKey("Bookings.id"))
     professionalID: int = db.Column(db.Integer, db.ForeignKey("Professional.id"))
