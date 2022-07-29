@@ -31,10 +31,9 @@ function Provider(props) {
           <p>{props.review}</p>
         </div>
         <div className="btn-group">
-          <Link to={`/c/booking/${props.id}`}>
-            <button>Book Now!</button>
+          <Link to={`/profile/${props.id}`}>
+            <button className="transparent-btn">View Profile</button>
           </Link>
-          <button className="transparent-btn">View Profile</button>
         </div>
       </div>
     </div>

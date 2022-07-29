@@ -13,7 +13,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -28,8 +27,6 @@ const style = {
 };
 
 function ProfileEdit(props) {
-  const navigate = useNavigate();
-  const { id } = useParams();
   const [servicesList, setServicesList] = useState([]);
   const [origServices, setOrigServices] = useState([]);
   const [editForm, setEditForm] = useState({});
@@ -38,8 +35,6 @@ function ProfileEdit(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    // navigate("/profile/" + props.id);
-    // window.location = "/profile/" + props.id;
   };
 
   const [formOpen, setFormOpen] = useState(false);
@@ -211,7 +206,7 @@ function ProfileEdit(props) {
 
             <br />
 
-            <button onClick={handleFormOpen}>Edit Profile</button>
+            <button onClick={handleFormOpen}>Confirm Choices</button>
           </div>
         </div>
       </div>
@@ -232,7 +227,7 @@ function ProfileEdit(props) {
             />
           ))}
         <br />
-        <Link to={`/getAllReviews/${id}`}>
+        <Link to={`/getAllReviews/${props.id}`}>
           <button >See All Reviews </button>
         </Link>
       </div>

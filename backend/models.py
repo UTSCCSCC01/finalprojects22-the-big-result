@@ -119,6 +119,7 @@ class Professional(User):
     ratings: float = db.Column(db.Float, nullable=False, default=0)
     averageCost: float = db.Column(db.Float)
     location: str = db.Column(db.String(500),default= "UTSC")
+    status: str = db.Column(db.String(20),default= "PENDING")
 
     # List of services
     services: List = db.relationship("Services", secondary=professionalServices, lazy='subquery', back_populates="professionals")

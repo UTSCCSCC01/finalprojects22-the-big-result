@@ -5,7 +5,7 @@ import { useAxiosAuth } from "../APICalls";
 import axios from "axios";
 
 import Profile from "../components/Profile/Profile";
-import ProfileEdit from "../components/Profile/ProfileEdit";
+// import ProfileEdit from "../components/Profile/ProfileEdit";
 
 function ProfilePage(props) {
   const [profileData, setProfileData] = useState([]);
@@ -40,35 +40,19 @@ function ProfilePage(props) {
         .catch((err) => console.log(err));
   }, []);
 
-  if (userId === parseInt(id)) {
-    return (
-      <ProfileEdit
-        id={id}
-        profilePictureLink={profileData.profilePictureLink}
-        name={profileData.name}
-        rating={profileData.rating}
-        description={profileData.description}
-        services={profileData.services}
-        location={profileData.location}
-        length={Object.keys(profileData).length}
-        reviews={profileData.reviews}
-      />
-    );
-  } else {
-    return (
-      <Profile
-        id={id}
-        profilePictureLink={profileData.profilePictureLink}
-        name={profileData.name}
-        rating={profileData.rating}
-        description={profileData.description}
-        services={profileData.services}
-        location={profileData.location}
-        length={Object.keys(profileData).length}
-        reviews={profileData.reviews}
-      />
-    );
-  }
+  return (
+    <Profile
+      id={id}
+      profilePictureLink={profileData.profilePictureLink}
+      name={profileData.name}
+      rating={profileData.rating}
+      description={profileData.description}
+      services={profileData.services}
+      location={profileData.location}
+      length={Object.keys(profileData).length}
+      reviews={profileData.reviews}
+    />
+  );
 }
 
 export default ProfilePage;

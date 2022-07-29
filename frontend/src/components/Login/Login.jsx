@@ -13,20 +13,21 @@ function Login() {
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [type, setType] = useState("customer");
+  const [errors, setErrors] = useState("");
   const [failedLogin, setFailedLogin] = useState(false);
 
   //TODO: Just put this under a protectedRoute with role "not logged in", or something similar?
   useEffect(() => {
     //From useContext, if user already exists, no need to login
-    if (user) navigate("/myProfile");
+    if (user) navigate("/");
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     axios({
       method: "POST",
-      url: `http://localhost:5000/token/${type}`,
+      url: `http://127.0.0.1:5000/token/${type}`,
       data: {
         email: loginForm.email,
         password: loginForm.password,
@@ -45,12 +46,15 @@ function Login() {
           // only go to profile tab when login is successful
           navigate("/");
           setFailedLogin(false);
-        } else setFailedLogin(true);
+        } else {
+          setFailedLogin(true);
+          // setErrors(res.data.error);
+        }
       })
       .catch((err) => {
         // diaplay "incorrect login" message
         setFailedLogin(true);
-        console.log(err);
+        setErrors(err.response.data.error);
       });
     // reset form after submission
     setLoginForm({ email: "", password: "" });
@@ -71,8 +75,13 @@ function Login() {
     //remove active class from unclicked element
     if (e.target.id === "customer") {
       document.querySelector("#provider").classList.remove("active");
+      document.querySelector("#admin").classList.remove("active");
+    } else if (e.target.id === "admin") {
+      document.querySelector("#customer").classList.remove("active");
+      document.querySelector("#provider").classList.remove("active");
     } else {
       document.querySelector("#customer").classList.remove("active");
+      document.querySelector("#admin").classList.remove("active");
     }
   };
 
@@ -85,6 +94,9 @@ function Login() {
         </button>
         <button className="tab" id="provider" onClick={handleTabs}>
           Service Provider
+        </button>
+        <button className="tab" id="admin" onClick={handleTabs}>
+          Admin
         </button>
       </div>
       <form id="login-form" className="form" onSubmit={handleSubmit}>
@@ -106,9 +118,7 @@ function Login() {
         />
         <button type="submit">Login</button>
       </form>
-      {failedLogin && (
-        <p className="error">Username or password is incorrect.</p>
-      )}
+      {failedLogin && <p className="error">{errors}</p>}
       <p>
         Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>
