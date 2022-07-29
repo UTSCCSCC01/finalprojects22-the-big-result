@@ -21,6 +21,7 @@ import ProfileSettingsPage from "./views/ProfileSettingsPage";
 import AllReviews from "./views/AllReviews.jsx";
 import RequestsPage from "./views/RequestsPage";
 import Deactivated from "./views/Deactivated";
+import Location from "./components/Location/Location";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <>
         <Navbar />
         <Routes>
+          <Route path="/location" element={<Location />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/services" element={<ServiceList />} />

@@ -14,9 +14,13 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Autocomplete,
   Select as MUISelect,
 } from "@mui/material";
+import Location from "../Location/Location";
 import { ScriptElementKindModifier } from "typescript";
+
+
 
 function SignUpProvider() {
   const navigate = useNavigate();
@@ -163,7 +167,8 @@ function SignUpProvider() {
           value={signupForm.password}
           required
         />
-        <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+        <Location />
+        {/* <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
           <InputLabel id="location-label">Location</InputLabel>
           <MUISelect
             labelId="location-label"
@@ -172,11 +177,12 @@ function SignUpProvider() {
             name="location"
             onChange={handleChange}
           >
+            
             <MenuItem value={"Toronto, Ontario"}>Toronto, Ontario</MenuItem>
             <MenuItem value={"Vaughn, Ontario"}>Vaughn, Ontario</MenuItem>
             <MenuItem value={"Waterloo, Ontario"}>Waterloo, Ontario</MenuItem>
           </MUISelect>
-        </FormControl>
+        </FormControl> */}
         <br />
         {servicesList && (
           <Select
