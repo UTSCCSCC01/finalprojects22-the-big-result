@@ -39,8 +39,8 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route path="/profileSettings" element={<ProfileSettingsPage />} />
           </Route>
-          {/* Protected route, should be accessible by both customers and providers*/}
-          <Route element={<ProtectedRoutes />}>
+          {/* Protected route, only accessible by providers*/}
+          <Route element={<ProtectedRoutes role={"provider"} />}>
             <Route path="/myProfile" element={<MyProfile />} />
           </Route>
           {/* Protected route, only accessible by customers*/}

@@ -19,7 +19,7 @@ function Login() {
   //TODO: Just put this under a protectedRoute with role "not logged in", or something similar?
   useEffect(() => {
     //From useContext, if user already exists, no need to login
-    if (user) navigate("/myProfile");
+    if (user) navigate("/");
   }, []);
 
   const handleSubmit = (e) => {

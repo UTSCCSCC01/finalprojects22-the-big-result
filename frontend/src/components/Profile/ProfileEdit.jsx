@@ -27,7 +27,6 @@ const style = {
 };
 
 function ProfileEdit(props) {
-  const { id } = useParams();
   const [servicesList, setServicesList] = useState([]);
   const [origServices, setOrigServices] = useState([]);
   const [editForm, setEditForm] = useState({});
@@ -207,7 +206,7 @@ function ProfileEdit(props) {
 
             <br />
 
-            <button onClick={handleFormOpen}>Edit Profile</button>
+            <button onClick={handleFormOpen}>Confirm Choices</button>
           </div>
         </div>
       </div>
@@ -228,7 +227,7 @@ function ProfileEdit(props) {
             />
           ))}
         <br />
-        <Link to={`/getAllReviews/${id}`}>
+        <Link to={`/getAllReviews/${props.id}`}>
           <button >See All Reviews </button>
         </Link>
       </div>

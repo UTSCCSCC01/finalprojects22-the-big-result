@@ -51,11 +51,11 @@ function Navbar() {
               <>
                 {/*<Link to="/myProfile">My Profile</Link>*/}
                 <Link to="/profileSettings">Settings</Link>
-                <Link to="/myProfile">My Profile</Link>
               </>
             )}
             {loggedIn && user && user.type === "provider" && (
               <>
+                <Link to="/myProfile">My Profile</Link>
                 <button id="provider-menu-btn" onClick={handleClick}>
                   My Bookings
                 </button>
