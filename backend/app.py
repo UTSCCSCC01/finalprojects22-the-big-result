@@ -12,6 +12,7 @@ from DAOs import runDAOQueries
 from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
+from pictures.testS3Stuff import testStuff
 from profile.userSettingsProfile import profileBluePrint
 
 from signup import signup_blueprint
@@ -75,4 +76,5 @@ app = createApp()
 
 if __name__ == "__main__":
     # runDAOQueries()
-    app.run(debug=True)
+    # app.run(debug=True)
+    testStuff()
