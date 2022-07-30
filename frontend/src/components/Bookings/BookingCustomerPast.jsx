@@ -48,7 +48,7 @@ function BookingCustomerPast(props) {
         <div className="btn-group">
           {/* {props.type =="Past" ? <button>Book Again</button> : <button>Reschedule</button>}
           {props.type == "Past" ? <button>Leave a Review</button> : <button>Cancel</button>} */}
-          <button onClick={() => navigate(`/c/booking/${props.providerId}?reschedule=1&id=${props.id}&cost=${props.cost}&service=${props.service}&providerName=${props.provider}`)}>Book Again</button>
+          <button onClick={() => navigate(`/c/booking/${props.providerId}?service=${props.service}&cost=${props.price}&providerName=${props.provider}`)}>Book Again</button>
           {/* <button>Leave a Review</button> */}
           {props.review == "" ? 
             <Link to="/c/leaveReview" state={{bookingId: props.bookingId, providerId: props.providerId}}><button>Leave A Review</button></Link> : 
