@@ -26,7 +26,7 @@ function CustUpBookingsPage() {
     <div className="bookings-page page">
       <h1>Upcoming Bookings</h1>
       <div className="bookings">
-        {bookings.map((booking) => (
+        {bookings.length!==0 ? bookings.map((booking) => (
           <BookingCustomerUpcoming
             id={booking.id}
             providerId = {booking.providerId}
@@ -40,7 +40,8 @@ function CustUpBookingsPage() {
             endTime={booking.endTime}
             startDateTime={booking.startDateTime}
           />
-        ))}
+        )) : 
+        <p className="empty">No upcoming bookings</p>}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 
 import BookingProfessionalCancelled from "../components/Bookings/BookingProfessionalCancelled";
 import BookingProfessionalPast from "../components/Bookings/BookingProfessionalPast";
@@ -7,12 +7,10 @@ import {
   getProfessionalPastBookings,
   useAxiosAuth,
 } from "../APICalls";
-import { AuthContext } from "../context/AuthProvider";
 
 function ProfessionalPastAndCancelledBookingsPage() {
   const [pastBookings, setPastBookings] = useState([]);
   const [cancelledBookings, setCancelledBookings] = useState([]);
-  const { user } = useContext(AuthContext);
   const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
@@ -26,7 +24,6 @@ function ProfessionalPastAndCancelledBookingsPage() {
           })
           .catch((err) => console.log(err.response));
 
-        console.log(res.data.id, "finding professional cancelled bookings...");
         getProfessionalCancelledBookings({
           professionalId: parseInt(res.data.id),
         }).then((response) => {
@@ -40,7 +37,7 @@ function ProfessionalPastAndCancelledBookingsPage() {
     <div className="bookings-page page">
       <h1>Past Bookings</h1>
       <div className="bookings">
-        {pastBookings.map((booking) => (
+        {pastBookings.length!==0 ? pastBookings.map((booking) => (
           <BookingProfessionalPast
             customer={booking.customer}
             service={booking.service}
@@ -51,12 +48,12 @@ function ProfessionalPastAndCancelledBookingsPage() {
             price={booking.price}
             picURL={booking.picURL}
           />
-        ))}
+        )) : 
+        <p className="empty">No past bookings</p>}
       </div>
       <h1>Cancelled Bookings</h1>
       <div className="bookings">
-        {/* TODO (A): no need for location? was not added to past bookings so didnt add to cancelled */}
-        {cancelledBookings.map((booking) => (
+        {cancelledBookings.length!==0 ? cancelledBookings.map((booking) => (
           <BookingProfessionalCancelled
             customer={booking.customer}
             service={booking.service}
@@ -68,7 +65,8 @@ function ProfessionalPastAndCancelledBookingsPage() {
             location={booking.location}
             price={booking.price}
           />
-        ))}
+        )) :
+        <p className="empty">No cancelled bookings</p>}
       </div>
     </div>
   );
