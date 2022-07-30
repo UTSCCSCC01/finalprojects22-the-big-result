@@ -77,7 +77,7 @@ simplify much of the frontend styling by providing built-in components. [Documen
 Gmail API is a library from the Google Cloud API. While the Google Cloud API provides a vast library, our usage is strictly using the https://www.googleapis.com/auth/gmail.modify endpoint.
 It is used to send email notifications to service providers, informing them of changes to their account or bookings. 
 The API requires OATH2 setup, and our backend utilizes environment variables to find the credentials.json and updates tokens on launch.
-This allows us to easily send emails by calling the gmailAPI class on our backend. [Gmail API Documentation for endpoint usage] (https://developers.google.com/gmail/api/guides/sending)
+This allows us to easily send emails by calling the gmailAPI class on our backend. [Gmail API Documentation for endpoint usage.](https://developers.google.com/gmail/api/guides/sending)
 
 ## Contribution
 
