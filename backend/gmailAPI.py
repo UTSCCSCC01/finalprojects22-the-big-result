@@ -41,9 +41,10 @@ def sendEmail(recieverEmail, subject, plainMessage):
 
     try:
         service = build('gmail', 'v1', credentials=creds)
-        message = EmailMessage()
+        #message = EmailMessage()
 
-        message.set_content(plainMessage)
+        #message.set_content(plainMessage)
+        message = MIMEText(plainMessage, 'plain')
 
         message['To'] = recieverEmail
         message['From'] = 'amorrmailingservice@gmail.com'
@@ -65,13 +66,13 @@ def signupProvider(email, name):
 
     sendEmail(email, "Welcome to Amorr!",
     """Hello, {0}
-    Thank you for creating an account and welcome to Amorr. We look forward to helping you grow your buisiness, now and in the years to come!
+Thank you for creating an account and welcome to Amorr. We look forward to helping you grow your buisiness, now and in the years to come!
 
-    Please give our approval team 1-2 buisiness days to verify your details. You will recieve an email once you've been approved!
-    If you did not create this account, please contact us so that we may deactivate the account.
-    
-    Thank you,
-    Amorr Public Relations
+Please give our approval team 1-2 buisiness days to verify your details. You will recieve an email once you've been approved!
+If you did not create this account, please contact us so that we may deactivate the account.
+
+Thank you,
+Amorr Public Relations
     """.format(name)
     )
 
@@ -79,12 +80,12 @@ def approveProvider(providerID):
     provider = userDAO.getUserById(providerID)
     sendEmail(provider.email, "Your account has been approved!",
     """Hello, {0}
-    Thank you for waiting. You have been approved as a service provider on Amorr, and can now login. 
-    
-    Once again, we welcome you to the Amorr family! 
-    
-    Thank you,
-    Amorr Public Relations
+Thank you for waiting. You have been approved as a service provider on Amorr, and can now login. 
+
+Once again, we welcome you to the Amorr family! 
+
+Thank you,
+Amorr Public Relations
     """.format(provider.firstName + " " + provider.lastName)
     )
 
@@ -94,7 +95,7 @@ def newBooking(customer_id, professional_id, startDateTime, endDateTime, locatio
 
     sendEmail(provider.email, "New Booking!",
     """Hello, {0}
-    We are pleased to inform you that {1} has booked you for the following service: {2}!
+We are pleased to inform you that {1} has booked you for the following service: {2}!
 
     Date: {3}
     Time: {4}
@@ -102,8 +103,8 @@ def newBooking(customer_id, professional_id, startDateTime, endDateTime, locatio
     Duration: {6}
     Extra Instructions: {7}
 
-    Thank you,
-    Amorr Public Relations
+Thank you,
+Amorr Public Relations
     """.format(
         provider.firstName + " " + provider.lastName,
         customer.firstName + " " + customer.lastName,
@@ -124,7 +125,7 @@ def rescheduleBooking(oldBooking_id, customer_id, professional_id,
 
     sendEmail(provider.email, "Your booking has been rescheduled",
     """Hello, {0}
-    Your booking with {1} on {2} has been rescheduled. Please ensure these details work for you:
+Your booking with {1} on {2} has been rescheduled. Please ensure these details work for you:
 
     Date: {3}
     Time: {4}
@@ -132,8 +133,8 @@ def rescheduleBooking(oldBooking_id, customer_id, professional_id,
     Duration: {6}
     Extra Instructions: {7}
 
-    Thank you,
-    Amorr Public Relations
+Thank you,
+Amorr Public Relations
     """.format(
         provider.firstName + " " + provider.lastName,
         customer.firstName + " " + customer.lastName,
@@ -153,12 +154,12 @@ def cancelBooking(bookingId):
 
     sendEmail(provider.email, "Your booking has been cancelled",
     """Hello, {0}
-    {1} has cancelled their appointment on {2} with you.
-    
-    Fortunately, there's still time for someone else to book that timeslot. We will notify you if there is a new booking!
+{1} has cancelled their appointment on {2} with you.
 
-    Thank you,
-    Amorr Public Relations
+Fortunately, there's still time for someone else to book that timeslot. We will notify you if there is a new booking!
+
+Thank you,
+Amorr Public Relations
     """.format(
         provider.firstName + " " + provider.lastName,
         customer.firstName + " " + customer.lastName,
