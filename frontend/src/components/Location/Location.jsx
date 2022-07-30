@@ -1,33 +1,22 @@
 import React from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAxiosAuth } from "../../APICalls";
+import axios from "axios";
 import "../Form.css";
 import "./Location.css";
 import {
-  TextField,
   OutlinedInput,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Autocomplete,
   Select as MUISelect,
 } from "@mui/material";
 
-const addresses = [ "ava", "sina"];
 
-function Location() {
-  const [address, setAddress] = useState("");
-
-  const handleChange = (e) => {
-    const { value, name } = e.target;
-    setAddress(value);
-  };
+function Location({ sendLocation }) {
+  const [location, setLocation] = useState("");
 
   const handleSelect = async value => {
-    setAddress(value);
+    setLocation(value);
+    sendLocation(value);
     console.log(value)
   };
  
@@ -41,8 +30,8 @@ function Location() {
       /> */}
      
       <PlacesAutocomplete
-        value={address}
-        onChange={setAddress}
+        value={location}
+        onChange={setLocation}
         onSelect={handleSelect}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
@@ -55,7 +44,7 @@ function Location() {
             <OutlinedInput
                 {...getInputProps({ placeholder: "Type service location",
                 className: 'location-search-input'})}
-                value={address}
+                value={location}
                 required
               />
             
@@ -63,7 +52,7 @@ function Location() {
               {loading ? <div>loading...</div> : null}
               {suggestions.map(suggestion => {
                 const style = {
-                  backgroundColor: suggestion.active ? "#41b6e6" : "#fff",
+                  backgroundColor: suggestion.active ? "#CBC3E3" : "#fff",
                   width: "100%"
                 };
                 return (
@@ -81,20 +70,3 @@ function Location() {
 }
 
 export default Location;
-
-
-{/* <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-<InputLabel id="location-label">Location</InputLabel>
-<MUISelect
-  labelId="location-label"
-  value={address}
-  label="location"
-  name="location"
-  onChange={handleChange}
->
-  
-  <MenuItem value={"Toronto, Ontario"}>Toronto, Ontario</MenuItem>
-  <MenuItem value={"Vaughn, Ontario"}>Vaughn, Ontario</MenuItem>
-  <MenuItem value={"Waterloo, Ontario"}>Waterloo, Ontario</MenuItem>
-</MUISelect>
-</FormControl> */}

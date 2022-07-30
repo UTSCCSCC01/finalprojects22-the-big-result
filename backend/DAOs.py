@@ -123,7 +123,7 @@ class ProfessionalsDAO:
         return Professional.query.filter_by(status=status).all()
 
     def getAllUniqueLocations(self) ->List[str]:
-        return [locationTuple[0] for locationTuple in Professional.query.with_entities(Professional.location).distinct().all()]
+        return [locationTuple[0] for locationTuple in Professional.query.filter_by(status="APPROVED").with_entities(Professional.location).distinct().all()]
 
 
 class AdminDAO:

@@ -91,6 +91,23 @@ function SignUpProvider() {
     }));
   };
 
+  // TODO: can combine this with handleChange?
+  const getLocation = (loc) => {
+    const arr = loc.split(",");
+    var locToStore = loc;
+    console.log(arr)
+    if (arr.length >= 3) {
+      // select the last three
+      locToStore = arr.slice(-3).join().substring(1);
+    }
+    setSignupForm((prevSignup) => ({
+      ...prevSignup,
+      location: locToStore,
+    }));
+    console.log('got location to store...', locToStore); // for now just a date  
+    console.log(signupForm)       
+  }
+
   const handleSelect = (e) => {
     setSignupForm((prevSignup) => ({
       ...prevSignup,
@@ -167,7 +184,9 @@ function SignUpProvider() {
           value={signupForm.password}
           required
         />
-        <Location />
+        <Location 
+          sendLocation={getLocation}
+        />
         {/* <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
           <InputLabel id="location-label">Location</InputLabel>
           <MUISelect
@@ -183,7 +202,7 @@ function SignUpProvider() {
             <MenuItem value={"Waterloo, Ontario"}>Waterloo, Ontario</MenuItem>
           </MUISelect>
         </FormControl> */}
-        <br />
+        {/* <br /> */}
         {servicesList && (
           <Select
             placeholder="Services Offered"

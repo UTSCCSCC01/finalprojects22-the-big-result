@@ -88,3 +88,10 @@ def get_pending_requests():
 def post_approve_request():
     profDAO.updateProfessionalStatus(request.args.get("id"), request.args.get("status"))
     return {"status" : "OK"}
+
+@list_providers_blueprint.route("/getLocations", methods=["GET"])
+def get_location_list():
+    locations = jsonify({"data": profDAO.getAllUniqueLocations()})
+    print('*******************************************************************')
+    print(locations)
+    return locations

@@ -3,7 +3,7 @@
 .location-search-input:focus,
 .location-search-input:active {
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-  border: honeydew;
+  border: black;
   display: block;
   width: 100%;
   padding: 16px;
@@ -13,13 +13,19 @@
 }
 
 .autocomplete-dropdown-container {
-  border-bottom: honeydew;
+  border-bottom: black;
   border-left: honeydew;
   border-right: honeydew;
-  width: auto;
+  width: inherit;
   border-top: 1px solid #e6e6e6;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  position: absolute;
+  /* position: absolute; */
   z-index: 1000;
   border-radius: 0 0 2px 2px;
+
+  position: fixed;
+  top: auto;
+  left: auto;
+  /* width: inherit !important;
+  font-family: "Roboto", sans-serif !important; */
 }
