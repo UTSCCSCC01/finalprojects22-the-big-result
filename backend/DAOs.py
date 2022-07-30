@@ -67,11 +67,12 @@ class ProfessionalsDAO:
         queryRes = Professional.query.filter_by(username=username, password=password).first()
         return queryRes is not None
 
+    #Added pending status when signing up as professional
     def addProfessional(self, firstname: str, lastname: str, email: str, username: str, password: str, description=None,
                         rating=0, averageCost=0, location="Toronto, Ontario") -> None:
         newProfess = Professional(firstName=firstname, lastName=lastname, email=email, username=username,
                                   password=password, description=description, ratings=rating,
-                                  averageCost=averageCost, location=location)
+                                  averageCost=averageCost, location=location, status="PENDING")
         db.session.add(newProfess)
         db.session.commit()
 
@@ -93,25 +94,36 @@ class ProfessionalsDAO:
         return Professional.query.filter_by(id=id).first().reviews.limit(numReviews).all()
     
     def getProfessionalsByLocation(self,location:str) -> List[Professional]:
-        return Professional.query.filter_by(location=location).all()
+        return Professional.query.filter_by(location=location, status="APPROVED").all()
 
     def getLowestAveragePrice(self) -> float:
-        return db.session.query(func.min(Professional.averageCost)).scalar()
+        return db.session.query(func.min(Professional.averageCost)).filter_by(status="APPROVED").scalar()
 
     def getHighestAveragePrice(self) ->float:
-        return db.session.query(func.max(Professional.averageCost)).scalar()
+        return db.session.query(func.max(Professional.averageCost)).filter_by(status="APPROVED").scalar()
 
     def getProfessionalsWithMinRating(self, minRating: float) -> List[Professional]:
-        return Professional.query.filter(Professional.ratings >= minRating).all()
+        return Professional.query.filter(Professional.ratings >= minRating, Professional.status == "APPROVED").all()
 
     # This is price inclusive
     def getProfessionalsByAvgPriceRange(self, minPrice: float, maxPrice: float) -> List[Professional]:
-        return Professional.query.filter(Professional.averageCost.between(minPrice,maxPrice)).all()
+        return Professional.query.filter(Professional.averageCost.between(minPrice,maxPrice), Professional.status == "APPROVED").all()
 
     def updateDescForProfessional(self, id: int, description: str):
         professional = Professional.query.filter_by(id=id).first()
         professional.description = description
         db.session.commit()
+
+    def updateProfessionalStatus(self, id:int, status:str):
+        professional = Professional.query.filter_by(id=id).first()
+        professional.status = status
+        db.session.commit()
+
+    def getProfessionalsByStatus(self, status: str) -> List[Professional]:
+        return Professional.query.filter_by(status=status).all()
+
+    def getAllUniqueLocations(self) ->List[str]:
+        return [locationTuple[0] for locationTuple in Professional.query.filter_by(status="APPROVED").with_entities(Professional.location).distinct().all()]
 
 
 class AdminDAO:
@@ -144,7 +156,6 @@ class AdminDAO:
 
 
 class ServicesDAO:
-
     # @cache.cached(timeout=50, key_prefix='all-serivces')
     def getAllServices(self) -> List[Services]:
         return Services.query.all()
@@ -161,13 +172,9 @@ class ServicesDAO:
         db.session.add(newService)
         db.session.commit()
 
+
     def getProfessionalsForService(self, servicename: str) -> List[Professional]:
-        retQuery = Services.query.filter_by(serviceName=servicename).first()
-        if retQuery is None:
-            return []
-        return retQuery.professionals
-
-
+        return Professional.query.filter_by(status="APPROVED").join(ProfessionalServices).filter_by(serviceName=servicename).all()
 
 class ProfessionalServicesDAO:
 
@@ -264,6 +271,12 @@ class BookingsDAO:
     def getBookingsFromProfID(self, profID: int) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).all()
 
+    def cancelBookingsFromProfId(self, profID:int):
+        bookings = Bookings.query.filter(Bookings.professionalID==profID, ((Bookings.status==Status.BOOKED) | (Bookings.status==Status.RESCHEDULED))).all()
+        for booking in bookings:
+            booking.status = Status.CANCELLED
+        db.session.commit()
+
     def getBookingsFromCustID(self, custID: int) -> List[Bookings]:
         return Bookings.query.filter_by(customerID=custID).all()
 
@@ -295,20 +308,20 @@ class BookingsDAO:
         booking.status = Status.RESCHEDULED
         db.session.commit()
 
-    # NOTE: assume booking time is fixed to an hour so add availability for an hour
-    def cancelBooking(self, id: int):
-      booking = Bookings.query.filter_by(id=id).first()
-      booking.status = Status.CANCELLED
-      db.session.commit()
+    # # NOTE: assume booking time is fixed to an hour so add availability for an hour
+    # def cancelBooking(self, id: int):
+    #   booking = Bookings.query.filter_by(id=id).first()
+    #   booking.status = Status.CANCELLED
+    #   db.session.commit()
 
-      # add cancelled booking as non recurring availability
-      profId = booking.professionalID
-      date = booking.beginServiceDateTime.date()
-      startTime = booking.beginServiceDateTime.time()
-      endTime = booking.endServiceDateTime.time()
-      newAvailability = AvailabilitiesNonRec(professionalID=profId, date=date,startTime=startTime,endTime=endTime, isAvailable=1)
-      db.session.add(newAvailability)
-      db.session.commit()
+    #   # add cancelled booking as non recurring availability
+    #   profId = booking.professionalID
+    #   date = booking.beginServiceDateTime.date()
+    #   startTime = booking.beginServiceDateTime.time()
+    #   endTime = booking.endServiceDateTime.time()
+    #   newAvailability = AvailabilitiesNonRec(professionalID=profId, date=date,startTime=startTime,endTime=endTime, isAvailable=1)
+    #   db.session.add(newAvailability)
+    #   db.session.commit()
 
     def getNonCancelledBookingsFromProfIDinRangeWithStatusIncl(self, profID: int, rangeStart: datetime, rangeEnd: datetime):
       return [booking for booking in db.session.query(Bookings)
@@ -387,6 +400,9 @@ def runDAOQueries():
 
     profDao = ProfessionalsDAO()
 
+    bookingsDao = BookingsDAO()
+    # print(bookingsDao.cancelBookingsFromProfId(40))
+
     # print(profDao.getProfessionalsByLocation("toronto"))
 
 
@@ -453,4 +469,6 @@ def runDAOQueries():
     # print()
     # for row in db.session.query(Bookings).filter(Bookings.professionalID=="36", Bookings.status!="CANCELLED"):
     #   print (row.professionalID)
+    # locations = profDao.getAllUniqueLocations()
+    # print(locations)
     pass

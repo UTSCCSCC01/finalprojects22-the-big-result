@@ -11,12 +11,9 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Select as MUISelect,
 } from "@mui/material";
-import { ScriptElementKindModifier } from "typescript";
+import Location from "../Location/Location";
+
 
 function SignUpProvider() {
   const navigate = useNavigate();
@@ -86,6 +83,18 @@ function SignUpProvider() {
       [name]: value,
     }));
   };
+
+  const getLocation = (loc) => {
+    const arr = loc.split(",");
+    var locToStore = loc;
+    // get city, state/province, country 
+    if (arr.length >= 3) 
+      locToStore = arr.slice(-3).join().substring(1);
+    setSignupForm((prevSignup) => ({
+      ...prevSignup,
+      location: locToStore,
+    }));     
+  }
 
   const handleSelect = (e) => {
     setSignupForm((prevSignup) => ({
@@ -163,21 +172,9 @@ function SignUpProvider() {
           value={signupForm.password}
           required
         />
-        <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-          <InputLabel id="location-label">Location</InputLabel>
-          <MUISelect
-            labelId="location-label"
-            value={signupForm.location}
-            label="location"
-            name="location"
-            onChange={handleChange}
-          >
-            <MenuItem value={"Toronto, Ontario"}>Toronto, Ontario</MenuItem>
-            <MenuItem value={"Vaughn, Ontario"}>Vaughn, Ontario</MenuItem>
-            <MenuItem value={"Waterloo, Ontario"}>Waterloo, Ontario</MenuItem>
-          </MUISelect>
-        </FormControl>
-        <br />
+        <Location 
+          sendLocation={getLocation}
+        />
         {servicesList && (
           <Select
             placeholder="Services Offered"

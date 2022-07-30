@@ -68,7 +68,7 @@
 
 .service-active {
   background: #b5addb;
-  -webkit-transition: all .2s ease-in;
+  -webkit-transition: all 0.2s ease-in;
 }
 
 .service-selection {
@@ -84,5 +84,9 @@
 .flex-container {
   display: flex;
   /* justify-content:space-between; */
-  align-items:center;
+  align-items: center;
+}
+
+.MuiButton-root:hover {
+  color: inherit;
 }

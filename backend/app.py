@@ -26,6 +26,7 @@ from bookings.listBookings import list_bookings_blueprint
 from calender import calender_blueprint # new
 from book import book_blueprint # new
 from reviews.reviews import review_blueprint
+from deactivate.deactivate import deactivate_blueprint
 
 
 def getDBURL() -> str:
@@ -46,6 +47,7 @@ def createApp():
     app.register_blueprint(review_blueprint) # deals with creating a review (theb-15)
     app.register_blueprint(profileBluePrint, url_prefix='/profile')
     app.register_blueprint(allReviews_blueprint) # deals with getting all reviews (theb-6)
+    app.register_blueprint(deactivate_blueprint)
 
     CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
     # JWTManager(app)

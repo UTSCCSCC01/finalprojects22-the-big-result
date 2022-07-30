@@ -13,6 +13,7 @@ function Login() {
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [type, setType] = useState("customer");
+  const [errors, setErrors] = useState("");
   const [failedLogin, setFailedLogin] = useState(false);
 
   //TODO: Just put this under a protectedRoute with role "not logged in", or something similar?
@@ -23,7 +24,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     axios({
       method: "POST",
       url: `http://localhost:5000/token/${type}`,
@@ -41,16 +42,18 @@ function Login() {
             type: res.data.type,
             access_token: res.data.access_token,
           });
-          console.log(user);
           // only go to profile tab when login is successful
           navigate("/");
           setFailedLogin(false);
-        } else setFailedLogin(true);
+        } else {
+          setFailedLogin(true);
+          // setErrors(res.data.error);
+        }
       })
       .catch((err) => {
         // diaplay "incorrect login" message
         setFailedLogin(true);
-        console.log(err);
+        setErrors(err.response.data.error);
       });
     // reset form after submission
     setLoginForm({ email: "", password: "" });
@@ -106,9 +109,7 @@ function Login() {
         />
         <button type="submit">Login</button>
       </form>
-      {failedLogin && (
-        <p className="error">Username or password is incorrect.</p>
-      )}
+      {failedLogin && <p className="error">{errors}</p>}
       <p>
         Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>

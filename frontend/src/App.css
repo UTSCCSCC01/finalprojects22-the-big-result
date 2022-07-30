@@ -78,6 +78,10 @@ button:hover {
   color: red;
 }
 
+.empty {
+  color: #1c2b49;
+}
+
 .highlight {
   color: #5646ab;
 }
