@@ -9,16 +9,6 @@ def testStuff():
 
     myBucketName= "csc-c01-pictures"
 
-    # client = boto3.resource(
-    #     's3',
-    #     aws_access_key_id='AKIA2OPVVDRCSY5EB5SO',
-    #     aws_secret_access_key='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'
-    # )
-
-    session = boto3.Session(
-        aws_access_key_id='AKIA2OPVVDRCSY5EB5SO',
-        aws_secret_access_key='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',
-    )
     # s3 = session.resource('s3')
     # response = client.list_buckets()
     #
