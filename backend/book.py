@@ -4,7 +4,7 @@ from tracemalloc import start
 from flask import Blueprint, jsonify, request
 from DAOs import BookingsDAO, ProfessionalsDAO
 from models import Status
-from gmailAPI import newBooking as notifyProfOfBooking, rescheduleBooking as notifyProfOfReschedule
+from gmailAPI import newBooking as notifyProfOfBooking, rescheduleBooking as notifyProfOfReschedule, cancelBooking as notifyProfOfCancel
 
 book_blueprint = Blueprint('book_blueprint', __name__)
 bookingDAO = BookingsDAO()
@@ -101,6 +101,7 @@ def get_bookings():
 def cancel_booking():
     bookingId = int(request.json.get("id", None))
     bookingDAO.cancelBooking(bookingId)
+    notifyProfOfCancel(bookingId)
     return { "id": bookingId }, 200
 
 @book_blueprint.route('/resolveBooking', methods=["PUT"])
