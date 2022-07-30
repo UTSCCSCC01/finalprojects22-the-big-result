@@ -79,6 +79,9 @@ It is used to send email notifications to service providers, informing them of c
 The API requires OATH2 setup, and our backend utilizes environment variables to find the credentials.json and updates tokens on launch.
 This allows us to easily send emails by calling the gmailAPI class on our backend. [Gmail API Documentation for endpoint usage.](https://developers.google.com/gmail/api/guides/sending)
 
+#### React Places Autocomplete
+We're using react-places-autocomplete powered by Google Maps Places Library as a react component to build customized autocomplete dropdowns for service locations. [Documentation found here](https://www.npmjs.com/package/react-places-autocomplete)
+
 ## Contribution
 
 #### Do you use git flow?
