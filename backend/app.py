@@ -13,6 +13,7 @@ from dbConnection import sampleQuery
 from models import runDBQueries
 from models import db
 from pictures.testS3Stuff import testStuff
+from pictures.uploadFile import picture_blueprint
 from profile.userSettingsProfile import profileBluePrint
 
 from signup import signup_blueprint
@@ -35,6 +36,9 @@ def getDBURL() -> str:
     DB_password = os.environ.get("DATABASE_PASSWORD")
     return f"mssql+pyodbc://masterUsername:{DB_password}@my-database-csc-c01.database.windows.net:1433/my-database-csc-c01?driver=ODBC+Driver+17+for+SQL+Server"
 
+UPLOAD_FOLDER = '/pictures/uploadedPics'
+
+
 def createApp():
     app = Flask(__name__)
     app.register_blueprint(signup_blueprint)
@@ -49,6 +53,9 @@ def createApp():
     app.register_blueprint(profileBluePrint, url_prefix='/profile')
     app.register_blueprint(allReviews_blueprint) # deals with getting all reviews (theb-6)
     app.register_blueprint(deactivate_blueprint)
+
+    app.register_blueprint(picture_blueprint)
+
 
     CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
     # JWTManager(app)
@@ -65,6 +72,9 @@ def createApp():
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=60)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.secret_key = 'super secret key'
+
 
     db.init_app(app)
     # cache.init_app(app)
