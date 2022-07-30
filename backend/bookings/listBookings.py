@@ -28,7 +28,7 @@ def past_future_bookings(bookings):
 def get_customer_upcoming_bookings():
     customer_id = int(request.headers.get("customerId", None))
     output = {'bookings': []}
-    bookings = bookingDAO.getBookingsFromStatusForCust(customer_id, "BOOKED")
+    bookings = past_future_bookings(bookingDAO.getBookingsFromStatusForCust(customer_id, "BOOKED"))[1]
 
     for booking in bookings:
       provider = professionalDAO.getProfessionalOnId(booking.professionalID)
@@ -38,7 +38,7 @@ def get_customer_upcoming_bookings():
           "provider": provider.firstName + " " + provider.lastName,
           "service": booking.serviceName,
           "description": booking.specialInstructions,
-          "cost": booking.price,
+          "price": booking.price,
           "picURL": "https://picsum.photos/100",
           "date": booking.beginServiceDateTime.strftime("%B %d, %Y"),
           "startTime": booking.beginServiceDateTime.strftime("%I:%M %p"),
@@ -94,46 +94,129 @@ def get_customer_cancelled_bookings():
         })
     return jsonify(output)
 
-# NOTE (A): did some refactoring here... could be improved and could be done for customer endpoints too 
-def get_prof_bookings_by_status(profId, status):
-  output = {'bookings': []}
-  # get list of upcoming bookings
-  bookings = bookingDAO.getBookingsFromStatusForProf(profId, status)
+# # NOTE (A): did some refactoring here... could be improved and could be done for customer endpoints too 
+# def get_prof_bookings_by_status(profId, status):
+#     output = {'bookings': []}
+#     # get list of bookings by status
+#     bookings = bookingDAO.getOrderedBookingsFromStatusForProf(profId, status)
 
-  # put into output
-  for booking in bookings:
-    customer = customerDAO.getCustomerOnID(booking.customerID)
-    customer_name = customer.firstName + " " + customer.lastName
-    date = booking.beginServiceDateTime.strftime("%B %d, %Y")
-    start_time = booking.beginServiceDateTime.strftime("%I:%M %p")
-    end_time = booking.endServiceDateTime.strftime("%I:%M %p")
+#     # put into output
+#     for booking in bookings:
+#         customer = customerDAO.getCustomerOnID(booking.customerID)
+#         customer_name = customer.firstName + " " + customer.lastName
+#         date = booking.beginServiceDateTime.strftime("%B %d, %Y")
+#         start_time = booking.beginServiceDateTime.strftime("%I:%M %p")
+#         end_time = booking.endServiceDateTime.strftime("%I:%M %p")
 
-    single_booking = {
-        "id": booking.id,
-        "customer": customer_name,
-        "service": booking.serviceName,
-        "date": date,
-        "startTime": start_time,
-        "endTime": end_time,
-        "location": booking.location,
-        "price": booking.price,
-        "picURL": "https://picsum.photos/100"
-    }
-    output['bookings'].append(single_booking)
-  return jsonify(output)
-
+#         single_booking = {
+#             "id": booking.id,
+#             "customer": customer_name,
+#             "service": booking.serviceName,
+#             "date": date,
+#             "startTime": start_time,
+#             "endTime": end_time,
+#             "location": booking.location,
+#             "price": booking.price,
+#             "picURL": "https://picsum.photos/100"
+#         }
+#         output['bookings'].append(single_booking)
+#     return jsonify(output)
 
 @list_bookings_blueprint.route("/professionalUpcomingBookings", methods=["GET"])
 def get_professional_upcoming_bookings():
     profId = int(request.headers.get("professionalId", None))
-    return get_prof_bookings_by_status(profId, "BOOKED")
+    output = {'bookings': []}
+    bookings = past_future_bookings(bookingDAO.getBookingsFromStatusForProf(profId, "BOOKED"))[1]
+
+    # put into output
+    for booking in bookings:
+        customer = customerDAO.getCustomerOnID(booking.customerID)
+        customer_name = customer.firstName + " " + customer.lastName
+        date = booking.beginServiceDateTime.strftime("%B %d, %Y")
+        start_time = booking.beginServiceDateTime.strftime("%I:%M %p")
+        end_time = booking.endServiceDateTime.strftime("%I:%M %p")
+
+        single_booking = {
+            "id": booking.id,
+            "customer": customer_name,
+            "service": booking.serviceName,
+            "date": date,
+            "startTime": start_time,
+            "endTime": end_time,
+            "location": booking.location,
+            "price": booking.price,
+            "picURL": "https://picsum.photos/100"
+        }
+        output['bookings'].append(single_booking)
+    return jsonify(output)
 
 @list_bookings_blueprint.route("/professionalPastBookings", methods=["GET"])
 def get_professional_past_bookings():
     profId = int(request.headers.get("professionalId", None))
-    return get_prof_bookings_by_status(profId, "RESOLVED")
+    output = {'bookings': []}
+    bookings = bookingDAO.getBookingsFromStatusForProf(profId, "RESOLVED")
+    bookings += past_future_bookings(bookingDAO.getBookingsFromStatusForProf(profId, "BOOKED"))[0]
+
+    # put into output
+    for booking in bookings:
+        customer = customerDAO.getCustomerOnID(booking.customerID)
+        customer_name = customer.firstName + " " + customer.lastName
+        date = booking.beginServiceDateTime.strftime("%B %d, %Y")
+        start_time = booking.beginServiceDateTime.strftime("%I:%M %p")
+        end_time = booking.endServiceDateTime.strftime("%I:%M %p")
+
+        single_booking = {
+            "id": booking.id,
+            "customer": customer_name,
+            "service": booking.serviceName,
+            "date": date,
+            "startTime": start_time,
+            "endTime": end_time,
+            "location": booking.location,
+            "price": booking.price,
+            "picURL": "https://picsum.photos/100"
+        }
+        output['bookings'].append(single_booking)
+    return jsonify(output)
+
+
+# @list_bookings_blueprint.route("/professionalUpcomingBookings", methods=["GET"])
+# def get_professional_upcoming_bookings():
+#     profId = int(request.headers.get("professionalId", None))
+#     return get_prof_bookings_by_status(profId, "BOOKED")
+
+# @list_bookings_blueprint.route("/professionalPastBookings", methods=["GET"])
+# def get_professional_past_bookings():
+#     profId = int(request.headers.get("professionalId", None))
+#     return get_prof_bookings_by_status(profId, "RESOLVED")
 
 @list_bookings_blueprint.route("/professionalCancelledBookings", methods=["GET"])
 def get_professional_cancelled_bookings():
     profId = int(request.headers.get("professionalId", None))
-    return get_prof_bookings_by_status(profId, "CANCELLED")
+    output = {'bookings': []}
+    # get list of bookings by status
+    bookings = bookingDAO.getBookingsFromStatusForProf(profId, "CANCELLED")
+
+    # put into output
+    for booking in bookings:
+        customer = customerDAO.getCustomerOnID(booking.customerID)
+        customer_name = customer.firstName + " " + customer.lastName
+        date = booking.beginServiceDateTime.strftime("%B %d, %Y")
+        start_time = booking.beginServiceDateTime.strftime("%I:%M %p")
+        end_time = booking.endServiceDateTime.strftime("%I:%M %p")
+
+        single_booking = {
+            "id": booking.id,
+            "customer": customer_name,
+            "service": booking.serviceName,
+            "date": date,
+            "startTime": start_time,
+            "endTime": end_time,
+            "location": booking.location,
+            "price": booking.price,
+            "picURL": "https://picsum.photos/100"
+        }
+        output['bookings'].append(single_booking)
+    return jsonify(output)
+
+    # return get_prof_bookings_by_status(profId, "CANCELLED")

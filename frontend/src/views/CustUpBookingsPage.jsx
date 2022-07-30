@@ -33,7 +33,7 @@ function CustUpBookingsPage() {
             provider={booking.provider}
             service={booking.service}
             description={booking.description}
-            cost={booking.cost}
+            price={booking.price}
             picURL={booking.picURL}
             date={booking.date}
             startTime={booking.startTime}
