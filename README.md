@@ -82,6 +82,9 @@ This allows us to easily send emails by calling the gmailAPI class on our backen
 #### React Places Autocomplete
 We're using react-places-autocomplete powered by Google Maps Places Library as a react component to build customized autocomplete dropdowns for service locations. [Documentation found here](https://www.npmjs.com/package/react-places-autocomplete)
 
+#### React Big Calendar
+React Big Calendar is an events calendar component, it has options to handle date formatting, culture localization, along with selecting, dragging, and editing events. This makes it easy to allow adding availability and booking events on a user-friendly UI for our users. [Documentation found here](https://www.npmjs.com/package/react-big-calendar)
+
 ## Contribution
 
 #### Do you use git flow?
