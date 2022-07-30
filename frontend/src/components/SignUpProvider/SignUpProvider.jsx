@@ -11,15 +11,8 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Autocomplete,
-  Select as MUISelect,
 } from "@mui/material";
 import Location from "../Location/Location";
-import { ScriptElementKindModifier } from "typescript";
-
 
 
 function SignUpProvider() {
@@ -91,21 +84,16 @@ function SignUpProvider() {
     }));
   };
 
-  // TODO: can combine this with handleChange?
   const getLocation = (loc) => {
     const arr = loc.split(",");
     var locToStore = loc;
-    console.log(arr)
-    if (arr.length >= 3) {
-      // select the last three
+    // get city, state/province, country 
+    if (arr.length >= 3) 
       locToStore = arr.slice(-3).join().substring(1);
-    }
     setSignupForm((prevSignup) => ({
       ...prevSignup,
       location: locToStore,
-    }));
-    console.log('got location to store...', locToStore); // for now just a date  
-    console.log(signupForm)       
+    }));     
   }
 
   const handleSelect = (e) => {
@@ -187,22 +175,6 @@ function SignUpProvider() {
         <Location 
           sendLocation={getLocation}
         />
-        {/* <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-          <InputLabel id="location-label">Location</InputLabel>
-          <MUISelect
-            labelId="location-label"
-            value={signupForm.location}
-            label="location"
-            name="location"
-            onChange={handleChange}
-          >
-            
-            <MenuItem value={"Toronto, Ontario"}>Toronto, Ontario</MenuItem>
-            <MenuItem value={"Vaughn, Ontario"}>Vaughn, Ontario</MenuItem>
-            <MenuItem value={"Waterloo, Ontario"}>Waterloo, Ontario</MenuItem>
-          </MUISelect>
-        </FormControl> */}
-        {/* <br /> */}
         {servicesList && (
           <Select
             placeholder="Services Offered"

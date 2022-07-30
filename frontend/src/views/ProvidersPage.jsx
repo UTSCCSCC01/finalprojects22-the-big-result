@@ -9,7 +9,7 @@ import {
 
 import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
-import { getServiceProvidersOnQuery } from "../APICalls";
+import { getLocations, getServiceProvidersOnQuery } from "../APICalls";
 
 import "../components/Filters.css";
 
@@ -53,7 +53,6 @@ function ProviderPage() {
       url: `http://127.0.0.1:5000/priceRange`,
     })
       .then((response) => {
-        console.log(response);
         const minPrice = response.data.priceLow;
         const maxPrice = response.data.priceHigh;
         setFilters((prevFilters) => ({
@@ -68,12 +67,8 @@ function ProviderPage() {
   }, []);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://127.0.0.1:5000/getLocations`,
-    })
+    getLocations()
       .then((response) => {
-        console.log("getlocation:", response);
         setLocationList(response.data.data);
       })
       .catch((err) => {
@@ -136,23 +131,6 @@ function ProviderPage() {
               renderInput={(params) => <TextField {...params} label="Location" />}
             />
           </div>
-          {/* <div className="location filter-component">
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-              <InputLabel id="location-label">Location</InputLabel>
-              <Select
-                labelId="location-label"
-                value={filters.location}
-                label="location"
-                name="location"
-                onChange={handleChange}
-              >
-                {locationList?.map((location) => (
-                  <MenuItem value={location}>{location}</MenuItem>
-                  
-                ))}
-              </Select>
-            </FormControl>
-          </div> */}
         </div>
       </div>
     );

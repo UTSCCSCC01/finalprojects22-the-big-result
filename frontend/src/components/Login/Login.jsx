@@ -42,7 +42,6 @@ function Login() {
             type: res.data.type,
             access_token: res.data.access_token,
           });
-          console.log(user);
           // only go to profile tab when login is successful
           navigate("/");
           setFailedLogin(false);

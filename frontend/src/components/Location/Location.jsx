@@ -1,13 +1,10 @@
 import React from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
-import { useState, useEffect } from "react";
-import { useAxiosAuth } from "../../APICalls";
-import axios from "axios";
+import { useState } from "react";
 import "../Form.css";
 import "./Location.css";
 import {
   OutlinedInput,
-  Select as MUISelect,
 } from "@mui/material";
 
 
@@ -17,18 +14,10 @@ function Location({ sendLocation }) {
   const handleSelect = async value => {
     setLocation(value);
     sendLocation(value);
-    console.log(value)
   };
  
   return (
-    <div>
-      {/* <Autocomplete
-        disablePortal
-        onChange={handleChange}
-        options={addresses}
-        renderInput={(params) => <TextField {...params} label="Location" />}
-      /> */}
-     
+    <div>     
       <PlacesAutocomplete
         value={location}
         onChange={setLocation}
