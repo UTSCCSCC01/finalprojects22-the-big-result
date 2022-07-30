@@ -93,3 +93,7 @@ def post_approve_request():
     profDAO.updateProfessionalStatus(request.args.get("id"), request.args.get("status"))
     notifyProviderOfApproval(request.args.get("id"))
     return {"status" : "OK"}
+
+@list_providers_blueprint.route("/getLocations", methods=["GET"])
+def get_location_list():
+    return jsonify({"data": profDAO.getAllUniqueLocations()})

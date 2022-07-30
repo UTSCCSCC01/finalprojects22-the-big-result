@@ -122,6 +122,9 @@ class ProfessionalsDAO:
     def getProfessionalsByStatus(self, status: str) -> List[Professional]:
         return Professional.query.filter_by(status=status).all()
 
+    def getAllUniqueLocations(self) ->List[str]:
+        return [locationTuple[0] for locationTuple in Professional.query.filter_by(status="APPROVED").with_entities(Professional.location).distinct().all()]
+
 
 class AdminDAO:
 
@@ -401,7 +404,7 @@ def runDAOQueries():
     profDao = ProfessionalsDAO()
 
     bookingsDao = BookingsDAO()
-    print(bookingsDao.cancelBookingsFromProfId(40))
+    # print(bookingsDao.cancelBookingsFromProfId(40))
 
     # print(profDao.getProfessionalsByLocation("toronto"))
 
@@ -469,4 +472,6 @@ def runDAOQueries():
     # print()
     # for row in db.session.query(Bookings).filter(Bookings.professionalID=="36", Bookings.status!="CANCELLED"):
     #   print (row.professionalID)
+    # locations = profDao.getAllUniqueLocations()
+    # print(locations)
     pass

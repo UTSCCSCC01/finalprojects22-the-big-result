@@ -1,0 +1,28 @@
+/* curtsey: https://stackoverflow.com/questions/58980475/react-places-autocomplete-pushing-down-the-other-components-below */
+.location-search-input,
+.location-search-input:focus,
+.location-search-input:active {
+  border: black;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  outline: none;
+}
+
+#signup .autocomplete-dropdown-container {
+  border-bottom: black;
+  border-left: honeydew;
+  border-right: honeydew;
+  width: inherit;
+  border-top: 1px solid #e6e6e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 0 0 2px 2px;
+  position: relative !important;
+}
+
+#signup .autocomplete-dropdown-container > * {
+  padding: 4px 0;
+}

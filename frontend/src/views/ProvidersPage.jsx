@@ -3,21 +3,20 @@ import axios from "axios";
 import {
   Slider,
   Rating,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Select,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 
 import Provider from "../components/Provider/Provider";
 import ServiceList from "../components/Services/ServicesList";
-import { getServiceProvidersOnQuery } from "../APICalls";
+import { getLocations, getServiceProvidersOnQuery } from "../APICalls";
 
 import "../components/Filters.css";
 
 function ProviderPage() {
   const [priceRange, setPriceRange] = useState([]);
   const [providerList, setProviderList] = useState([]);
+  const [locationList, setLocationList] = useState([]);
   const [filters, setFilters] = useState({
     service: "",
     price: priceRange ? [priceRange[0], priceRange[1]] : [],
@@ -40,13 +39,20 @@ function ProviderPage() {
     }));
   };
 
+  const handleChangeLocation = (e) => {
+    const location = e.target.textContent;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      location: location,
+    }));
+  };
+
   useEffect(() => {
     axios({
       method: "GET",
       url: `http://127.0.0.1:5000/priceRange`,
     })
       .then((response) => {
-        console.log(response);
         const minPrice = response.data.priceLow;
         const maxPrice = response.data.priceHigh;
         setFilters((prevFilters) => ({
@@ -56,10 +62,20 @@ function ProviderPage() {
         setPriceRange([minPrice, maxPrice]);
       })
       .catch((err) => {
-        console.log("ERR");
         console.log(err.response);
       });
   }, []);
+
+  useEffect(() => {
+    getLocations()
+      .then((response) => {
+        setLocationList(response.data.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }, []);
+  
 
   useEffect(() => {
     let query = `/listServiceProviders?service=${filters.service}&rating=${filters.rating}&location=${filters.location}`;
@@ -107,24 +123,13 @@ function ProviderPage() {
               onChange={handleChange}
             />
           </div>
-          <div className="location filter-component">
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-              <InputLabel id="location-label">Location</InputLabel>
-              <Select
-                labelId="location-label"
-                value={filters.location}
-                label="location"
-                name="location"
-                onChange={handleChange}
-              >
-                <MenuItem value="">I'm flexible</MenuItem>
-                <MenuItem value={"Toronto, Ontario"}>Toronto, Ontario</MenuItem>
-                <MenuItem value={"Vaughn, Ontario"}>Vaughn, Ontario</MenuItem>
-                <MenuItem value={"Waterloo, Ontario"}>
-                  Waterloo, Ontario
-                </MenuItem>
-              </Select>
-            </FormControl>
+          <div>
+            <Autocomplete
+              disablePortal
+              onChange={handleChangeLocation}
+              options={locationList}
+              renderInput={(params) => <TextField {...params} label="Location" />}
+            />
           </div>
         </div>
       </div>
