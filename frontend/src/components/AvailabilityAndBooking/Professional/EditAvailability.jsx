@@ -21,6 +21,7 @@ import moment from "moment";
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
 const DragAndDropCalendar = withDragAndDrop(Calendar);
+const today = new Date();
 
 function ProfCalendarEdit({ mode, id, sendMode }) {
   const navigate = useNavigate();
@@ -31,7 +32,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
   const [viewDate, setViewDate] = useState(EvFn.getSunday(new Date()));
 
   useEffect(() => {
-    console.log("id of professional:", id);
     if (mode === Constants.RECURRING) {
       getRecurrAvailability({
         professionalId: id,
@@ -83,7 +83,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
 
   // TODO prevent overlapping booking/availability events
   const handleSelect = ({ start, end }) => {
-    console.log("creating event ...");
     if (mode === Constants.RECURRING) {
       setEventsToRecurr([
         ...eventsToRecurr,
@@ -111,7 +110,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
 
   // TODO: make generic function and pass in states and setStates as parameters
   const handleSelectEvent = (event) => {
-    console.log("clicking on event...");
     if (event.title === Constants.BOOKING) return;
     if (mode === Constants.RECURRING) {
       const w = window.confirm("Would you like to remove this event?");
@@ -139,7 +137,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
   };
 
   const onEventResize = (data) => {
-    console.log("event resizing...");
     if (data.event.title === Constants.BOOKING) return;
     if (mode === Constants.RECURRING) {
       setEventsToRecurr(
@@ -167,7 +164,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
   };
 
   const onEventDrop = (data) => {
-    console.log("event dropped...");
     if (data.event.title === Constants.BOOKING) return;
     if (mode === Constants.RECURRING) {
       setEventsToRecurr(
@@ -195,7 +191,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
   };
 
   const onSubmitEditRecurr = () => {
-    console.log("submitting recurr availability edit...");
     const eventsToRecurrFormatted =
       EvFn.formatWeekEventsForPOST(eventsToRecurr);
 
@@ -211,7 +206,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
   };
 
   const onSubmitEditNonRecurr = () => {
-    console.log("submitting non-recurr edit...");
     const allAvailabilitiesFormatted =
       EvFn.formatWeekEventsForPOST(viewAvailabilities);
 
@@ -228,7 +222,6 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
   };
 
   const onNavigate = (date, view) => {
-    console.log("navigating to...", EvFn.getSunday(date));
     getAvailability({
       professionalId: id,
       start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
@@ -302,6 +295,8 @@ function ProfCalendarEdit({ mode, id, sendMode }) {
             no-overlap
             eventPropGetter={EvFn.eventStyleGetter}
             onNavigate={onNavigate}
+            min={new Date(today.getFullYear(), today.getMonth(), today.getDate(), 7)}
+            max={new Date(today.getFullYear()+1, today.getMonth(), today.getDate(), 22)}
           />
         </div>
         <button
