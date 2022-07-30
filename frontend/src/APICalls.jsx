@@ -140,6 +140,8 @@ export const getCustomerCancelledBookings = (headers) =>
   getRequest("/customerCancelledBookings", headers);
 export const getProfessionalCancelledBookings = (headers) =>
   getRequest("/professionalCancelledBookings", headers);
+export const getLocations = (headers) =>
+  getRequest("/getLocations", headers);
 
 // post requests
 export const setRecurrAvailability = (data) =>

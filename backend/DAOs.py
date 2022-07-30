@@ -122,6 +122,9 @@ class ProfessionalsDAO:
     def getProfessionalsByStatus(self, status: str) -> List[Professional]:
         return Professional.query.filter_by(status=status).all()
 
+    def getAllUniqueLocations(self) ->List[str]:
+        return [locationTuple[0] for locationTuple in Professional.query.filter_by(status="APPROVED").with_entities(Professional.location).distinct().all()]
+
 
 class AdminDAO:
 
@@ -265,6 +268,9 @@ class AvailabilitiesNonRecDAO:
 
 class BookingsDAO:
 
+    def getBookingByID(self, id: int) -> Bookings:
+        return Bookings.query.filter_by(id=id).first()
+
     def getBookingsFromProfID(self, profID: int) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).all()
 
@@ -278,10 +284,10 @@ class BookingsDAO:
         return Bookings.query.filter_by(customerID=custID).all()
 
     def getBookingsFromStatusForProf(self,profID: id, status: Status) -> List[Bookings]:
-        return Bookings.query.filter_by(professionalID=profID, status=status).all()
+        return Bookings.query.filter_by(professionalID=profID, status=status).order_by(Bookings.beginServiceDateTime).all()
 
     def getBookingsFromStatusForCust(self,custID: id, status: Status) -> List[Bookings]:
-        return Bookings.query.filter_by(customerID=custID, status=status).all()
+        return Bookings.query.filter_by(customerID=custID, status=status).order_by(Bookings.beginServiceDateTime).all()
 
     def resolveBooking(self, id: int):
         booking = Bookings.query.filter_by(id=id).first()
@@ -398,7 +404,7 @@ def runDAOQueries():
     profDao = ProfessionalsDAO()
 
     bookingsDao = BookingsDAO()
-    print(bookingsDao.cancelBookingsFromProfId(40))
+    # print(bookingsDao.cancelBookingsFromProfId(40))
 
     # print(profDao.getProfessionalsByLocation("toronto"))
 
@@ -466,4 +472,6 @@ def runDAOQueries():
     # print()
     # for row in db.session.query(Bookings).filter(Bookings.professionalID=="36", Bookings.status!="CANCELLED"):
     #   print (row.professionalID)
+    # locations = profDao.getAllUniqueLocations()
+    # print(locations)
     pass

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { addBookings, getUsersMe } from "../../../APICalls"
 import { AuthContext } from "../../../context/AuthProvider";
 
+const today = new Date();
+
 function BookingConfirmation(props) {
   const [instructions, setInstructions] = useState('');
   const { user } = useContext(AuthContext);

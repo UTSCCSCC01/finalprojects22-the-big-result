@@ -1,22 +1,16 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 
 import BookingProfessionalUpcoming from "../components/Bookings/BookingProfessionalUpcoming";
 import { getProfessionalUpcomingBookings, useAxiosAuth } from "../APICalls";
-import { AuthContext } from "../context/AuthProvider";
 
 function ProfessionalUpBookingsPage() {
   const [bookingsList, setBookingsList] = useState([]);
-  const { user } = useContext(AuthContext);
   const axiosAuth = useAxiosAuth();
 
   useEffect(() => {
     axiosAuth
       .get("/users/me")
       .then((res) => {
-        console.log(
-          res.data.id,
-          "id of the customer finding upcoming bookings"
-        );
         getProfessionalUpcomingBookings({
           professionalId: parseInt(res.data.id),
         })
@@ -32,7 +26,7 @@ function ProfessionalUpBookingsPage() {
     <div className="bookings-page page">
       <h1>Upcoming Bookings</h1>
       <div className="bookings">
-        {bookingsList.map((booking) => (
+        {bookingsList.length!==0 ? bookingsList.map((booking) => (
           <BookingProfessionalUpcoming
             customer={booking.customer}
             service={booking.service}
@@ -43,7 +37,8 @@ function ProfessionalUpBookingsPage() {
             price={booking.price}
             picURL={booking.picURL}
           />
-        ))}
+        )) :
+        <p className="empty">No upcoming bookings</p>}
       </div>
     </div>
   );

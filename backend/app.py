@@ -29,7 +29,7 @@ from calender import calender_blueprint # new
 from book import book_blueprint # new
 from reviews.reviews import review_blueprint
 from deactivate.deactivate import deactivate_blueprint
-
+from gmailAPI import verifyToken as initializeGmailToken
 
 def getDBURL() -> str:
     load_dotenv(f".{os.sep}config{os.sep}.env")
@@ -87,4 +87,6 @@ app = createApp()
 if __name__ == "__main__":
     # runDAOQueries()
     # app.run(debug=True)
-    testStuff()
+    # testStuff()
+    initializeGmailToken()
+    app.run(debug=True)

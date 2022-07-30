@@ -19,7 +19,7 @@ function Login() {
   //TODO: Just put this under a protectedRoute with role "not logged in", or something similar?
   useEffect(() => {
     //From useContext, if user already exists, no need to login
-    if (user) navigate("/myProfile");
+    if (user) navigate("/");
   }, []);
 
   const handleSubmit = (e) => {
@@ -42,7 +42,6 @@ function Login() {
             type: res.data.type,
             access_token: res.data.access_token,
           });
-          console.log(user);
           // only go to profile tab when login is successful
           navigate("/");
           setFailedLogin(false);

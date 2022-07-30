@@ -38,17 +38,15 @@ function BookingCustomerUpcoming(props) {
           <p>
             Time: {props.startTime} to {props.endTime}
           </p>
-          <p>Price: ${props.cost}</p>
+          <p>Price: ${props.price}</p>
         </div>
       </div>
       <div className="desc">
         <div className="btn-group">
           {/* pass in the id of the current booking to be rescheduled */}
-          <Link to={`/c/booking/${props.providerId}?reschedule=1&id=${props.id}&cost=${props.cost}&service=${props.service}&providerName=${props.provider}`}>
-            <button>Reschedule</button>
-          </Link>
+          <button onClick={() => navigate(`/c/booking/${props.providerId}?reschedule=1&id=${props.id}&cost=${props.cost}&service=${props.service}&providerName=${props.provider}`)}>Reschedule</button>
           <button onClick={onCancelBooking}>Cancel</button>
-          <button className="transparent-btn">About Professional</button>
+          <button onClick={() => navigate(`/profile/${props.providerId}`)} className="transparent-btn">About Professional</button>
         </div>
       </div>
     </div>

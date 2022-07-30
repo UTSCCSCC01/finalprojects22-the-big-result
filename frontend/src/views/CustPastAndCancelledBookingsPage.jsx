@@ -31,14 +31,13 @@ function CustPastAndCancelledBookingsPage() {
     <div className="bookings-page page">
       <h1>Past Bookings</h1>
       <div className="bookings">
-        {pastBookings.map((booking) => (
+        {pastBookings.length!==0 ? pastBookings.map((booking) => (
           <BookingCustomerPast
             bookingId={booking.id}
             providerId={booking.providerId}
             provider={booking.provider}
             service={booking.service}
             review={booking.review}
-            cost={booking.cost}
             picURL={booking.picURL}
             date={booking.date}
             startTime={booking.startTime}
@@ -46,15 +45,15 @@ function CustPastAndCancelledBookingsPage() {
             location={booking.location}
             price={booking.price}
           />
-        ))}
+        )) :
+        <p className="empty">No past bookings</p>}
       </div>
       <h1>Cancelled Bookings</h1>
       <div className="bookings">
-        {cancelledBookings.map((booking) => (
+        {cancelledBookings.length!==0 ? cancelledBookings.map((booking) => (
           <BookingCustomerCancelled
             provider={booking.provider}
             service={booking.service}
-            cost={booking.cost}
             picURL={booking.picURL}
             date={booking.date}
             startTime={booking.startTime}
@@ -62,7 +61,8 @@ function CustPastAndCancelledBookingsPage() {
             location={booking.location}
             price={booking.price}
           />
-        ))}
+        )) :
+        <p className="empty">No cancelled bookings</p>}
       </div>
     </div>
   );

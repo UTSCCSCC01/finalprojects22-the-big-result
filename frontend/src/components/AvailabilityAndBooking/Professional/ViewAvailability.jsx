@@ -13,6 +13,7 @@ import moment from "moment";
 
 moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
+const today = new Date();
 
 
 function ViewAvailability({ id, sendMode }) {
@@ -90,6 +91,8 @@ function ViewAvailability({ id, sendMode }) {
             style={{ height: "100vh" }}
             eventPropGetter={(EvFn.eventStyleGetter)}
             onNavigate={onNavigate}
+            min={new Date(today.getFullYear(), today.getMonth(), today.getDate(), 7)}
+            max={new Date(today.getFullYear()+1, today.getMonth(), today.getDate(), 22)}
           />
         </div>
       </div>

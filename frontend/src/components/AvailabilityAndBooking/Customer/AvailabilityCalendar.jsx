@@ -13,6 +13,7 @@ import moment from "moment";
 
 moment.locale('en-GB');
 const localizer = momentLocalizer(moment);
+const today = new Date();
 
 
 function AvailabilityCalendar({ profId, oldBookingId, sendBookingInfo }) {
@@ -33,7 +34,6 @@ function AvailabilityCalendar({ profId, oldBookingId, sendBookingInfo }) {
  }, []);
 
  const handleSelectEvent = (event) => {
-    console.log("selecting event...");
     // send booking info back to parent
     sendBookingInfo({ 
       professionalId: profId,
@@ -48,7 +48,6 @@ function AvailabilityCalendar({ profId, oldBookingId, sendBookingInfo }) {
   }
 
   const onNavigate =(date, view) => {
-    console.log('navigating to...', date, view, new Date(EvFn.getSunday(date) - 7));
     getAvailability({ 
       professionalId: profId, 
       start: EvFn.getDateFromDateTime(new Date(EvFn.getSunday(date) - 7)),
@@ -77,6 +76,8 @@ function AvailabilityCalendar({ profId, oldBookingId, sendBookingInfo }) {
             eventPropGetter={(EvFn.eventStyleGetter)}
             onNavigate={onNavigate}
             onSelectEvent={handleSelectEvent}
+            min={new Date(today.getFullYear(), today.getMonth(), today.getDate(), 7)}
+            max={new Date(today.getFullYear()+1, today.getMonth(), today.getDate(), 22)}
           />
         </div>
       </div>
