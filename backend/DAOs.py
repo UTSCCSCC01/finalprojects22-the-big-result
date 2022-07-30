@@ -265,6 +265,9 @@ class AvailabilitiesNonRecDAO:
 
 class BookingsDAO:
 
+    def getBookingByID(self, id: int) -> Bookings:
+        return Bookings.query.filter_by(id=id).first()
+
     def getBookingsFromProfID(self, profID: int) -> List[Bookings]:
         return Bookings.query.filter_by(professionalID=profID).all()
 

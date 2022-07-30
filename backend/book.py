@@ -4,6 +4,7 @@ from tracemalloc import start
 from flask import Blueprint, jsonify, request
 from DAOs import BookingsDAO, ProfessionalsDAO
 from models import Status
+from gmailAPI import newBooking as notifyProfOfBooking, rescheduleBooking as notifyProfOfReschedule
 
 book_blueprint = Blueprint('book_blueprint', __name__)
 bookingDAO = BookingsDAO()
@@ -36,12 +37,14 @@ def add_bookings():
     json_object = request.json
     customer_id = int(json_object.get("customerId", None))
     service = json_object.get("service", None)
-    cost = float(json_object.get("cost", None))
     professional_id = int(json_object.get("professionalId", None))
 
-    # previous_booking_id = int(json_object.get("prevBookingId", None))
-    isRescheduling = True if "reschedule" in json_object else False
-    print(json_object)
+    isRescheduling = "reschedule" in json_object and json_object["reschedule"]
+    if isRescheduling:
+        booking_id = int(json_object.get("id", None)) 
+        cost = bookingDAO.getBookingByID(booking_id).price
+    else:
+        cost = float(json_object["cost"])
 
     day_of_booking = date.fromisoformat(json_object.get("date", None))
     time_begin = time.fromisoformat(json_object.get("start", None))
@@ -51,14 +54,17 @@ def add_bookings():
     # get service, location, from professional chosen using professional_id
     chosen_professional = professionalDAO.getProfessionalOnId(professional_id)
     location = chosen_professional.location
+    startDayTime = datetime.combine(day_of_booking, time_begin)
+    endDayTime = datetime.combine(day_of_booking, time_end)
 
-    bookingDAO.addBooking(customer_id, professional_id, datetime.combine(day_of_booking, time_begin),
-                                 datetime.combine(day_of_booking, time_end), location, Status.BOOKED, cost, service,
-                                 instructions)
+    bookingDAO.addBooking(customer_id, professional_id, startDayTime, endDayTime, location, 
+                            Status.BOOKED, cost, service, instructions)
 
     if isRescheduling:
-        booking_id = int(json_object.get("id", None)) # double check this is the id of the booking being rescheduled
         bookingDAO.setBookingAsRescheduled(booking_id)
+        notifyProfOfReschedule(booking_id, customer_id, professional_id, startDayTime, endDayTime, location, instructions)
+    else:
+        notifyProfOfBooking(customer_id, professional_id, startDayTime, endDayTime, location, service, instructions)
 
     return {"success": "yes"}
 

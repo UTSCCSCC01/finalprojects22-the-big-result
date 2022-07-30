@@ -45,7 +45,6 @@ def get_customer_upcoming_bookings():
           "endTime": booking.endServiceDateTime.strftime("%I:%M %p"),
           "location": booking.location
       })
-    print('upcoming bookings', output)
     return jsonify(output)
 
 @list_bookings_blueprint.route("/customerPastBookings", methods=["GET"])

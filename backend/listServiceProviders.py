@@ -2,6 +2,7 @@ from flask import request
 from flask import Blueprint, jsonify
 from jinja2 import Undefined
 from DAOs import CustomersDAO, ProfessionalsDAO, ServicesDAO
+from gmailAPI import approveProvider as notifyProviderOfApproval
 
 list_providers_blueprint = Blueprint('list_providers_blueprint', __name__)
 
@@ -90,4 +91,5 @@ def get_pending_requests():
 @list_providers_blueprint.route("/approveRequest", methods=["PATCH"])
 def post_approve_request():
     profDAO.updateProfessionalStatus(request.args.get("id"), request.args.get("status"))
+    notifyProviderOfApproval(request.args.get("id"))
     return {"status" : "OK"}
