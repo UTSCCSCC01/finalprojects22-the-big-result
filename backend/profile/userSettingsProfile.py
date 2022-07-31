@@ -43,7 +43,9 @@ def buildSettingsResponse(user: User, settings: Settings, settingsExist=True) ->
 def doStuff():
     id = get_jwt_identity()
     # userID: int = request.args.get("userId", default=36, type=int)
+
     userID = int(id[:-1])
+    print(userID)
 
     userDao = UserDAO()
     settingsDao = SettingsDAO()

@@ -1,7 +1,7 @@
 from flask import request
 from flask import Blueprint, jsonify
 from jinja2 import Undefined
-from DAOs import CustomersDAO, ProfessionalsDAO, ServicesDAO
+from DAOs import CustomersDAO, ProfessionalsDAO, ServicesDAO, ReviewsDAO
 from gmailAPI import approveProvider as notifyProviderOfApproval
 
 list_providers_blueprint = Blueprint('list_providers_blueprint', __name__)
@@ -17,6 +17,7 @@ def get_price_range():
 
 @list_providers_blueprint.route("/listServiceProviders")
 def get_service_provider_list():
+
     rate = float(request.args.get('rating'))
     price_low = float(request.args.get('pricelow', profDAO.getLowestAveragePrice()))
     price_high = float(request.args.get('pricehigh', profDAO.getHighestAveragePrice()))
