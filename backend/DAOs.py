@@ -1,6 +1,9 @@
+import os
 from typing import List
 
 # from caching import cache
+import boto3
+
 from models import db, Customer, Professional, Admin, Services, ProfessionalServices, Reviews, AvailabilitiesRec, \
     AvailabilitiesNonRec, DayOfWeek, IsAvailable, Bookings, Status, Settings, User
 
@@ -398,6 +401,25 @@ class SettingsDAO:
     def getSettingsByUserID(self, userID: int) -> Settings:
         return Settings.query.filter_by(id=userID).first()
 
+class PicturesDAO:
+
+    def __photoKey(self,userID: int) -> str:
+        return str(userID) + ".jpg"
+
+    def __init__(self):
+        self.client = boto3.client('s3'
+                                   ,aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+                                   aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
+
+    def getProfilePictureByUserID(self,userID:int):
+        test_image = self.client.get_object(Bucket="csc-c01-pictures", Key=self.__photoKey(userID))
+        # print(test_image)
+        return test_image['Body']
+
+    def uploadProfilePictureByUserID(self,profilePicFile,userID:int):
+        self.client.upload_fileobj(profilePicFile, "csc-c01-pictures", self.__photoKey(userID))
+
+
 def runDAOQueries():
     custDao = CustomersDAO()
 
@@ -475,3 +497,6 @@ def runDAOQueries():
     # locations = profDao.getAllUniqueLocations()
     # print(locations)
     pass
+
+
+
