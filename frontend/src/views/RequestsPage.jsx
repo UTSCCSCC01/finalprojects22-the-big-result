@@ -1,15 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Request from "../components/Request/Request";
-import { AuthContext } from "../context/AuthProvider";
-import { useAxiosAuth } from "../APICalls";
-import { useNavigate } from "react-router-dom";
 
 function RequestsPage(props) {
   const [providerList, setProviderList] = useState([]);
-  const { user } = useContext(AuthContext);
-  const axiosAuth = useAxiosAuth();
-  const navigate = useNavigate();
   
   useEffect(() => {
     axios({
@@ -34,25 +28,6 @@ function RequestsPage(props) {
     });
     setProviderList(newProvidersList);
   }
-
-  useEffect(() => {
-    if (!user) navigate("/login");
-    else {
-      axiosAuth
-        .get("/users/me")
-        .then((response) => {
-          const res = response.data;
-          res.access_token && props.setToken(res.access_token);
-          console.log(res.id)
-          if (res.id != 67) {
-            navigate("/login");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [user]);
 
   return (
     <div className="providers-page page" id="providers">

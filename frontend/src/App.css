@@ -70,6 +70,7 @@ button:hover {
 .tabs .tab {
   border-radius: 0;
   border: none;
+  border-right: 2px solid white;
 }
 
 /*Special text*/

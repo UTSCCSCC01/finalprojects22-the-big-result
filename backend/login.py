@@ -9,7 +9,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, set_re
 from flask_bcrypt import check_password_hash
 from sqlalchemy import create_engine
 
-from DAOs import CustomersDAO, ProfessionalsDAO
+from DAOs import CustomersDAO, ProfessionalsDAO, AdminDAO
 from datetime import datetime, timedelta, timezone # for refreshing token
 
 invalidLogin = 'invalid_login'
@@ -23,6 +23,7 @@ singleQuote = "'"
 
 custDAO = CustomersDAO()
 profDAO = ProfessionalsDAO()
+adminDAO = AdminDAO()
 
 login_blueprint = Blueprint('login_blueprint', __name__)
 
@@ -32,7 +33,12 @@ def create_token(type):
     email = request.json.get("email", None)
     err_res = {"error": "Wrong email or password"}, 401
   
-    user_type = 'c' if type == 'customer' else 'p'
+    if type == 'customer':
+      user_type = 'c'
+    elif type == 'provider':
+      user_type = 'p'
+    elif type == 'admin':
+      user_type = 'a'
     
     if user_type == 'c':
       person = custDAO.getCustomerOnUsername(email)
@@ -42,6 +48,12 @@ def create_token(type):
       if person.status != "APPROVED":
         err_res = {"error": "Must be approved as a provider to log in"}, 403
         return err_res
+    elif user_type == 'a':
+      person = adminDAO.getAdminOnUsername(email)
+      if not person:
+        err_res = {"error": "Not an admin"}, 403
+        return err_res
+      
     if not person: 
         return err_res
     check_pass = check_password_hash(person.password, request.json.get("password", None))
@@ -69,6 +81,8 @@ def refresh():
     user_type="customer"
   elif user[-1] == "p":
     user_type="provider"
+  elif user[-1] == "a":
+    user_type="admin"
   response = jsonify({ "type": user_type, "access_token" : access_token })
   response.headers.add('Access-Control-Allow-Credentials', 'true')
   return response, 200
@@ -97,6 +111,9 @@ def get_current_user():
   elif id[-1] == "p":
     user_type = "provider"
     person = profDAO.getProfessionalOnId(id[:len(id)-1])
+  elif id[-1] == "a":
+    user_type = "admin"
+    person = adminDAO.getAdminlOnId(id[:len(id)-1])
   if person == None:
     return err_res
   else:

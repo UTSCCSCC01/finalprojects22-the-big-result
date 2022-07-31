@@ -25,3 +25,8 @@ select {
   padding: 0;
   text-align: left;
 }
+
+a{
+  color: white;
+  text-decoration: none;
+}

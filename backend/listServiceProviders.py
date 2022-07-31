@@ -1,7 +1,8 @@
 from flask import request
 from flask import Blueprint, jsonify
 from jinja2 import Undefined
-from DAOs import CustomersDAO, ProfessionalsDAO, ServicesDAO
+from DAOs import CustomersDAO, ProfessionalsDAO, ServicesDAO, ReviewsDAO
+from gmailAPI import approveProvider as notifyProviderOfApproval
 
 list_providers_blueprint = Blueprint('list_providers_blueprint', __name__)
 
@@ -16,6 +17,7 @@ def get_price_range():
 
 @list_providers_blueprint.route("/listServiceProviders")
 def get_service_provider_list():
+
     rate = float(request.args.get('rating'))
     price_low = float(request.args.get('pricelow', profDAO.getLowestAveragePrice()))
     price_high = float(request.args.get('pricehigh', profDAO.getHighestAveragePrice()))
@@ -57,8 +59,11 @@ def get_service_provider_list():
             "review": description,
             "profilePicURL": "https://picsum.photos/102"
         })
+    
+    results_sorted = sorted(results_formatted, key=lambda d: d['name'].lower())
+
     some_providers = {
-        "providers": results_formatted
+        "providers": results_sorted
     }
 
     return some_providers
@@ -87,6 +92,7 @@ def get_pending_requests():
 @list_providers_blueprint.route("/approveRequest", methods=["PATCH"])
 def post_approve_request():
     profDAO.updateProfessionalStatus(request.args.get("id"), request.args.get("status"))
+    notifyProviderOfApproval(request.args.get("id"))
     return {"status" : "OK"}
 
 @list_providers_blueprint.route("/getLocations", methods=["GET"])

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { addBookings, getUsersMe } from "../../../APICalls"
 import { AuthContext } from "../../../context/AuthProvider";
 
+const today = new Date();
+
 function BookingConfirmation(props) {
   const [instructions, setInstructions] = useState('');
   const { user } = useContext(AuthContext);
@@ -39,7 +41,7 @@ function BookingConfirmation(props) {
         <textarea placeholder="Enter your instruction here." value={instructions} onChange={(e) => setInstructions(e.target.value)}></textarea>
       </form>
       {/* TODO: styling put in CSS  */}
-      <button onClick={onConfirmation} style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/c/upcomingBookings`}>Confirm Details</Link></button>
+      <button onClick={onConfirmation} style={{'padding':'10px 100px', 'margin': '10px 25px', 'color': 'white'}}><Link to={`/c/upcomingBookings`}>Confirm Details</Link></button>
       <button style={{'padding':'10px 100px', 'margin': '10px 25px'}}><Link to={`/`}>Cancel</Link></button>
     </div>
   );

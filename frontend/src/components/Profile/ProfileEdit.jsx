@@ -13,6 +13,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import {useAxiosAuth} from "../../APICalls";
 
 const style = {
   position: "absolute",
@@ -26,8 +27,33 @@ const style = {
   p: 4,
 };
 
+const uploadImage = async (file,userid) => {
+    try {
+        console.log("Upload Image", file);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("userid",userid);
+        const config = {
+            headers: {
+                "content-type": "multipart/form-data"
+            }
+        };
+        const API = "upload";
+        const HOST = "http://localhost:5000";
+        const url = `${HOST}/${API}`;
+
+        const result = await axios.post(url, formData, config);
+        console.log("Result: ", result);
+
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 function ProfileEdit(props) {
-  const { id } = useParams();
+  const axiosAuth = useAxiosAuth();
+
   const [servicesList, setServicesList] = useState([]);
   const [origServices, setOrigServices] = useState([]);
   const [editForm, setEditForm] = useState({});
@@ -66,7 +92,32 @@ function ProfileEdit(props) {
     setFormOpen(false);
   };
 
+  const [image, setImage] = useState("");
+
+
   useEffect(() => {
+    // axiosAuth
+    //   .get(`/getphoto`)
+    //   .then((response) => {
+    //     const res = response.data;
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    axiosAuth.get(`/getProfilePicture`, {
+      responseType: "arraybuffer"
+    })
+    .then((res) => {
+    const base64 = btoa(
+      new Uint8Array(res.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ''
+      )
+    );
+    setImage(base64)
+  })
+
     axios({
       method: "GET",
       url: `http://127.0.0.1:5000/getServices`,
@@ -139,24 +190,56 @@ function ProfileEdit(props) {
     return finalServices;
   };
 
+    const [file, setFile] = useState(null);
+
+    const handleFile = (e) => {
+        let file = e.target.files[0];
+        // this.setState({ file });
+      setFile(file);
+      setImage(file);
+    }
+    const handleUpload = async (e) => {
+        console.log(file);
+        await uploadImage(file, props.id);
+    }
+    const updateProfilePicture = async(e) =>{
+        axiosAuth.get(`/getProfilePicture`, {
+      responseType: "arraybuffer"
+    })
+    .then((res) => {
+    const base64 = btoa(
+      new Uint8Array(res.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ''
+      )
+    );
+    setImage(base64)
+  })
+    }
+
   return (
     <div id="profile" className="page">
       <div className="profile-container">
         <div className="profile-inner-container">
           <div className="img-container">
-            <img
-              className="profile-img"
-              src={props.profilePictureLink}
-              alt=""
-            ></img>
-            <input
-              onChange={handleChange}
-              placeholder="Profile Picture Link"
-              type="text"
-              name="profilePictureLink"
-              value={editForm.profilePictureLink}
-            />
+            {/*<img*/}
+            {/*  className="profile-img"*/}
+            {/*  src={props.profilePictureLink}*/}
+            {/*  alt=""*/}
+            {/*/>*/}
+            <img src={`data:;base64,${image}`} alt={""} />
+            {/*<input*/}
+            {/*  onChange={handleChange}*/}
+            {/*  placeholder="Profile Picture Link"*/}
+            {/*  type="text"*/}
+            {/*  name="profilePictureLink"*/}
+            {/*  value={editForm.profilePictureLink}*/}
+            {/*/>*/}
+            <input type="file" name="file" accept="image/*" onChange={e => handleFile(e)} />
+            <button onClick={e => {handleUpload(e);}}>Upload</button>
+
           </div>
+
 
           <div className="description-container">
             <div className="name-review-container">
@@ -207,7 +290,7 @@ function ProfileEdit(props) {
 
             <br />
 
-            <button onClick={handleFormOpen}>Edit Profile</button>
+            <button onClick={handleFormOpen}>Confirm Choices</button>
           </div>
         </div>
       </div>
@@ -228,7 +311,7 @@ function ProfileEdit(props) {
             />
           ))}
         <br />
-        <Link to={`/getAllReviews/${id}`}>
+        <Link to={`/getAllReviews/${props.id}`}>
           <button >See All Reviews </button>
         </Link>
       </div>

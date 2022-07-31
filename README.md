@@ -68,9 +68,22 @@ SQLAlchemy is used as an object-relational mapper, which maps the SQL table(s) i
  It has a variety of helpful features, like automatically getting relationship data and being able to be passed around
  as an object. We're specifically using flask-sqlalchemy, which helps simplify a few things like query sessions. 
  Documentation for [Flask-SQLAlchemy can be found here](https://flask-sqlalchemy.palletsprojects.com/en/2.x/). 
+
 #### Material UI
 Material UI is our CSS library that we're using. Specifically, we're using react-material-ui, which helps
 simplify much of the frontend styling by providing built-in components. [Documentation found here](https://mui.com/getting-started/usage/)
+
+#### Gmail API
+Gmail API is a library from the Google Cloud API. While the Google Cloud API provides a vast library, our usage is strictly using the https://www.googleapis.com/auth/gmail.modify endpoint.
+It is used to send email notifications to service providers, informing them of changes to their account or bookings. 
+The API requires OATH2 setup, and our backend utilizes environment variables to find the credentials.json and updates tokens on launch.
+This allows us to easily send emails by calling the gmailAPI class on our backend. [Gmail API Documentation for endpoint usage.](https://developers.google.com/gmail/api/guides/sending)
+
+#### React Places Autocomplete
+We're using react-places-autocomplete powered by Google Maps Places Library as a react component to build customized autocomplete dropdowns for service locations. [Documentation found here](https://www.npmjs.com/package/react-places-autocomplete)
+
+#### React Big Calendar
+React Big Calendar is an events calendar component, it has options to handle date formatting, culture localization, along with selecting, dragging, and editing events. This makes it easy to allow adding availability and booking events on a user-friendly UI for our users. [Documentation found here](https://www.npmjs.com/package/react-big-calendar)
 
 ## Contribution
 

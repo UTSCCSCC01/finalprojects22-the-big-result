@@ -38,7 +38,6 @@ function CustPastAndCancelledBookingsPage() {
             provider={booking.provider}
             service={booking.service}
             review={booking.review}
-            cost={booking.cost}
             picURL={booking.picURL}
             date={booking.date}
             startTime={booking.startTime}
@@ -55,7 +54,6 @@ function CustPastAndCancelledBookingsPage() {
           <BookingCustomerCancelled
             provider={booking.provider}
             service={booking.service}
-            cost={booking.cost}
             picURL={booking.picURL}
             date={booking.date}
             startTime={booking.startTime}

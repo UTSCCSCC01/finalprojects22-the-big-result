@@ -43,14 +43,13 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route path="/profileSettings" element={<ProfileSettingsPage />} />
           </Route>
-          {/* Protected route, should be accessible by both customers and providers*/}
-          <Route element={<ProtectedRoutes />}>
+          {/* Protected route, only accessible by providers*/}
+          <Route element={<ProtectedRoutes role={"provider"} />}>
             <Route path="/myProfile" element={<MyProfile />} />
           </Route>
           {/* Protected route, only accessible by customers*/}
 
           <Route element={<ProtectedRoutes role={"customer"} />}>
-            <Route path="/requests" element={<RequestsPage />} />
             <Route path="/c/booking/:profId" element={<CustomerBooking />} />
             <Route
               path="/c/upcomingBookings"
@@ -61,6 +60,10 @@ function App() {
               element={<CustPastAndCancelledBookingsPage />}
             />
             <Route path="/c/leaveReview" element={<LeaveReview />} />
+          </Route>
+          {/* Protected route, only accessible by admin*/}
+          <Route element={<ProtectedRoutes role={"admin"} />}>
+            <Route path="/requests" element={<RequestsPage />} />
           </Route>
           {/* Protected route, only accessible by providers*/}
           <Route element={<ProtectedRoutes role={"provider"} />}>
