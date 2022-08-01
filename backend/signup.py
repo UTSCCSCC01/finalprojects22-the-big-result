@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, request, jsonify
 from flask_bcrypt import generate_password_hash
-from DAOs import CustomersDAO, ProfessionalsDAO, ProfessionalServicesDAO
+from DAOs import CustomersDAO, ProfessionalsDAO, ProfessionalServicesDAO, PicturesDAO
 from gmailAPI import signupProvider as sendRegisteredEmail
 signup_blueprint = Blueprint('signup_blueprint', __name__)
 
@@ -38,6 +38,8 @@ def signup(type):
             providerDao.addProfessional(firstName, lastName, email, email, password, description, location=location)
             id = providerDao.getProfessionalOnUsername(email).id
             dao_service = ProfessionalServicesDAO()
+            picturesDao = PicturesDAO()
+            picturesDao.uploadDefaultPictureByUserID(id)
             for service in servicesDesc:
                 dao_service.addServiceProvidedByProfessional(id, service.get("service"), 
                                                     service.get("price"), service.get("desc"))
