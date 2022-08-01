@@ -191,7 +191,7 @@ function ProfileEdit(props) {
   };
 
     const [file, setFile] = useState(null);
-
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     const handleFile = (e) => {
       let file = e.target.files[0];
@@ -200,11 +200,25 @@ function ProfileEdit(props) {
       // const fileURL = URL.createObjectURL(file)
       // const base64 = getBase64StringFromDataURL(fileURL);
       // setImage(base64);
-
     }
     const handleUpload = async (e) => {
         console.log(file);
         await uploadImage(file, props.id);
+
+        await sleep(1000)
+
+      axiosAuth.get(`/getProfilePicture`, {
+      responseType: "arraybuffer"
+    })
+      .then((res) => {
+           const base64 = btoa(
+          new Uint8Array(res.data).reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            ''
+          )
+        );
+        setImage(base64)
+      })
 
     }
 
