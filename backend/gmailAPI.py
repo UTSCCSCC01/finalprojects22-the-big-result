@@ -66,9 +66,9 @@ def signupProvider(email, name):
 
     sendEmail(email, "Welcome to Amorr!",
     """Hello, {0}
-Thank you for creating an account and welcome to Amorr. We look forward to helping you grow your buisiness, now and in the years to come!
+Thank you for creating an account and welcome to Amorr. We look forward to helping you grow your business, now and in the years to come!
 
-Please give our approval team 1-2 buisiness days to verify your details. You will recieve an email once you've been approved!
+Please give our approval team 1-2 business days to verify your details. You will receive an email once you've been approved!
 If you did not create this account, please contact us so that we may deactivate the account.
 
 Thank you,

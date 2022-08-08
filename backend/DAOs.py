@@ -403,6 +403,9 @@ class SettingsDAO:
 
 class PicturesDAO:
 
+    DEFAULT_IMAGE_KEY = 'default_image.jpeg'
+    BUCKET_NAME = "csc-c01-pictures"
+
     def __photoKey(self,userID: int) -> str:
         return str(userID) + ".jpg"
 
@@ -412,12 +415,22 @@ class PicturesDAO:
                                    aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
 
     def getProfilePictureByUserID(self,userID:int):
-        test_image = self.client.get_object(Bucket="csc-c01-pictures", Key=self.__photoKey(userID))
+        test_image = self.client.get_object(Bucket=self.BUCKET_NAME, Key=self.__photoKey(userID))
         # print(test_image)
         return test_image['Body']
 
+
     def uploadProfilePictureByUserID(self,profilePicFile,userID:int):
-        self.client.upload_fileobj(profilePicFile, "csc-c01-pictures", self.__photoKey(userID))
+        self.client.upload_fileobj(profilePicFile, self.BUCKET_NAME, self.__photoKey(userID))
+
+    def uploadDefaultPictureByUserID(self, userID:int):
+        copySource = {
+            'Bucket': self.BUCKET_NAME,
+            'Key': self.DEFAULT_IMAGE_KEY
+        }
+        self.client.copy_object(Bucket=self.BUCKET_NAME,Key=self.__photoKey(userID),CopySource=copySource)
+
+
 
 
 def runDAOQueries():
@@ -496,6 +509,8 @@ def runDAOQueries():
     #   print (row.professionalID)
     # locations = profDao.getAllUniqueLocations()
     # print(locations)
+    # picDao = PicturesDAO()
+    # picDao.uploadDefaultPictureByUserID(150)
     pass
 
 
